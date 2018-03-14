@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "EditPanelFramework", "EditPanelFramework\EditPanelFramework.vbproj", "{32AD3F4C-4A95-4B21-8B9B-5AFB8DAAFDDA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{32AD3F4C-4A95-4B21-8B9B-5AFB8DAAFDDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32AD3F4C-4A95-4B21-8B9B-5AFB8DAAFDDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32AD3F4C-4A95-4B21-8B9B-5AFB8DAAFDDA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{32AD3F4C-4A95-4B21-8B9B-5AFB8DAAFDDA}.Debug|x64.Build.0 = Debug|Any CPU
+		{32AD3F4C-4A95-4B21-8B9B-5AFB8DAAFDDA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{32AD3F4C-4A95-4B21-8B9B-5AFB8DAAFDDA}.Debug|x86.Build.0 = Debug|Any CPU
+		{32AD3F4C-4A95-4B21-8B9B-5AFB8DAAFDDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32AD3F4C-4A95-4B21-8B9B-5AFB8DAAFDDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32AD3F4C-4A95-4B21-8B9B-5AFB8DAAFDDA}.Release|x64.ActiveCfg = Release|Any CPU
+		{32AD3F4C-4A95-4B21-8B9B-5AFB8DAAFDDA}.Release|x64.Build.0 = Release|Any CPU
+		{32AD3F4C-4A95-4B21-8B9B-5AFB8DAAFDDA}.Release|x86.ActiveCfg = Release|Any CPU
+		{32AD3F4C-4A95-4B21-8B9B-5AFB8DAAFDDA}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5CF61E51-31EC-4557-95B8-2A431B93B87B}
+	EndGlobalSection
+EndGlobal

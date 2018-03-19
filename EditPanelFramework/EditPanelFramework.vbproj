@@ -57,6 +57,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -92,17 +93,19 @@
     <Compile Include="MetaData\EditPanelModeMetaData.vb" />
     <Compile Include="MetaData\FieldMetaData.vb" />
     <Compile Include="MetaData\FieldMethod.vb" />
-    <Compile Include="Model\ModelCellUpdatedEventArgs.vb" />
-    <Compile Include="Model\ModelSelectionRangeChangedEventArgs.vb" />
-    <Compile Include="Model\ModelDataAddedEventArgs.vb" />
-    <Compile Include="Model\ModelDataRemovedEventArgs.vb" />
-    <Compile Include="Model\ModelUpdatedEventArgs.vb" />
+    <Compile Include="Model\ModelAdapters\HTTPJsonModelAdapter.vb" />
+    <Compile Include="Model\ModelAdapters\HTTPMethod.vb" />
+    <Compile Include="Model\ModelEventArgs\ModelCellUpdatedEventArgs.vb" />
+    <Compile Include="Model\ModelEventArgs\ModelSelectionRangeChangedEventArgs.vb" />
+    <Compile Include="Model\ModelEventArgs\ModelDataAddedEventArgs.vb" />
+    <Compile Include="Model\ModelEventArgs\ModelDataRemovedEventArgs.vb" />
+    <Compile Include="Model\ModelEventArgs\ModelUpdatedEventArgs.vb" />
     <Compile Include="Model\IModel.vb" />
-    <Compile Include="Model\IndexRowPair.vb" />
+    <Compile Include="Model\ModelDataStructures\IndexRowPair.vb" />
     <Compile Include="Model\Model.vb" />
-    <Compile Include="Model\PositionCellPair.vb" />
-    <Compile Include="Model\Range.vb" />
-    <Compile Include="Model\RangeChangedEventArgs.vb" />
+    <Compile Include="Model\ModelDataStructures\PositionCellPair.vb" />
+    <Compile Include="Model\ModelDataStructures\Range.vb" />
+    <Compile Include="Model\ModelEventArgs\RangeChangedEventArgs.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

@@ -1,7 +1,11 @@
 ﻿Imports System.Linq
 Imports System.Reflection
+Imports System.Text
+Imports System.Web.Script.Serialization
 
 Friend Class Util
+    Private Shared jsEngine As New Jint.Engine
+
     Public Shared Sub PrintDataTable(table As DataTable)
         '打印表头
         For Each column As DataColumn In table.Columns
@@ -37,5 +41,32 @@ Friend Class Util
             Return result
         End If
     End Function
+
+    'Private Shared Function DictionaryToJson(Of TKey, TValue)(dic As Dictionary(Of TKey, TValue)) As String
+    '    '将Data数组转换成json字符串
+    '    Return New JavaScriptSerializer().Serialize(dic)
+    '    'Dim sbDataJsonStr As New StringBuilder
+    '    'sbDataJsonStr.Append("{")
+    '    'For Each field In dic
+    '    '    Dim valueStr = Nothing
+    '    '    Dim tmp = Nothing
+    '    '    '如果是数值类型，不加引号。否则加引号
+
+    '    '    If Double.TryParse(CStr(field.Value), tmp) Then
+    '    '        valueStr = Str(field.Value)
+    '    '    Else
+    '    '        valueStr = """" & CStr(field.Value) & """"
+    '    '    End If
+    '    '    sbDataJsonStr.AppendFormat("""" & field.Key & """:" & valueStr & ",")
+    '    'Next
+    '    'sbDataJsonStr.Length -= 1
+    '    'sbDataJsonStr.Append("},")
+
+    '    'sbDataJsonStr.Length -= 1
+
+    '    'jsEngine.Execute(String.Format("$data = {0};", sbDataJsonStr.ToString))
+    '    'Dim result = jsEngine.Execute(String.Format("JSON.stringify({0})", Me.JsonTemplate)).GetCompletionValue.AsString
+    '    'Return result
+    'End Function
 
 End Class

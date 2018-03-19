@@ -30,6 +30,7 @@ Partial Class Form2
         Me.ReoGridControl2 = New unvell.ReoGrid.ReoGridControl()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
         Me.ReoGridControl3 = New unvell.ReoGrid.ReoGridControl()
+        Me.ButtonPush = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'TableLayoutPanel1
@@ -139,11 +140,21 @@ Partial Class Form2
         Me.ReoGridControl3.TabIndex = 9
         Me.ReoGridControl3.Text = "ReoGridControl3"
         '
+        'ButtonPush
+        '
+        Me.ButtonPush.Location = New System.Drawing.Point(1247, 109)
+        Me.ButtonPush.Name = "ButtonPush"
+        Me.ButtonPush.Size = New System.Drawing.Size(201, 65)
+        Me.ButtonPush.TabIndex = 11
+        Me.ButtonPush.Text = "TestPush"
+        Me.ButtonPush.UseVisualStyleBackColor = True
+        '
         'Form2
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(12.0!, 24.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(2443, 665)
+        Me.Controls.Add(Me.ButtonPush)
         Me.Controls.Add(Me.ReoGridControl3)
         Me.Controls.Add(Me.TableLayoutPanel2)
         Me.Controls.Add(Me.ReoGridControl2)
@@ -167,4 +178,5 @@ Partial Class Form2
     Friend WithEvents ReoGridControl2 As unvell.ReoGrid.ReoGridControl
     Friend WithEvents TableLayoutPanel2 As TableLayoutPanel
     Friend WithEvents ReoGridControl3 As unvell.ReoGrid.ReoGridControl
+    Friend WithEvents ButtonPush As Button
 End Class

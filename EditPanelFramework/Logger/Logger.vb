@@ -6,6 +6,7 @@ Friend Enum LogMode As Integer
     LOAD_MODE_METHODLISTENER
     REFRESH_VIEW
     SYNC_FROM_VIEW
+    MODEL_ADAPTER
 End Enum
 
 Friend Enum LogLevel As Integer
@@ -26,7 +27,8 @@ Friend Class Logger
             {LogMode.REFRESH_VIEW, New LogConfig("Refreshing view")},
             {LogMode.SYNC_FROM_VIEW, New LogConfig("Synchronizing data from view")},
             {LogMode.PARSING_METADATA, New LogConfig("Parsing metadata")},
-            {LogMode.LOAD_MODE_METHODLISTENER, New LogConfig("Loading mode MethodListener")}
+            {LogMode.LOAD_MODE_METHODLISTENER, New LogConfig("Loading mode MethodListener")},
+            {LogMode.MODEL_ADAPTER, New LogConfig("Model Adapter failure")}
         }
     End Sub
 

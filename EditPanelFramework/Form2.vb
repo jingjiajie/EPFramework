@@ -1,9 +1,12 @@
-﻿Public Class Form2
+﻿Imports System.Net
+
+Public Class Form2
     Private tableLayoutView As TableLayoutPanelView
     Private tableLayoutView2 As TableLayoutPanelView
     Private reoGridView1 As ReoGridWorksheetView
     Private reoGridView2 As ReoGridWorksheetView
     Private reoGridView3 As ReoGridWorksheetView
+    Dim adapter As HTTPJsonModelAdapter
     Dim model As Model
 
     Private Sub Form2_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -64,6 +67,24 @@
         Me.reoGridView3 = New ReoGridWorksheetView(Me.ReoGridControl3)
         Me.reoGridView3.SetMetaDataFromJson(metaDataStr, New MyMethods)
         Me.reoGridView3.Model = model
+
+        Me.adapter = New HTTPJsonModelAdapter()
+        adapter.Model = model
+        adapter.SetAddAPI("http://localhost:8080/person/add", HTTPMethod.POST, "$data", Sub(res As HttpWebResponse, ex As WebException)
+                                                                                            If ex IsNot Nothing Then
+                                                                                                Console.WriteLine("Add请求失败：" & ex.Message)
+                                                                                                Return
+                                                                                            End If
+                                                                                            Console.WriteLine("Add请求返回：" & Str(res.StatusCode))
+                                                                                        End Sub)
+        adapter.SetUpdateAPI("http://localhost:8080/person/update", HTTPMethod.PUT, "$data", Sub(res As HttpWebResponse, ex As WebException)
+                                                                                                 If ex IsNot Nothing Then
+                                                                                                     Console.WriteLine("Update请求失败：" & ex.Message)
+                                                                                                     Return
+                                                                                                 End If
+                                                                                                 Console.WriteLine("Update请求返回：" & Str(res.StatusCode))
+                                                                                             End Sub)
+        adapter.SetPullAPI("http://localhost:8080/person", HTTPMethod.GET, "$data", Nothing)
     End Sub
 
     Private Sub ButtonSwitchToTableLayout_Click(sender As Object, e As EventArgs)
@@ -94,6 +115,10 @@
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
         Me.model.RemoveRow(0)
+    End Sub
+
+    Private Sub ButtonPush_Click(sender As Object, e As EventArgs) Handles ButtonPush.Click
+        Call adapter.PushToServer()
     End Sub
 End Class
 

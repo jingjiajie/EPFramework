@@ -164,7 +164,7 @@ Public Class Model
         Dim posCellPairs As New List(Of PositionCellPair)
         For i = 0 To rows.Length - 1
             Me.Data.Rows(rows(i))(columns(i)) = dataOfEachCell(i)
-            posCellPairs.Add(New PositionCellPair(rows(i), columns(i), dataOfEachCell(i)))
+            posCellPairs.Add(New PositionCellPair(rows(i), columns(i), Me.Data.Columns(columns(i)).ColumnName, dataOfEachCell(i)))
         Next
 
         RaiseEvent CellUpdated(New ModelCellUpdatedEventArgs() With {

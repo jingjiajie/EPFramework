@@ -6,85 +6,73 @@ Public Class Form2
     Private reoGridView1 As ReoGridWorksheetView
     Private reoGridView2 As ReoGridWorksheetView
     Private reoGridView3 As ReoGridWorksheetView
-    Dim adapter As HTTPJsonModelAdapter
+    Dim adapter As JsonWebAPIModelAdapter
     Dim model As Model
 
     Private Sub Form2_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-        Dim dataTable = New DataTable()
-        dataTable.Columns.AddRange(New DataColumn() {New DataColumn("Name"), New DataColumn("Age"), New DataColumn("Type")})
-        dataTable.Rows.Add("小明", 5)
-        dataTable.Rows.Add("小红", 10)
-        Me.model = New Model(dataTable)
-        'AddHandler model.DataAdded, Sub(dt As DataTable)
-        '                                Console.Write("Added rows:")
-        '                                For Each row In dt.Rows
-        '                                    Call Console.Write(row(0) & " ")
-        '                                Next
-        '                                Call Console.WriteLine()
-        '                            End Sub
-
-        AddHandler model.RowUpdated, Sub(ev As ModelRowUpdatedEventArgs)
-                                         Console.Write("Updated rows:")
-                                         For Each item In ev.UpdatedRows
-                                             Console.Write(Str(item.Index) & " " & CStr(item.RowData("Name")) & " ")
-                                         Next
-                                         Call Console.WriteLine()
-                                     End Sub
-
-        'AddHandler model.DataRemoved, Sub(dt As DataTable)
-        '                                  Console.Write("Removed rows:")
-        '                                  For Each row In dt.Rows
-        '                                      Console.Write(row(0) & " ")
-        '                                  Next
-        '                                  Call Console.WriteLine()
-        '                              End Sub
-
         Dim metaDataStr = <string>[{
                                       mode:'default',
-                                      fields:[{name:'Name',displayName:'姓名'},
-                                              {name:'Age',displayName:'年龄'},
-                                              {name:'Type',displayName:'类型'}]
+                                      fields:[/*{name:'id',displayName:'ID',visible:false},*/
+                                              {name:'name',displayName:'姓名'},
+                                              {name:'password',displayName:'密码'},
+                                              {name:'role',displayName:'角色'},
+                                              {name:'authorityString',displayName:'权限字符串'}]
                                   }]
                           </string>.Value
+
+        Me.model = New Model(metaDataStr)
 
         Me.tableLayoutView = New TableLayoutPanelView(Me.TableLayoutPanel1)
         Me.tableLayoutView.SetMetaDataFromJson(metaDataStr, New MyMethods)
         Me.tableLayoutView.Model = model
 
-        Me.tableLayoutView2 = New TableLayoutPanelView(Me.TableLayoutPanel2)
-        Me.tableLayoutView2.SetMetaDataFromJson(metaDataStr, New MyMethods)
-        Me.tableLayoutView2.Model = model
+        'Me.tableLayoutView2 = New TableLayoutPanelView(Me.TableLayoutPanel2)
+        'Me.tableLayoutView2.SetMetaDataFromJson(metaDataStr, New MyMethods)
+        'Me.tableLayoutView2.Model = model
 
         Me.reoGridView1 = New ReoGridWorksheetView(Me.ReoGridControl1)
         Me.reoGridView1.SetMetaDataFromJson(metaDataStr, New MyMethods)
         Me.reoGridView1.Model = model
 
-        Me.reoGridView2 = New ReoGridWorksheetView(Me.ReoGridControl2)
-        Me.reoGridView2.SetMetaDataFromJson(metaDataStr, New MyMethods)
-        Me.reoGridView2.Model = model
+        'Me.reoGridView2 = New ReoGridWorksheetView(Me.ReoGridControl2)
+        'Me.reoGridView2.SetMetaDataFromJson(metaDataStr, New MyMethods)
+        'Me.reoGridView2.Model = model
 
-        Me.reoGridView3 = New ReoGridWorksheetView(Me.ReoGridControl3)
-        Me.reoGridView3.SetMetaDataFromJson(metaDataStr, New MyMethods)
-        Me.reoGridView3.Model = model
+        'Me.reoGridView3 = New ReoGridWorksheetView(Me.ReoGridControl3)
+        'Me.reoGridView3.SetMetaDataFromJson(metaDataStr, New MyMethods)
+        'Me.reoGridView3.Model = model
 
-        Me.adapter = New HTTPJsonModelAdapter()
+        Me.adapter = New JsonWebAPIModelAdapter()
         adapter.Model = model
-        adapter.SetAddAPI("http://localhost:8080/person/add", HTTPMethod.POST, "$data", Sub(res As HttpWebResponse, ex As WebException)
-                                                                                            If ex IsNot Nothing Then
-                                                                                                Console.WriteLine("Add请求失败：" & ex.Message)
-                                                                                                Return
-                                                                                            End If
-                                                                                            Console.WriteLine("Add请求返回：" & Str(res.StatusCode))
-                                                                                        End Sub)
-        adapter.SetUpdateAPI("http://localhost:8080/person/update", HTTPMethod.PUT, "$data", Sub(res As HttpWebResponse, ex As WebException)
-                                                                                                 If ex IsNot Nothing Then
-                                                                                                     Console.WriteLine("Update请求失败：" & ex.Message)
-                                                                                                     Return
-                                                                                                 End If
-                                                                                                 Console.WriteLine("Update请求返回：" & Str(res.StatusCode))
-                                                                                             End Sub)
-        adapter.SetPullAPI("http://localhost:8080/person", HTTPMethod.GET, "$data", Nothing)
+
+        adapter.SetPullAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/{}", HTTPMethod.GET, "$data", Sub(res As HttpWebResponse, ex As WebException)
+                                                                                                                       If ex IsNot Nothing Then
+                                                                                                                           Console.WriteLine("Add请求失败：" & ex.Message)
+                                                                                                                           Return
+                                                                                                                       End If
+                                                                                                                       Console.WriteLine("Add请求返回：" & Str(res.StatusCode))
+                                                                                                                   End Sub)
+        adapter.SetUpdateAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/", HTTPMethod.PUT, "$data", Sub(res As HttpWebResponse, ex As WebException)
+                                                                                                                       If ex IsNot Nothing Then
+                                                                                                                           Console.WriteLine("Update请求失败：" & ex.Message)
+                                                                                                                           Return
+                                                                                                                       End If
+                                                                                                                       Console.WriteLine("Update请求返回：" & Str(res.StatusCode))
+                                                                                                                   End Sub)
+        adapter.SetRemoveAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/{mapProperty($data,'id')}", HTTPMethod.DELETE, Nothing, Sub(res As HttpWebResponse, ex As WebException)
+                                                                                                                                                   If ex IsNot Nothing Then
+                                                                                                                                                       Console.WriteLine("Remove请求失败：" & ex.Message)
+                                                                                                                                                       Return
+                                                                                                                                                   End If
+                                                                                                                                                   Console.WriteLine("Remove请求返回：" & Str(res.StatusCode))
+                                                                                                                                               End Sub)
+        adapter.SetAddAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/", HTTPMethod.POST, "$data", Sub(res As HttpWebResponse, ex As WebException)
+                                                                                                                     If ex IsNot Nothing Then
+                                                                                                                         Console.WriteLine("Add请求失败：" & ex.Message)
+                                                                                                                         Return
+                                                                                                                     End If
+                                                                                                                     Console.WriteLine("Add请求返回：" & Str(res.StatusCode))
+                                                                                                                 End Sub)
     End Sub
 
     Private Sub ButtonSwitchToTableLayout_Click(sender As Object, e As EventArgs)
@@ -114,11 +102,20 @@ Public Class Form2
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        Me.model.RemoveRow(0)
+        Dim selectionRange = Me.model.FirstSelectionRange
+        Call Me.model.RemoveRows(selectionRange.Row, selectionRange.Rows)
     End Sub
 
-    Private Sub ButtonPush_Click(sender As Object, e As EventArgs) Handles ButtonPush.Click
-        Call adapter.PushToServer()
+    Private Sub ButtonPush_Click(sender As Object, e As EventArgs) Handles ButtonPull.Click
+        Call adapter.PullFromServer()
+    End Sub
+
+    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles ButtonPush.Click
+        Call Me.adapter.PushToServer()
+    End Sub
+
+    Private Sub Button4_Click_1(sender As Object, e As EventArgs) Handles Button4.Click
+        Me.model.AddRow(Nothing)
     End Sub
 End Class
 

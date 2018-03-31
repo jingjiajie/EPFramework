@@ -21,6 +21,7 @@ Public Class TableLayoutPanelView
         AddHandler Me.Model.RowRemoved, AddressOf Me.ModelRowRemovedEvent
         AddHandler Me.Model.CellUpdated, AddressOf Me.ModelCellUpdatedEvent
         AddHandler Me.Model.SelectionRangeChanged, AddressOf Me.ModelSelectionRangeChangedEvent
+        AddHandler Me.Model.Refreshed, AddressOf Me.ModelRefreshedEvent
 
         Me.ImportData()
     End Sub
@@ -31,6 +32,7 @@ Public Class TableLayoutPanelView
         RemoveHandler Me.Model.RowAdded, AddressOf Me.ModelRowAddedEvent
         RemoveHandler Me.Model.RowRemoved, AddressOf Me.ModelRowRemovedEvent
         RemoveHandler Me.Model.SelectionRangeChanged, AddressOf Me.ModelSelectionRangeChangedEvent
+        RemoveHandler Me.Model.Refreshed, AddressOf Me.ModelRefreshedEvent
 
     End Sub
 
@@ -83,6 +85,11 @@ Public Class TableLayoutPanelView
                 Return
             End If
         Next
+    End Sub
+
+    Private Sub ModelRefreshedEvent(e As ModelRefreshedEventArgs)
+        If switcherModelDataUpdatedEvent = False Then Return '开关被关闭则不执行事件
+        Call Me.ImportData()
     End Sub
 
     Private Sub ModelRowUpdatedEvent(e As ModelRowUpdatedEventArgs)
@@ -273,7 +280,7 @@ Public Class TableLayoutPanelView
         End If
         For Each curField In fieldMetaData
             Dim curColumn As DataColumn = (From c As DataColumn In data.Columns
-                                           Where c.ColumnName = curField.Name
+                                           Where c.ColumnName.Equals(curField.Name, StringComparison.OrdinalIgnoreCase)
                                            Select c).FirstOrDefault
             '在对象中找不到MetaData描述的字段，直接报错，并接着下一个字段
             If curColumn Is Nothing Then
@@ -340,7 +347,7 @@ Public Class TableLayoutPanelView
                         Select m).FirstOrDefault
         Dim value = Me.GetMappedValue(fieldName, metaData)
         RemoveHandler Me.Model.CellUpdated, AddressOf Me.ModelCellUpdatedEvent
-        Me.Model.UpdateCell(modelSelectedRow, Me.dicFieldNameColumn(fieldName), value)
+        Me.Model.UpdateCell(modelSelectedRow, fieldName, value)
         AddHandler Me.Model.CellUpdated, AddressOf Me.ModelCellUpdatedEvent
     End Sub
 

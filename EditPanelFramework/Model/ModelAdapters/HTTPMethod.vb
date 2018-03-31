@@ -17,4 +17,12 @@
             Throw New Exception("Unknown HTTPMethod!")
         End If
     End Function
+
+    Public Shared Operator =(method1 As HTTPMethod, method2 As HTTPMethod) As Boolean
+        Return method1 Is method2
+    End Operator
+
+    Public Shared Operator <>(method1 As HTTPMethod, method2 As HTTPMethod) As Boolean
+        Return Not method1 = method2
+    End Operator
 End Class

@@ -42,31 +42,13 @@ Friend Class Util
         End If
     End Function
 
-    'Private Shared Function DictionaryToJson(Of TKey, TValue)(dic As Dictionary(Of TKey, TValue)) As String
-    '    '将Data数组转换成json字符串
-    '    Return New JavaScriptSerializer().Serialize(dic)
-    '    'Dim sbDataJsonStr As New StringBuilder
-    '    'sbDataJsonStr.Append("{")
-    '    'For Each field In dic
-    '    '    Dim valueStr = Nothing
-    '    '    Dim tmp = Nothing
-    '    '    '如果是数值类型，不加引号。否则加引号
-
-    '    '    If Double.TryParse(CStr(field.Value), tmp) Then
-    '    '        valueStr = Str(field.Value)
-    '    '    Else
-    '    '        valueStr = """" & CStr(field.Value) & """"
-    '    '    End If
-    '    '    sbDataJsonStr.AppendFormat("""" & field.Key & """:" & valueStr & ",")
-    '    'Next
-    '    'sbDataJsonStr.Length -= 1
-    '    'sbDataJsonStr.Append("},")
-
-    '    'sbDataJsonStr.Length -= 1
-
-    '    'jsEngine.Execute(String.Format("$data = {0};", sbDataJsonStr.ToString))
-    '    'Dim result = jsEngine.Execute(String.Format("JSON.stringify({0})", Me.JsonTemplate)).GetCompletionValue.AsString
-    '    'Return result
-    'End Function
+    Public Shared Function Range(start As Long, [end] As Long) As Long()
+        Dim length = [end] - start
+        Dim result(length - 1) As Long
+        For i = 0 To length - 1
+            result(i) = start + i
+        Next
+        Return result
+    End Function
 
 End Class

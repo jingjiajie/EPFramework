@@ -40,6 +40,7 @@ Public Class ReoGridWorksheetView
         AddHandler Me.Model.RowAdded, AddressOf Me.ModelRowAddedEvent
         AddHandler Me.Model.RowRemoved, AddressOf Me.ModelRowRemovedEvent
         AddHandler Me.Model.SelectionRangeChanged, AddressOf Me.ModelSelectionRangeChangedEvent
+        AddHandler Me.Model.Refreshed, AddressOf Me.ModelRefreshedEvent
 
         Call Me.ImportData()
     End Sub
@@ -50,6 +51,7 @@ Public Class ReoGridWorksheetView
         RemoveHandler Me.Model.RowAdded, AddressOf Me.ModelRowAddedEvent
         RemoveHandler Me.Model.RowRemoved, AddressOf Me.ModelRowRemovedEvent
         RemoveHandler Me.Model.SelectionRangeChanged, AddressOf Me.ModelSelectionRangeChangedEvent
+        RemoveHandler Me.Model.Refreshed, AddressOf Me.ModelRefreshedEvent
 
     End Sub
 
@@ -67,6 +69,11 @@ Public Class ReoGridWorksheetView
         RemoveHandler Me.Panel.BeforeSelectionRangeChange, AddressOf Me.BeforeSelectionRangeChange
         Me.Panel.SelectionRange = New RangePosition(range.Row, range.Column, range.Rows, range.Columns)
         AddHandler Me.Panel.BeforeSelectionRangeChange, AddressOf Me.BeforeSelectionRangeChange
+    End Sub
+
+    Protected Sub ModelRefreshedEvent(e As ModelRefreshedEventArgs)
+        Logger.Debug("==ReoGrid ModelRefreshedEvent")
+        Call Me.ImportData()
     End Sub
 
     Protected Sub ModelRowUpdatedEvent(e As ModelRowUpdatedEventArgs)
@@ -353,7 +360,7 @@ Public Class ReoGridWorksheetView
         Logger.Debug("==ReoGrid ImportData: " + Str(Me.GetHashCode))
         Logger.SetMode(LogMode.REFRESH_VIEW)
         Dim data As DataTable
-        data = Me.Model.ToDataTable
+        data = Me.Model.GetDataTable
         If data.Rows.Count = 0 Then
             Logger.PutMessage("Data is empty")
             Return False
@@ -392,7 +399,7 @@ Public Class ReoGridWorksheetView
             '遍历列（MetaData)
             For Each curField In fieldMetaData
                 Dim curDataColumn As DataColumn = (From c As DataColumn In data.Columns
-                                                   Where c.ColumnName = curField.Name
+                                                   Where c.ColumnName.Equals(curField.Name, StringComparison.OrdinalIgnoreCase)
                                                    Select c).FirstOrDefault
                 '在对象中找不到MetaData描述的字段，直接报错，并接着下一个字段
                 If curDataColumn Is Nothing Then
@@ -564,7 +571,7 @@ Public Class ReoGridWorksheetView
 
         If rowsUpdated.Length > 0 Then
             RemoveHandler Me.Model.CellUpdated, AddressOf Me.ModelCellUpdatedEvent
-            Me.Model.UpdateCells(rowsUpdated, Me.Times(colUpdated, rowsUpdated.LongLength), updateCellData)
+            Me.Model.UpdateCells(rowsUpdated, Me.Times(fieldName, rowsUpdated.LongLength), updateCellData)
             AddHandler Me.Model.CellUpdated, AddressOf Me.ModelCellUpdatedEvent
         End If
     End Sub
@@ -604,7 +611,7 @@ Public Class ReoGridWorksheetView
             Dim curReoGridCell = Panel.GetCell(row, curReoGridColumnNum)
 
             '获取DataTable的列
-            Dim modelDataTable = Model.ToDataTable
+            Dim modelDataTable = Model.GetDataTable
             Dim curColumn As DataColumn = (From c As DataColumn In modelDataTable.Columns
                                            Where c.ColumnName = curField.Name
                                            Select c).FirstOrDefault

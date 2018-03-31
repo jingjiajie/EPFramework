@@ -76,12 +76,6 @@
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.Designer.vb">
-      <DependentUpon>Form1.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Form1.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Form2.Designer.vb">
       <DependentUpon>Form2.vb</DependentUpon>
     </Compile>
@@ -93,9 +87,10 @@
     <Compile Include="MetaData\EditPanelModeMetaData.vb" />
     <Compile Include="MetaData\FieldMetaData.vb" />
     <Compile Include="MetaData\FieldMethod.vb" />
-    <Compile Include="Model\ModelAdapters\HTTPJsonModelAdapter.vb" />
+    <Compile Include="Model\ModelAdapters\JsonWebAPIModelAdapter.vb" />
     <Compile Include="Model\ModelAdapters\HTTPMethod.vb" />
     <Compile Include="Model\ModelEventArgs\ModelCellUpdatedEventArgs.vb" />
+    <Compile Include="Model\ModelEventArgs\ModelRefreshedEventArgs.vb" />
     <Compile Include="Model\ModelEventArgs\ModelSelectionRangeChangedEventArgs.vb" />
     <Compile Include="Model\ModelEventArgs\ModelDataAddedEventArgs.vb" />
     <Compile Include="Model\ModelEventArgs\ModelDataRemovedEventArgs.vb" />
@@ -129,9 +124,6 @@
     <Compile Include="View\ViewBase.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.vb</DependentUpon>
     </EmbeddedResource>
@@ -154,6 +146,9 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model\ModelAdapters\JsonWebAPIInfo.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

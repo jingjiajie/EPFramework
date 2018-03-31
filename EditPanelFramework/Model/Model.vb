@@ -5,16 +5,39 @@ Public Class Model
     Implements IModel
 
     Private _selectionRange As Range() = New Range() {}
-    Private Property Data As DataTable
+    Private _mode As String
+    Private _metaData As EditPanelMetaData
+    Public Property Mode As String
+        Get
+            Return Me._mode
+        End Get
+        Set(value As String)
+            Me._mode = value
+            If Me._metaData IsNot Nothing Then
+                Call Me.RefreshDataTable()
+            End If
+        End Set
+    End Property
+    Public Property MetaData As EditPanelMetaData
+        Get
+            Return Me._metaData
+        End Get
+        Set(value As EditPanelMetaData)
+            Me._metaData = value
+            If Me._mode IsNot Nothing Then
+                Call Me.RefreshDataTable()
+            End If
+        End Set
+    End Property
+    Private Property Data As New DataTable
+    Private Property RowGuid As New Dictionary(Of DataRow, Guid)
 
-    Public Sub New(data As DataTable)
-        Me.Data = data
-        '选区默认第一行
-        If Me.SelectionRange.Length = 0 Then
-            Me.SelectionRange = New Range() {
-                    New Range(0, 0, 1, Me.Data.Columns.Count)
-                }
+    Public Sub New(metaData As String, Optional mode As String = "default")
+        Me.MetaData = EditPanelMetaData.FromJson(New Jint.Engine, metaData)
+        If Me.MetaData Is Nothing Then
+            Throw New Exception("Invalid metaData")
         End If
+        Me.Mode = mode
     End Sub
 
     Public ReadOnly Property RowCount As Long Implements IModel.RowCount
@@ -44,6 +67,23 @@ Public Class Model
         End Set
     End Property
 
+    Public Property FirstSelectionRange As Range Implements IModel.FirstSelectionRange
+        Get
+            If Me.SelectionRange Is Nothing Then Return Nothing
+            If Me.SelectionRange.Length = 0 Then Return Nothing
+            Return Me.SelectionRange(0)
+        End Get
+        Set(value As Range)
+            If Me.SelectionRange Is Nothing Then
+                Me.SelectionRange = {value}
+            ElseIf Me.SelectionRange.Length = 0 Then
+                Me.SelectionRange = {value}
+            Else
+                Me.SelectionRange(0) = value
+            End If
+        End Set
+    End Property
+
     Public Property SelectionRange(i) As Range
         Get
             Return Me._selectionRange(i)
@@ -57,6 +97,17 @@ Public Class Model
         End Set
     End Property
 
+    Private Sub RefreshDataTable()
+        If Me.MetaData Is Nothing Then Return
+        If Me.Mode Is Nothing Then Return
+
+        Call Me.Data.Columns.Clear()
+        Dim fieldMetaData = Me.MetaData.GetFieldMetaData(Me.Mode)
+        For Each curField In fieldMetaData
+            Me.Data.Columns.Add(curField.Name)
+        Next
+    End Sub
+
     Private Sub BindRangeChangedEventToSelectionRangeChangedEvent(range As Range)
         AddHandler range.RangeChanged, Sub()
                                            RaiseEvent SelectionRangeChanged(New ModelSelectionRangeChangedEventArgs() With {
@@ -65,8 +116,8 @@ Public Class Model
                                        End Sub
     End Sub
 
-    Public Function ToDataTable() As DataTable Implements IModel.ToDataTable
-        ToDataTable = Me.Data
+    Public Function GetDataTable() As DataTable Implements IModel.GetDataTable
+        GetDataTable = Me.Data
         Exit Function
     End Function
 
@@ -93,32 +144,51 @@ Public Class Model
         Dim addedRows As New List(Of Long)
         For Each curData In dataOfEachRow
             Dim newRow = Me.Data.NewRow
-            For Each item In curData
-                newRow(item.Key) = item.Value
-            Next
+            Dim newGuid = Guid.NewGuid '生成新添加行的GUID
+            Me.RowGuid.Add(newRow, newGuid)
+            If curData IsNot Nothing Then
+                For Each item In curData
+                    newRow(item.Key) = item.Value
+                Next
+            End If
             Me.Data.Rows.Add(newRow)
             addedRows.Add(Me.Data.Rows.Count - 1)
         Next
 
         RaiseEvent RowAdded(New ModelRowAddedEventArgs() With {
-                             .AddedRows = (From r In addedRows Select New IndexRowPair(r, Me.DataRowToDictionary(Me.Data.Rows(r)))).ToArray
+                             .AddedRows = (From r In addedRows Select New IndexRowPair(r, Me.RowGuid(Me.Data.Rows(r)), Me.DataRowToDictionary(Me.Data.Rows(r)))).ToArray
                             })
 
         Return Me.Data.Rows.Count - 1
     End Function
 
     Public Sub RemoveRow(row As Long) Implements IModel.RemoveRow
+        Me.RemoveRows(New Long() {row})
+    End Sub
+
+    Public Sub RemoveRows(startRow As Long, rowCount As Long) Implements IModel.RemoveRows
+        Me.RemoveRows(Util.Range(startRow, startRow + rowCount))
+    End Sub
+
+    Public Sub RemoveRows(rows As Long()) Implements IModel.RemoveRows
         Try
-            Dim newRow = Me.Data.NewRow
-            newRow.ItemArray = Me.Data.Rows(row).ItemArray
-            Me.Data.Rows.RemoveAt(row)
+            Dim indexRowList = New List(Of IndexRowPair)
+            For Each row In rows
+                Dim dataRow = Me.Data.Rows(row)
+                If Not Me.RowGuid.ContainsKey(Me.Data.Rows(row)) Then
+                    Me.RowGuid.Add(Me.Data.Rows(row), Guid.NewGuid)
+                End If
+                Dim newIndexRowPair = New IndexRowPair(row, Me.RowGuid(Me.Data.Rows(row)), Me.DataRowToDictionary(Me.Data.Rows(row)))
+                indexRowList.Add(newIndexRowPair)
+                dataRow.Delete()
+            Next
+            Call Me.Data.AcceptChanges()
+
             RaiseEvent RowRemoved(New ModelRowRemovedEventArgs() With {
-                                        .RemovedRows = New IndexRowPair() {
-                                            New IndexRowPair(row, DataRowToDictionary(newRow))
-                                        }
+                                        .RemovedRows = indexRowList.ToArray
                                    })
         Catch ex As Exception
-            Throw New Exception("RemoveRow failed: " & ex.Message)
+            Throw New Exception("RemoveRows failed: " & ex.Message)
         End Try
     End Sub
 
@@ -143,7 +213,7 @@ Public Class Model
 
             Dim updatedRows(rows.Length - 1) As IndexRowPair
             For i = 0 To rows.Length - 1
-                updatedRows(i) = New IndexRowPair(rows(i), Me.DataRowToDictionary(Me.Data.Rows(rows(i))))
+                updatedRows(i) = New IndexRowPair(rows(i), Me.RowGuid(Me.Data.Rows(rows(i))), Me.DataRowToDictionary(Me.Data.Rows(rows(i))))
             Next
 
             Dim tmp = New ModelRowUpdatedEventArgs() With {
@@ -156,20 +226,34 @@ Public Class Model
         End Try
     End Sub
 
-    Public Sub UpdateCell(row As Long, column As Integer, data As Object) Implements IModel.UpdateCell
-        Me.UpdateCells(New Long() {row}, New Integer() {column}, New Object() {data})
+    Public Sub UpdateCell(row As Long, columnName As String, data As Object) Implements IModel.UpdateCell
+        Me.UpdateCells(New Long() {row}, New String() {columnName}, New Object() {data})
     End Sub
 
-    Public Sub UpdateCells(rows As Long(), columns As Integer(), dataOfEachCell As Object()) Implements IModel.UpdateCells
+    Public Sub UpdateCells(rows As Long(), columnNames As String(), dataOfEachCell As Object()) Implements IModel.UpdateCells
         Dim posCellPairs As New List(Of PositionCellPair)
         For i = 0 To rows.Length - 1
-            Me.Data.Rows(rows(i))(columns(i)) = dataOfEachCell(i)
-            posCellPairs.Add(New PositionCellPair(rows(i), columns(i), Me.Data.Columns(columns(i)).ColumnName, dataOfEachCell(i)))
+            Dim columnName = columnNames(i)
+            Dim dataColumn = (From col As DataColumn In Me.Data.Columns
+                              Where col.ColumnName.Equals(columnName, StringComparison.OrdinalIgnoreCase)
+                              Select col).FirstOrDefault
+            If dataColumn Is Nothing Then
+                Throw New Exception("UpdateCells failed: column """ & columnName & """ not found in model")
+            End If
+            Me.Data.Rows(rows(i))(dataColumn) = dataOfEachCell(i)
+            If Not Me.RowGuid.ContainsKey(Me.Data.Rows(rows(i))) Then
+                Me.RowGuid.Add(Me.Data.Rows(rows(i)), Guid.NewGuid)
+            End If
+            posCellPairs.Add(New PositionCellPair(rows(i), Me.RowGuid(Me.Data.Rows(rows(i))), columnName, dataOfEachCell(i)))
         Next
 
         RaiseEvent CellUpdated(New ModelCellUpdatedEventArgs() With {
                                     .UpdatedCells = posCellPairs.ToArray
                                })
+    End Sub
+
+    Public Sub RaiseRefreshedEvent(e As ModelRefreshedEventArgs) Implements IModel.RaiseRefreshedEvent
+        RaiseEvent Refreshed(e)
     End Sub
 
     Protected Function DataRowToDictionary(dataRow As DataRow) As Dictionary(Of String, Object)
@@ -181,6 +265,7 @@ Public Class Model
         Return result
     End Function
 
+    Public Event Refreshed(e As ModelRefreshedEventArgs) Implements IModel.Refreshed
     Public Event RowAdded(e As ModelRowAddedEventArgs) Implements IModel.RowAdded
     Public Event RowUpdated(e As ModelRowUpdatedEventArgs) Implements IModel.RowUpdated
     Public Event RowRemoved(e As ModelRowRemovedEventArgs) Implements IModel.RowRemoved

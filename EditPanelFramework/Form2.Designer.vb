@@ -30,7 +30,9 @@ Partial Class Form2
         Me.ReoGridControl2 = New unvell.ReoGrid.ReoGridControl()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
         Me.ReoGridControl3 = New unvell.ReoGrid.ReoGridControl()
+        Me.ButtonPull = New System.Windows.Forms.Button()
         Me.ButtonPush = New System.Windows.Forms.Button()
+        Me.Button4 = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'TableLayoutPanel1
@@ -43,7 +45,7 @@ Partial Class Form2
         Me.TableLayoutPanel1.RowCount = 2
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(560, 250)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(560, 383)
         Me.TableLayoutPanel1.TabIndex = 0
         '
         'ReoGridControl1
@@ -51,7 +53,7 @@ Partial Class Form2
         Me.ReoGridControl1.BackColor = System.Drawing.Color.White
         Me.ReoGridControl1.ColumnHeaderContextMenuStrip = Nothing
         Me.ReoGridControl1.LeadHeaderContextMenuStrip = Nothing
-        Me.ReoGridControl1.Location = New System.Drawing.Point(0, 256)
+        Me.ReoGridControl1.Location = New System.Drawing.Point(0, 430)
         Me.ReoGridControl1.Name = "ReoGridControl1"
         Me.ReoGridControl1.RowHeaderContextMenuStrip = Nothing
         Me.ReoGridControl1.Script = Nothing
@@ -84,11 +86,11 @@ Partial Class Form2
         '
         'Button3
         '
-        Me.Button3.Location = New System.Drawing.Point(1012, 163)
+        Me.Button3.Location = New System.Drawing.Point(1191, 241)
         Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(164, 48)
+        Me.Button3.Size = New System.Drawing.Size(192, 74)
         Me.Button3.TabIndex = 8
-        Me.Button3.Text = "删除首行"
+        Me.Button3.Text = "删除"
         Me.Button3.UseVisualStyleBackColor = True
         '
         'ReoGridControl2
@@ -96,7 +98,7 @@ Partial Class Form2
         Me.ReoGridControl2.BackColor = System.Drawing.Color.White
         Me.ReoGridControl2.ColumnHeaderContextMenuStrip = Nothing
         Me.ReoGridControl2.LeadHeaderContextMenuStrip = Nothing
-        Me.ReoGridControl2.Location = New System.Drawing.Point(580, 256)
+        Me.ReoGridControl2.Location = New System.Drawing.Point(580, 430)
         Me.ReoGridControl2.Name = "ReoGridControl2"
         Me.ReoGridControl2.RowHeaderContextMenuStrip = Nothing
         Me.ReoGridControl2.Script = Nothing
@@ -119,7 +121,7 @@ Partial Class Form2
         Me.TableLayoutPanel2.RowCount = 2
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel2.Size = New System.Drawing.Size(426, 250)
+        Me.TableLayoutPanel2.Size = New System.Drawing.Size(426, 383)
         Me.TableLayoutPanel2.TabIndex = 1
         '
         'ReoGridControl3
@@ -127,7 +129,7 @@ Partial Class Form2
         Me.ReoGridControl3.BackColor = System.Drawing.Color.White
         Me.ReoGridControl3.ColumnHeaderContextMenuStrip = Nothing
         Me.ReoGridControl3.LeadHeaderContextMenuStrip = Nothing
-        Me.ReoGridControl3.Location = New System.Drawing.Point(1156, 256)
+        Me.ReoGridControl3.Location = New System.Drawing.Point(1156, 430)
         Me.ReoGridControl3.Name = "ReoGridControl3"
         Me.ReoGridControl3.RowHeaderContextMenuStrip = Nothing
         Me.ReoGridControl3.Script = Nothing
@@ -140,21 +142,41 @@ Partial Class Form2
         Me.ReoGridControl3.TabIndex = 9
         Me.ReoGridControl3.Text = "ReoGridControl3"
         '
+        'ButtonPull
+        '
+        Me.ButtonPull.Location = New System.Drawing.Point(1182, 35)
+        Me.ButtonPull.Name = "ButtonPull"
+        Me.ButtonPull.Size = New System.Drawing.Size(201, 65)
+        Me.ButtonPull.TabIndex = 11
+        Me.ButtonPull.Text = "TestPull"
+        Me.ButtonPull.UseVisualStyleBackColor = True
+        '
         'ButtonPush
         '
-        Me.ButtonPush.Location = New System.Drawing.Point(1247, 109)
+        Me.ButtonPush.Location = New System.Drawing.Point(1191, 136)
         Me.ButtonPush.Name = "ButtonPush"
-        Me.ButtonPush.Size = New System.Drawing.Size(201, 65)
-        Me.ButtonPush.TabIndex = 11
+        Me.ButtonPush.Size = New System.Drawing.Size(192, 75)
+        Me.ButtonPush.TabIndex = 12
         Me.ButtonPush.Text = "TestPush"
         Me.ButtonPush.UseVisualStyleBackColor = True
+        '
+        'Button4
+        '
+        Me.Button4.Location = New System.Drawing.Point(1191, 333)
+        Me.Button4.Name = "Button4"
+        Me.Button4.Size = New System.Drawing.Size(192, 72)
+        Me.Button4.TabIndex = 13
+        Me.Button4.Text = "增加"
+        Me.Button4.UseVisualStyleBackColor = True
         '
         'Form2
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(12.0!, 24.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(2443, 665)
+        Me.ClientSize = New System.Drawing.Size(2443, 818)
+        Me.Controls.Add(Me.Button4)
         Me.Controls.Add(Me.ButtonPush)
+        Me.Controls.Add(Me.ButtonPull)
         Me.Controls.Add(Me.ReoGridControl3)
         Me.Controls.Add(Me.TableLayoutPanel2)
         Me.Controls.Add(Me.ReoGridControl2)
@@ -178,5 +200,7 @@ Partial Class Form2
     Friend WithEvents ReoGridControl2 As unvell.ReoGrid.ReoGridControl
     Friend WithEvents TableLayoutPanel2 As TableLayoutPanel
     Friend WithEvents ReoGridControl3 As unvell.ReoGrid.ReoGridControl
+    Friend WithEvents ButtonPull As Button
     Friend WithEvents ButtonPush As Button
+    Friend WithEvents Button4 As Button
 End Class

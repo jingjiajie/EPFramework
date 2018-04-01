@@ -159,7 +159,28 @@ Public Class JsonWebAPIModelAdapter
                 dataTable.Rows.Add(newRow)
             Next
             '修改完成后整体触发刷新事件
-            Call Me.Model.RaiseRefreshedEvent(New ModelRefreshedEventArgs)
+            Dim selectionRanges As New List(Of Range)
+            For Each oriRange In Me.Model.SelectionRange
+                '截取选区，如果原选区超过了数据表的范围，则进行截取
+                If oriRange.Row >= dataTable.Rows.Count Then Continue For
+                If oriRange.Column >= dataTable.Columns.Count Then Continue For
+                Dim newRow = oriRange.Row
+                Dim newCol = oriRange.Column
+                Dim newRows = oriRange.Rows
+                Dim newCols = oriRange.Columns
+                If oriRange.Row + oriRange.Rows >= dataTable.Rows.Count Then
+                    newRows = dataTable.Rows.Count - newRow
+                End If
+                If oriRange.Column + oriRange.Columns >= dataTable.Columns.Count Then
+                    newRows = dataTable.Columns.Count - newCol
+                End If
+                selectionRanges.Add(New Range(newRow, newCol, newRows, newCols))
+            Next
+            '如果实在没有选区了，就自动选第一行第一列
+            If selectionRanges.Count = 0 AndAlso dataTable.Rows.Count > 0 Then
+                selectionRanges.Add(New Range(0, 0, 1, 1))
+            End If
+            Call Me.Model.Refresh(dataTable, selectionRanges.ToArray)
 
             Call Me.PullCallback.Invoke(response, Nothing)
         Catch ex As WebException

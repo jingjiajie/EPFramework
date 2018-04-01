@@ -18,6 +18,7 @@ Public Class ReoGridWorksheetView
 
     Public Sub New(reoGridControl As ReoGridControl)
         Me.Panel = reoGridControl.CurrentWorksheet
+        Me.Panel.RowCount = 0
         Dim worksheet = Me.Panel
         Me.Workbook = reoGridControl
         worksheet.StartEdit()
@@ -123,35 +124,37 @@ Public Class ReoGridWorksheetView
 
         '设定表格初始有一行
         Me.Panel.Rows = 1
-        '设定表头列数为metadata指定的字段数量
-        Me.Panel.Columns = fieldMetaData.Length
         '禁止自动判断单元格格式
         Me.Panel.SetSettings(WorksheetSettings.Edit_AutoFormatCell, False)
         '清空列Name和列号的对应关系
         Me.dicNameColumn.Clear()
+        Dim curColumn = 0
         '遍历FieldMetaData()
         For i = 0 To fieldMetaData.Length - 1
             Dim curField = fieldMetaData(i)
-            Me.dicNameColumn.Add(curField.Name, i)
             '如果字段不可视，直接跳过
             If curField.Visible = False Then Continue For
             '否则开始初始化表头
-            Me.Panel.ColumnHeaders.Item(i).Text = curField.DisplayName
+            Me.dicNameColumn.Add(curField.Name, curColumn)
+            Me.Panel.ColumnHeaders.Item(curColumn).Text = curField.DisplayName
             '给字段注册事件
             '内容改变事件
             If curField.ContentChanged IsNot Nothing Then
                 If curField.Values Is Nothing Then '如果是文本框，同时绑定到文本改变事件和单元格内容变化事件
-                    Me.dicTextChangedEvent.Add(i, curField.ContentChanged)
-                    Me.dicCellDataChangedEvent.Add(i, curField.ContentChanged)
+                    Me.dicTextChangedEvent.Add(curColumn, curField.ContentChanged)
+                    Me.dicCellDataChangedEvent.Add(curColumn, curField.ContentChanged)
                 Else '否则是ComboBox，仅绑定到CellDataChanged事件
-                    Me.dicCellDataChangedEvent.Add(i, curField.ContentChanged)
+                    Me.dicCellDataChangedEvent.Add(curColumn, curField.ContentChanged)
                 End If
             End If
             '编辑完成事件
             If curField.EditEnded IsNot Nothing Then
-                Me.dicBeforeSelectionRangeChangeEvent.Add(i, curField.EditEnded)
+                Me.dicBeforeSelectionRangeChangeEvent.Add(curColumn, curField.EditEnded)
             End If
+            curColumn += 1
         Next
+        '设定表头列数
+        Me.Panel.Columns = curColumn
 
         '给worksheet添加事件
         '换行初始化行，绑定JS变量
@@ -178,8 +181,9 @@ Public Class ReoGridWorksheetView
         Dim worksheet = Me.Panel
         '遍历FieldMetaData()
         For i = 0 To fieldMetaData.Length - 1
-            Dim col = i
             Dim curField = fieldMetaData(i)
+            If Not curField.Visible Then Continue For
+            Dim col = Me.dicNameColumn(curField.Name)
             '如果字段不可视，直接跳过
             If curField.Visible = False Then Continue For
             '否则开始初始化当前格
@@ -359,12 +363,6 @@ Public Class ReoGridWorksheetView
     Protected Function ImportData(Optional rows As Long() = Nothing) As Boolean
         Logger.Debug("==ReoGrid ImportData: " + Str(Me.GetHashCode))
         Logger.SetMode(LogMode.REFRESH_VIEW)
-        Dim data As DataTable
-        data = Me.Model.GetDataTable
-        If data.Rows.Count = 0 Then
-            Logger.PutMessage("Data is empty")
-            Return False
-        End If
         If Me.Mode Is Nothing Then
             Logger.PutMessage("Mode is not setted")
             Return False
@@ -383,22 +381,23 @@ Public Class ReoGridWorksheetView
             Logger.PutMessage("Mode """ + Me.Mode + """ not found!")
             Return False
         End If
+        Dim dataTable = Me.Model.GetDataTable
         '清空ReoGrid相应行
         If rows Is Nothing Then
             Me.Panel.Rows = 0
-            Me.Panel.Rows = data.Rows.Count
+            Me.Panel.Rows = dataTable.Rows.Count
             Me.RowInited.Clear()
         Else
             Me.ClearRows(rows)
         End If
         '遍历传入数据
-        For Each curDataRowNum In If(rows Is Nothing, Me.Range(data.Rows.Count), rows)
-            Dim curDataRow = data.Rows(curDataRowNum)
+        For Each curDataRowNum In If(rows Is Nothing, Me.Range(dataTable.Rows.Count), rows)
+            Dim curDataRow = dataTable.Rows(curDataRowNum)
             Dim curReoGridRowNum = curDataRowNum
             Me.InitRow(curReoGridRowNum)
             '遍历列（MetaData)
             For Each curField In fieldMetaData
-                Dim curDataColumn As DataColumn = (From c As DataColumn In data.Columns
+                Dim curDataColumn As DataColumn = (From c As DataColumn In dataTable.Columns
                                                    Where c.ColumnName.Equals(curField.Name, StringComparison.OrdinalIgnoreCase)
                                                    Select c).FirstOrDefault
                 '在对象中找不到MetaData描述的字段，直接报错，并接着下一个字段
@@ -418,7 +417,7 @@ Public Class ReoGridWorksheetView
                 Logger.SetMode(LogMode.REFRESH_VIEW)
                 '然后获取单元格
                 If Me.dicNameColumn.ContainsKey(curField.Name) = False Then
-                    Logger.PutMessage("Field """ & curField.Name & """ not found in view")
+                    'Logger.PutMessage("Field """ & curField.Name & """ not found in view")
                     Continue For
                 End If
                 Dim curReoGridColumnNum = Me.dicNameColumn(curField.Name)

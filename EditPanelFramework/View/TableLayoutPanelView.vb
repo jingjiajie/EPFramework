@@ -75,7 +75,6 @@ Public Class TableLayoutPanelView
         Logger.SetMode(LogMode.REFRESH_VIEW)
         Dim modelSelectedRow = Me.GetModelSelectedRow
         If modelSelectedRow < 0 Then
-            Logger.PutMessage("Unvalid selection range in model")
             Return
         End If
         '如果更新的行不包括本View的目标行，则不刷新
@@ -96,10 +95,7 @@ Public Class TableLayoutPanelView
         If switcherModelDataUpdatedEvent = False Then Return '开关被关闭则不执行事件
         Logger.Debug("TableLayoutView ModelRowUpdatedEvent: " & Str(Me.GetHashCode))
         Dim modelSelectedRow = Me.GetModelSelectedRow
-        If modelSelectedRow < 0 Then
-            Logger.PutMessage("Unvalid selection range in model")
-            Return
-        End If
+        If modelSelectedRow < 0 Then Return
         Dim needToUpdate As Boolean = (From indexRow In e.UpdatedRows
                                        Where indexRow.Index = modelSelectedRow
                                        Select indexRow.Index).Count > 0
@@ -257,10 +253,6 @@ Public Class TableLayoutPanelView
         End If
         Dim modelSelectedRow = Me.GetModelSelectedRow
         If modelSelectedRow < 0 Then
-            Logger.PutMessage("Unvalid selection range in model")
-            Return False
-        End If
-        If modelSelectedRow < 0 Then
             Call Me.ClearPanelData()
             Return True
         End If
@@ -301,7 +293,7 @@ Public Class TableLayoutPanelView
                               Where control.Name = curField.Name
                               Select control).FirstOrDefault()
             If curControl Is Nothing Then
-                Logger.PutMessage(curField.Name + " not found in view!")
+                'Logger.PutMessage(curField.Name + " not found in view!")
                 Continue For
             End If
             '根据Control是文本框还是ComboBox，有不一样的行为
@@ -332,7 +324,7 @@ Public Class TableLayoutPanelView
         Logger.SetMode(LogMode.SYNC_FROM_VIEW)
         Dim modelSelectedRow = Me.GetModelSelectedRow
         If modelSelectedRow < 0 Then
-            Logger.PutMessage("Unvalid selection range in model")
+            Logger.PutMessage("TableLayoutPanelView export cell data failed, Invalid selection range in model")
             Return
         End If
         If modelSelectedRow < 0 Then '如果目标行为负，则认为未指向确定行，故不导出数据
@@ -355,7 +347,7 @@ Public Class TableLayoutPanelView
         Logger.SetMode(LogMode.SYNC_FROM_VIEW)
         Dim modelSelectedRow = Me.GetModelSelectedRow
         If modelSelectedRow < 0 Then
-            Logger.PutMessage("Unvalid selection range in model")
+            Logger.PutMessage("TableLayoutPanelView export data failed, Invalid selection range in model")
             Return
         End If
         If modelSelectedRow < 0 Then '如果目标行为负，则认为未指向确定行，故不导出数据

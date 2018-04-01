@@ -12,6 +12,8 @@
     Function GetRows(rows As Long()) As DataTable
     Function GetDataTable() As DataTable
 
+    Sub Refresh(dataTable As DataTable, selectionRange As Range())
+
     '属性相关
     ReadOnly Property RowCount As Long
     ReadOnly Property ColumnCount As Long
@@ -25,6 +27,4 @@
     Event RowRemoved(e As ModelRowRemovedEventArgs)
     Event CellUpdated(e As ModelCellUpdatedEventArgs)
     Event SelectionRangeChanged(e As ModelSelectionRangeChangedEventArgs)
-
-    Sub RaiseRefreshedEvent(e As ModelRefreshedEventArgs)
 End Interface

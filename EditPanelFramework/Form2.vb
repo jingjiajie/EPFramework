@@ -12,7 +12,7 @@ Public Class Form2
     Private Sub Form2_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim metaDataStr = <string>[{
                                       mode:'default',
-                                      fields:[/*{name:'id',displayName:'ID',visible:false},*/
+                                      fields:[{name:'id',displayName:'ID',visible:false},
                                               {name:'name',displayName:'姓名'},
                                               {name:'password',displayName:'密码'},
                                               {name:'role',displayName:'角色'},
@@ -26,21 +26,21 @@ Public Class Form2
         Me.tableLayoutView.SetMetaDataFromJson(metaDataStr, New MyMethods)
         Me.tableLayoutView.Model = model
 
-        'Me.tableLayoutView2 = New TableLayoutPanelView(Me.TableLayoutPanel2)
-        'Me.tableLayoutView2.SetMetaDataFromJson(metaDataStr, New MyMethods)
-        'Me.tableLayoutView2.Model = model
+        Me.tableLayoutView2 = New TableLayoutPanelView(Me.TableLayoutPanel2)
+        Me.tableLayoutView2.SetMetaDataFromJson(metaDataStr, New MyMethods)
+        Me.tableLayoutView2.Model = model
 
         Me.reoGridView1 = New ReoGridWorksheetView(Me.ReoGridControl1)
         Me.reoGridView1.SetMetaDataFromJson(metaDataStr, New MyMethods)
         Me.reoGridView1.Model = model
 
-        'Me.reoGridView2 = New ReoGridWorksheetView(Me.ReoGridControl2)
-        'Me.reoGridView2.SetMetaDataFromJson(metaDataStr, New MyMethods)
-        'Me.reoGridView2.Model = model
+        Me.reoGridView2 = New ReoGridWorksheetView(Me.ReoGridControl2)
+        Me.reoGridView2.SetMetaDataFromJson(metaDataStr, New MyMethods)
+        Me.reoGridView2.Model = model
 
-        'Me.reoGridView3 = New ReoGridWorksheetView(Me.ReoGridControl3)
-        'Me.reoGridView3.SetMetaDataFromJson(metaDataStr, New MyMethods)
-        'Me.reoGridView3.Model = model
+        Me.reoGridView3 = New ReoGridWorksheetView(Me.ReoGridControl3)
+        Me.reoGridView3.SetMetaDataFromJson(metaDataStr, New MyMethods)
+        Me.reoGridView3.Model = model
 
         Me.adapter = New JsonWebAPIModelAdapter()
         adapter.Model = model

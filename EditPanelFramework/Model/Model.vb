@@ -30,7 +30,6 @@ Public Class Model
         End Set
     End Property
     Private Property Data As New DataTable
-    Private Property RowGuid As New Dictionary(Of DataRow, Guid)
 
     Public Sub New(metaData As String, Optional mode As String = "default")
         Me.MetaData = EditPanelMetaData.FromJson(New Jint.Engine, metaData)
@@ -144,8 +143,8 @@ Public Class Model
         Dim addedRows As New List(Of Long)
         For Each curData In dataOfEachRow
             Dim newRow = Me.Data.NewRow
-            Dim newGuid = Guid.NewGuid '生成新添加行的GUID
-            Me.RowGuid.Add(newRow, newGuid)
+            'Dim newGuid = Guid.NewGuid '生成新添加行的GUID
+            'Me.RowGuid.Add(newRow, newGuid)
             If curData IsNot Nothing Then
                 For Each item In curData
                     newRow(item.Key) = item.Value
@@ -156,7 +155,7 @@ Public Class Model
         Next
 
         RaiseEvent RowAdded(New ModelRowAddedEventArgs() With {
-                             .AddedRows = (From r In addedRows Select New IndexRowPair(r, Me.RowGuid(Me.Data.Rows(r)), Me.DataRowToDictionary(Me.Data.Rows(r)))).ToArray
+                             .AddedRows = (From r In addedRows Select New IndexRowPair(r, Me.GetRowID(Me.Data.Rows(r)), Me.DataRowToDictionary(Me.Data.Rows(r)))).ToArray
                             })
 
         Return Me.Data.Rows.Count - 1
@@ -175,10 +174,10 @@ Public Class Model
             Dim indexRowList = New List(Of IndexRowPair)
             For Each row In rows
                 Dim dataRow = Me.Data.Rows(row)
-                If Not Me.RowGuid.ContainsKey(Me.Data.Rows(row)) Then
-                    Me.RowGuid.Add(Me.Data.Rows(row), Guid.NewGuid)
-                End If
-                Dim newIndexRowPair = New IndexRowPair(row, Me.RowGuid(Me.Data.Rows(row)), Me.DataRowToDictionary(Me.Data.Rows(row)))
+                'If Not Me.RowGuid.ContainsKey(Me.Data.Rows(row)) Then
+                '    Me.RowGuid.Add(Me.Data.Rows(row), Guid.NewGuid)
+                'End If
+                Dim newIndexRowPair = New IndexRowPair(row, Me.GetRowID(Me.Data.Rows(row)), Me.DataRowToDictionary(Me.Data.Rows(row)))
                 indexRowList.Add(newIndexRowPair)
                 dataRow.Delete()
             Next
@@ -213,7 +212,7 @@ Public Class Model
 
             Dim updatedRows(rows.Length - 1) As IndexRowPair
             For i = 0 To rows.Length - 1
-                updatedRows(i) = New IndexRowPair(rows(i), Me.RowGuid(Me.Data.Rows(rows(i))), Me.DataRowToDictionary(Me.Data.Rows(rows(i))))
+                updatedRows(i) = New IndexRowPair(rows(i), Me.GetRowID(Me.Data.Rows(rows(i))), Me.DataRowToDictionary(Me.Data.Rows(rows(i))))
             Next
 
             Dim tmp = New ModelRowUpdatedEventArgs() With {
@@ -241,10 +240,10 @@ Public Class Model
                 Throw New Exception("UpdateCells failed: column """ & columnName & """ not found in model")
             End If
             Me.Data.Rows(rows(i))(dataColumn) = dataOfEachCell(i)
-            If Not Me.RowGuid.ContainsKey(Me.Data.Rows(rows(i))) Then
-                Me.RowGuid.Add(Me.Data.Rows(rows(i)), Guid.NewGuid)
-            End If
-            posCellPairs.Add(New PositionCellPair(rows(i), Me.RowGuid(Me.Data.Rows(rows(i))), columnName, dataOfEachCell(i)))
+            'If Not Me.RowGuid.ContainsKey(Me.Data.Rows(rows(i))) Then
+            '    Me.RowGuid.Add(Me.Data.Rows(rows(i)), Guid.NewGuid)
+            'End If
+            posCellPairs.Add(New PositionCellPair(rows(i), Me.GetRowID(Me.Data.Rows(rows(i))), columnName, dataOfEachCell(i)))
         Next
 
         RaiseEvent CellUpdated(New ModelCellUpdatedEventArgs() With {
@@ -252,8 +251,13 @@ Public Class Model
                                })
     End Sub
 
-    Public Sub RaiseRefreshedEvent(e As ModelRefreshedEventArgs) Implements IModel.RaiseRefreshedEvent
-        RaiseEvent Refreshed(e)
+    Public Sub Refresh(dataTable As DataTable, ranges As Range()) Implements IModel.Refresh
+        Me._selectionRange = ranges
+        For Each range In Me._selectionRange
+            Me.BindRangeChangedEventToSelectionRangeChangedEvent(range)
+        Next
+        Me._Data = dataTable
+        RaiseEvent Refreshed(New ModelRefreshedEventArgs)
     End Sub
 
     Protected Function DataRowToDictionary(dataRow As DataRow) As Dictionary(Of String, Object)
@@ -263,6 +267,14 @@ Public Class Model
             result.Add(column.ColumnName, dataRow(column))
         Next
         Return result
+    End Function
+
+    Protected Function GetRowID(row As DataRow) As Guid
+        Static rowGuid As New Dictionary(Of DataRow, Guid)
+        If Not rowGuid.ContainsKey(row) Then
+            rowGuid.Add(row, Guid.NewGuid)
+        End If
+        Return rowGuid(row)
     End Function
 
     Public Event Refreshed(e As ModelRefreshedEventArgs) Implements IModel.Refreshed

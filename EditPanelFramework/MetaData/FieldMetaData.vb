@@ -9,7 +9,8 @@ Public Class FieldMetaData
     Public Property Editable As Boolean = True
     Public Property Values As FieldMethod 'No Params Returns (in Object)()
     Public Property ForwardMapper As FieldMethod 'Params Object Returns String
-    Public Property ReverseMapper As FieldMethod 'Params String Returns Object
+    Public Property BackwordMapper As FieldMethod 'Params String Returns Object
+    Public Property Association As FieldMethod 'Params String Returns AssociationItem()
 
     Public Property ContentChanged As FieldMethod 'Params String No Returns
     Public Property EditEnded As FieldMethod 'Params String No Returns
@@ -85,7 +86,7 @@ Public Class FieldMetaData
                                 Logger.PutMessage("No MethodListener setted!")
                                 Return
                             End If
-                            Dim method = newFieldMetaData.MethodListener.GetType().GetMethod(methodName)
+                            Dim method = newFieldMetaData.MethodListener.GetType().GetMethod(methodName, BindingFlags.Instance Or BindingFlags.Static Or BindingFlags.Public Or BindingFlags.NonPublic Or BindingFlags.IgnoreCase)
                             If method Is Nothing Then
                                 Logger.PutMessage("Method """ + methodName + """ not found in current MethodListener!")
                                 Return

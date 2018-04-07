@@ -136,30 +136,78 @@ Public Class Model
     End Function
 
     Public Function AddRow(data As Dictionary(Of String, Object)) As Long Implements IModel.AddRow
-        Return Me.AddRows(New Dictionary(Of String, Object)() {data})
+        Return Me.AddRows({data})(0)
     End Function
 
-    Public Function AddRows(dataOfEachRow As Dictionary(Of String, Object)()) As Long Implements IModel.AddRows
-        Dim addedRows As New List(Of Long)
-        For Each curData In dataOfEachRow
+    Public Function AddRows(dataOfEachRow As Dictionary(Of String, Object)()) As Long() Implements IModel.AddRows
+        'Dim addedRows As New List(Of Long)
+        'For Each curData In dataOfEachRow
+        '    Dim newRow = Me.Data.NewRow
+        '    'Dim newGuid = Guid.NewGuid '生成新添加行的GUID
+        '    'Me.RowGuid.Add(newRow, newGuid)
+        '    If curData IsNot Nothing Then
+        '        For Each item In curData
+        '            newRow(item.Key) = item.Value
+        '        Next
+        '    End If
+        '    Me.Data.Rows.Add(newRow)
+        '    addedRows.Add(Me.Data.Rows.Count - 1)
+        'Next
+
+        'RaiseEvent RowAdded(New ModelRowAddedEventArgs() With {
+        '                     .AddedRows = (From r In addedRows Select New IndexRowPair(r, Me.GetRowID(Me.Data.Rows(r)), Me.DataRowToDictionary(Me.Data.Rows(r)))).ToArray
+        '                    })
+
+        'Return Me.Data.Rows.Count - 1
+        Dim addRowCount = dataOfEachRow.Length
+        Dim oriRowCount = Me.Data.Rows.Count
+        Dim insertRows = Util.Range(RowCount, RowCount + addRowCount)
+        Call Me.InsertRows(insertRows, dataOfEachRow)
+        Return insertRows
+    End Function
+
+    Public Sub InsertRow(row As Long, data As Dictionary(Of String, Object)) Implements IModel.InsertRow
+        Call Me.InsertRows({row}, {data})
+    End Sub
+
+    Public Sub InsertRows(rows As Long(), dataOfEachRow As Dictionary(Of String, Object)()) Implements IModel.InsertRows
+        Dim indexRowPairs As New List(Of IndexRowPair)
+        '原始行每次插入之后，行号会变，所以做调整
+        Dim realRowsASC = (From r In rows Order By r Ascending Select r).ToArray
+        For i = 0 To realRowsASC.Length - 1
+            realRowsASC(i) = realRowsASC(i) + i
+        Next
+        For i = 0 To realRowsASC.Length - 1
+            Dim realRow = rows(i)
+            Dim curData = dataOfEachRow(i)
             Dim newRow = Me.Data.NewRow
-            'Dim newGuid = Guid.NewGuid '生成新添加行的GUID
-            'Me.RowGuid.Add(newRow, newGuid)
             If curData IsNot Nothing Then
                 For Each item In curData
                     newRow(item.Key) = item.Value
                 Next
             End If
-            Me.Data.Rows.Add(newRow)
-            addedRows.Add(Me.Data.Rows.Count - 1)
+            Me.Data.Rows.InsertAt(newRow, realRow)
+            Dim newIndexRowPair As New IndexRowPair(rows(i), Me.GetRowID(Me.Data.Rows(realRow)), If(curData, New Dictionary(Of String, Object)))
+            indexRowPairs.Add(newIndexRowPair)
         Next
 
         RaiseEvent RowAdded(New ModelRowAddedEventArgs() With {
-                             .AddedRows = (From r In addedRows Select New IndexRowPair(r, Me.GetRowID(Me.Data.Rows(r)), Me.DataRowToDictionary(Me.Data.Rows(r)))).ToArray
+                             .AddedRows = indexRowPairs.ToArray
                             })
 
-        Return Me.Data.Rows.Count - 1
-    End Function
+        Dim columnCount = Me.Data.Columns.Count
+        Dim selectionRanges As New List(Of Range)
+        For Each curRow In realRowsASC
+            If selectionRanges.Count = 0 OrElse selectionRanges.Last.Row + 1 <> curRow Then
+                selectionRanges.Add(New Range(curRow, 0, 1, columnCount))
+                Continue For
+            End If
+            If selectionRanges.Last.Row + 1 = curRow Then
+                selectionRanges.Last.Rows += 1
+            End If
+        Next
+        Me.SelectionRange = selectionRanges.ToArray
+    End Sub
 
     Public Sub RemoveRow(row As Long) Implements IModel.RemoveRow
         Me.RemoveRows(New Long() {row})
@@ -174,9 +222,6 @@ Public Class Model
             Dim indexRowList = New List(Of IndexRowPair)
             For Each row In rows
                 Dim dataRow = Me.Data.Rows(row)
-                'If Not Me.RowGuid.ContainsKey(Me.Data.Rows(row)) Then
-                '    Me.RowGuid.Add(Me.Data.Rows(row), Guid.NewGuid)
-                'End If
                 Dim newIndexRowPair = New IndexRowPair(row, Me.GetRowID(Me.Data.Rows(row)), Me.DataRowToDictionary(Me.Data.Rows(row)))
                 indexRowList.Add(newIndexRowPair)
                 dataRow.Delete()
@@ -186,6 +231,11 @@ Public Class Model
             RaiseEvent RowRemoved(New ModelRowRemovedEventArgs() With {
                                         .RemovedRows = indexRowList.ToArray
                                    })
+            If Me.Data.Rows.Count = 0 Then
+                Me.SelectionRange = {}
+            Else
+                Me.SelectionRange = {New Range(Math.Min(rows.Min, Me.Data.Rows.Count - 1), 0, 1, Me.Data.Columns.Count)}
+            End If
         Catch ex As Exception
             Throw New Exception("RemoveRows failed: " & ex.Message)
         End Try

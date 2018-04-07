@@ -38,6 +38,10 @@ Public Class TableLayoutPanelView
 
     Private Function GetModelSelectedRow() As Long
         Logger.SetMode(LogMode.REFRESH_VIEW)
+        If Me.Model Is Nothing Then
+            Logger.PutMessage("Model not set!")
+            Return -1
+        End If
         If Me.Model.SelectionRange.Length = 0 Then
             Return -1
         End If
@@ -167,7 +171,15 @@ Public Class TableLayoutPanelView
                     .Name = curField.Name,
                     .ReadOnly = Not curField.Editable
                 }
+                Me.Panel.Controls.Add(textBox)
                 '绑定用户事件
+                If curField.Association IsNot Nothing Then
+                    Dim formAssociation = New FormAssociation(textBox)
+                    formAssociation.SetAssociationFunc(Function(str As String)
+                                                           Dim ret = curField.Association.Invoke({str})
+                                                           Return Util.ToArray(Of AssociationItem)(ret)
+                                                       End Function)
+                End If
                 If curField.ContentChanged IsNot Nothing Then
                     AddHandler textBox.TextChanged, Sub()
                                                         If Me.switcherLocalEvents = False Then Return
@@ -188,7 +200,6 @@ Public Class TableLayoutPanelView
                                               Logger.Debug("TableLayoutView TextBox Leave Save Data: " & Str(Me.GetHashCode))
                                               Call Me.CellUpdateEvent(textBox.Name)
                                           End Sub
-                Me.Panel.Controls.Add(textBox)
             Else '否则可以用ComboBox体现
                 Dim comboBox As New ComboBox With {
                     .Name = curField.Name,
@@ -396,8 +407,8 @@ Public Class TableLayoutPanelView
         End Select
         '将文字经过ReverseMapper映射成转换后的value
         Dim value As Object
-        If Not fieldMetaData.ReverseMapper Is Nothing Then
-            value = fieldMetaData.ReverseMapper.Invoke(text)
+        If Not fieldMetaData.BackwordMapper Is Nothing Then
+            value = fieldMetaData.BackwordMapper.Invoke(text)
         Else
             value = text
         End If

@@ -129,6 +129,8 @@ Public Class JsonWebAPIModelAdapter
             Dim data = Me.PullAPI.GetParamValuesFromResponse(responseStreamReader.ReadToEnd, {"$data"})(0)
             If data Is Nothing Then Return False
 
+            '清空actions
+            Call Me.modelActions.Clear()
             '更新Model
             Dim resultList As New List(Of IDictionary(Of String, Object))
             '判断是对象还是对象数组
@@ -182,9 +184,9 @@ Public Class JsonWebAPIModelAdapter
             End If
             Call Me.Model.Refresh(dataTable, selectionRanges.ToArray)
 
-            Call Me.PullCallback.Invoke(response, Nothing)
+            Call Me.PullCallback?.Invoke(response, Nothing)
         Catch ex As WebException
-            Call Me.PullCallback.Invoke(CType(ex.Response, HttpWebResponse), ex)
+            Call Me.PullCallback?.Invoke(CType(ex.Response, HttpWebResponse), ex)
         End Try
         Return True
     End Function
@@ -281,11 +283,11 @@ Public Class JsonWebAPIModelAdapter
 
                 response = httpWebRequest.GetResponse
             Catch ex As WebException
-                Call Me.ResponseCallback.Invoke(CType(ex.Response, HttpWebResponse), ex)
+                Call Me.ResponseCallback?.Invoke(CType(ex.Response, HttpWebResponse), ex)
                 Return False
             End Try
 
-            Call Me.ResponseCallback.Invoke(response, Nothing)
+            Call Me.ResponseCallback?.Invoke(response, Nothing)
             '返回200认为成功，否则认为失败。//TODO 这儿应该能让用户定制
             If response.StatusCode = HttpStatusCode.OK Then
                 Return True

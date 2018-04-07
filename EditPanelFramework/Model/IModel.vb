@@ -1,7 +1,9 @@
 ﻿Public Interface IModel
     '数据操作方法
     Function AddRow(data As Dictionary(Of String, Object)) As Long
-    Function AddRows(data As Dictionary(Of String, Object)()) As Long
+    Function AddRows(data As Dictionary(Of String, Object)()) As Long()
+    Sub InsertRow(row As Long, data As Dictionary(Of String, Object))
+    Sub InsertRows(rows As Long(), data As Dictionary(Of String, Object)())
     Sub RemoveRow(row As Long)
     Sub RemoveRows(rows As Long())
     Sub RemoveRows(startRow As Long, rowCount As Long)

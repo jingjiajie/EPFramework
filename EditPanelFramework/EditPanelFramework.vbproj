@@ -92,9 +92,9 @@
     <Compile Include="Model\ModelEventArgs\ModelCellUpdatedEventArgs.vb" />
     <Compile Include="Model\ModelEventArgs\ModelRefreshedEventArgs.vb" />
     <Compile Include="Model\ModelEventArgs\ModelSelectionRangeChangedEventArgs.vb" />
-    <Compile Include="Model\ModelEventArgs\ModelDataAddedEventArgs.vb" />
-    <Compile Include="Model\ModelEventArgs\ModelDataRemovedEventArgs.vb" />
-    <Compile Include="Model\ModelEventArgs\ModelUpdatedEventArgs.vb" />
+    <Compile Include="Model\ModelEventArgs\ModelRowAddedEventArgs.vb" />
+    <Compile Include="Model\ModelEventArgs\ModelRowRemovedEventArgs.vb" />
+    <Compile Include="Model\ModelEventArgs\ModelRowUpdatedEventArgs.vb" />
     <Compile Include="Model\IModel.vb" />
     <Compile Include="Model\ModelDataStructures\IndexRowPair.vb" />
     <Compile Include="Model\Model.vb" />
@@ -117,6 +117,13 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Util\Util.vb" />
+    <Compile Include="View\AssociationItem.vb" />
+    <Compile Include="View\FormAssociation.Designer.vb">
+      <DependentUpon>FormAssociation.vb</DependentUpon>
+    </Compile>
+    <Compile Include="View\FormAssociation.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="View\IMethodListener.vb" />
     <Compile Include="View\IView.vb" />
     <Compile Include="View\ReoGridWorksheetView.vb" />
@@ -132,6 +139,9 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\FormAssociation.resx">
+      <DependentUpon>FormAssociation.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

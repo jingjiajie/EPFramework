@@ -1,6 +1,7 @@
 ﻿Imports EditPanelFramework
 Imports Jint.Native
 Imports System.Linq
+Imports System.Threading
 Imports unvell.ReoGrid
 Imports unvell.ReoGrid.CellTypes
 Imports unvell.ReoGrid.Events
@@ -13,8 +14,11 @@ Public Class ReoGridWorksheetView
     Private dicBeforeSelectionRangeChangeEvent As New Dictionary(Of Integer, FieldMethod) '选择编辑框改变时触发的事件列表
     Private dicNameColumn As New Dictionary(Of String, Integer)
     Private textBox As TextBox = Nothing
+    Private formAssociation As FormAssociation
     Private RowInited As New List(Of Integer) '已经初始化过的行，保证每行只初始化一次
     Private Workbook As ReoGridControl = Nothing
+
+    Private canChangeSelectionRange As Boolean = True
 
     Public Sub New(reoGridControl As ReoGridControl)
         Me.Panel = reoGridControl.CurrentWorksheet
@@ -29,10 +33,13 @@ Public Class ReoGridWorksheetView
                 Exit For
             End If
         Next
+        Me.formAssociation = New FormAssociation(Me.textBox)
         If Me.textBox Is Nothing Then
             Logger.SetMode(LogMode.INIT_VIEW)
             Logger.PutMessage("Table textbox not found")
         End If
+        AddHandler Me.textBox.PreviewKeyDown, AddressOf Me.TextboxPreviewKeyDown
+        AddHandler Me.Panel.CellMouseDown, AddressOf Me.CellMouseDown
     End Sub
 
     Protected Overrides Sub BindModel()
@@ -58,18 +65,7 @@ Public Class ReoGridWorksheetView
 
     Protected Sub ModelSelectionRangeChangedEvent(e As ModelSelectionRangeChangedEventArgs)
         Logger.Debug("==ReoGrid ModelSelectionRangeChanged " & Str(Me.GetHashCode))
-        Logger.SetMode(LogMode.REFRESH_VIEW)
-        If e.NewSelectionRange.Length <= 0 Then
-            Me.Panel.SelectionRange = RangePosition.Empty
-            Return
-        End If
-        If e.NewSelectionRange.Length > 1 Then
-            Logger.PutMessage("Multiple range selected, ReoGridView will only show range of the first one", LogLevel.WARNING)
-        End If
-        Dim range = e.NewSelectionRange(0)
-        RemoveHandler Me.Panel.BeforeSelectionRangeChange, AddressOf Me.BeforeSelectionRangeChange
-        Me.Panel.SelectionRange = New RangePosition(range.Row, range.Column, range.Rows, range.Columns)
-        AddHandler Me.Panel.BeforeSelectionRangeChange, AddressOf Me.BeforeSelectionRangeChange
+        Call Me.RefreshSelectionRange()
     End Sub
 
     Protected Sub ModelRefreshedEvent(e As ModelRefreshedEventArgs)
@@ -84,16 +80,19 @@ Public Class ReoGridWorksheetView
     End Sub
 
     Protected Sub ModelRowAddedEvent(e As ModelRowAddedEventArgs)
-        Dim rows As Long() = (From item In e.AddedRows Select item.Index).ToArray
-        Logger.Debug("Reogrid Added Rows: " & rows.ToString)
-        '只允许增加从最后一行开始连续的若干行
-        For i = 0 To rows.Length - 1
-            If i <> 0 AndAlso rows(i) - rows(i - 1) <> 1 Then
-                Throw New Exception("DataAddedEvent参数错误，只允许增加从最后一行开始连续的若干行")
-            End If
+        Dim oriRows As Long() = (From item In e.AddedRows Select item.Index).ToArray
+        Logger.Debug("Reogrid Added Rows: " & oriRows.ToString)
+        '原始行每次插入之后，行号会变，所以做调整
+        Dim realRowsASC = (From r In oriRows Order By r Ascending Select r).ToArray
+        For i = 0 To realRowsASC.Length - 1
+            realRowsASC(i) = realRowsASC(i) + i
         Next
-        Me.Panel.Rows += rows.Length
-        Me.ImportData(rows)
+        '将调整后的行分别插入表格中
+        For i = 0 To realRowsASC.Length - 1
+            Me.Panel.InsertRows(realRowsASC(i), 1)
+        Next
+        '刷新数据
+        Call Me.ImportData(realRowsASC)
     End Sub
 
     Protected Sub ModelCellUpdatedEvent(e As ModelCellUpdatedEventArgs)
@@ -110,6 +109,21 @@ Public Class ReoGridWorksheetView
                 Me.Panel.DeleteRows(indexDataRow.Index, 1)
             End If
         Next
+        AddHandler Me.Panel.BeforeSelectionRangeChange, AddressOf Me.BeforeSelectionRangeChange
+    End Sub
+
+    Protected Sub RefreshSelectionRange()
+        Logger.SetMode(LogMode.REFRESH_VIEW)
+        If Me.Model.SelectionRange.Length <= 0 Then
+            Me.Panel.SelectionRange = RangePosition.Empty
+            Return
+        End If
+        If Me.Model.SelectionRange.Length > 1 Then
+            Logger.PutMessage("Multiple range selected, ReoGridView will only show range of the first one", LogLevel.WARNING)
+        End If
+        Dim range = Me.Model.SelectionRange(0)
+        RemoveHandler Me.Panel.BeforeSelectionRangeChange, AddressOf Me.BeforeSelectionRangeChange
+        Me.Panel.SelectionRange = New RangePosition(range.Row, range.Column, range.Rows, range.Columns)
         AddHandler Me.Panel.BeforeSelectionRangeChange, AddressOf Me.BeforeSelectionRangeChange
     End Sub
 
@@ -168,6 +182,7 @@ Public Class ReoGridWorksheetView
 
         Call Me.InitRow(Me.Panel.SelectionRange.Row)
         Call Me.BindRowToJsEngine(Me.Panel.SelectionRange.Row)
+        Call Me.BindAssociation(0) '最开始默认0,0的时候，不会触发选取更改。所以手动绑定一下单元格联想
     End Sub
 
     Private Sub InitRow(row As Integer)
@@ -216,13 +231,52 @@ Public Class ReoGridWorksheetView
         Call Me.ExportCellsAndAddedRows()
     End Sub
 
+    Private Sub CellMouseDown(sender As Object, e As EventArgs)
+        Me.canChangeSelectionRange = True
+        Me.formAssociation.StayVisible = False
+    End Sub
+
+    Private Sub TextboxPreviewKeyDown(sender As Object, e As PreviewKeyDownEventArgs)
+        If (e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.Down) AndAlso Me.formAssociation IsNot Nothing AndAlso Me.formAssociation.Visible = True Then
+            Me.canChangeSelectionRange = False
+            Me.formAssociation.StayVisible = True
+            Dim threadRestartEdit = New Thread(
+                Sub()
+                    Call Thread.Sleep(10)
+                    Call Me.Workbook.Invoke(
+                    Sub()
+                        Call Me.Panel.StartEdit()
+                    End Sub)
+                End Sub)
+            Call threadRestartEdit.Start()
+        ElseIf e.KeyCode = Keys.Enter And Me.formAssociation.Selected Then
+            Me.canChangeSelectionRange = False
+            Dim threadEnableChangeSelectionRange = New Thread(
+                Sub()
+                    Call Thread.Sleep(100)
+                    Me.canChangeSelectionRange = True
+                End Sub)
+            Call threadEnableChangeSelectionRange.Start()
+        Else
+            Me.canChangeSelectionRange = True
+            Me.formAssociation.StayVisible = False
+        End If
+    End Sub
+
     '选择行改变时初始化新的行，只初始化选区首行
     Private Sub BeforeSelectionRangeChange(sender As Object, e As BeforeSelectionChangeEventArgs)
+        If Me.canChangeSelectionRange = False Then
+            e.IsCancelled = True
+            Return
+        End If
         Dim worksheet = Me.Panel
         Dim newRow = System.Math.Min(e.StartRow, e.EndRow)
         Dim newCol = System.Math.Min(e.StartCol, e.EndCol)
         Dim newRows = System.Math.Max(e.StartRow, e.EndRow) - newRow + 1
         Dim newCols = System.Math.Max(e.StartCol, e.EndCol) - newCol + 1
+
+        '隐藏联想
+        Call Me.formAssociation.Hide()
 
         '首先更新数据
         '如果是在Model已有行的变化，认为是Update，否则认为是Add
@@ -250,13 +304,29 @@ Public Class ReoGridWorksheetView
         AddHandler Me.Model.SelectionRangeChanged, AddressOf Me.ModelSelectionRangeChangedEvent
 
         '初始化新的选中行。如果选区首行没变，就不重新初始化行了
-        If newRow = Me.Panel.SelectionRange.Row Then
-            Exit Sub
-        Else
-            If RowInited.Contains(newRow) = False Then
+        If Not newRow = Me.Panel.SelectionRange.Row Then
+            If Not RowInited.Contains(newRow) Then
                 Me.InitRow(newRow)
             End If
             Me.BindRowToJsEngine(newRow)
+        End If
+
+        Me.BindAssociation(newCol)
+    End Sub
+
+    Private Sub BindAssociation(col As Integer)
+        If Me.Panel.SelectionRange.IsSingleCell Then
+            Dim newColName = (From mc In Me.dicNameColumn Where mc.Value = col Select mc.Key).First
+            Dim modeMetaData = Me.MetaData.GetFieldMetaData(Me.Mode)
+            Dim curField = (From m In modeMetaData Where m.Name = newColName Select m).First
+            If curField.Association Is Nothing Then
+                formAssociation.SetAssociationFunc(Nothing)
+            Else
+                formAssociation.SetAssociationFunc(Function(str As String)
+                                                       Dim ret = curField.Association.Invoke({str})
+                                                       Return Util.ToArray(Of AssociationItem)(ret)
+                                                   End Function)
+            End If
         End If
     End Sub
 
@@ -306,10 +376,12 @@ Public Class ReoGridWorksheetView
         Dim viewObj = jsEngine.Execute("view = {}").GetValue("view").AsObject
         Dim fieldMetaData = Me.MetaData.GetFieldMetaData(Me.Mode)
         jsEngine.SetValue("DropdownListCellItemsToArray", New Func(Of DropdownListCell.DropdownItemsCollection, Object())(AddressOf Me.DropdownListCellItemsToArray))
+        Dim col = -1
         For i = 0 To fieldMetaData.Length - 1
             Try
                 Dim curField = fieldMetaData(i)
-                Dim col = i
+                If Not curField.Visible Then Continue For
+                col += 1
                 If curField.Values IsNot Nothing Then '如果设置了Values，则是下拉框
                     viewObj.Put(curField.Name, JsValue.FromObject(jsEngine, worksheet.CreateAndGetCell(row, col)), True)
                     Dim tmp = String.Format(
@@ -409,11 +481,11 @@ Public Class ReoGridWorksheetView
                 '先计算值，过一遍Mapper
                 Dim value = curDataRow(curDataColumn)
                 Dim text = If(value Is Nothing, "", value.ToString)
-                If String.IsNullOrWhiteSpace(text) Then Continue For '如果推的内容是空白，就不显示在格里了，节约创建单元格的内存空间
-
                 If Not curField.ForwardMapper Is Nothing Then
                     text = curField.ForwardMapper.Invoke(text)
                 End If
+
+                If String.IsNullOrWhiteSpace(text) Then Continue For '如果推的内容是空白，就不显示在格里了，节约创建单元格的内存空间
                 Logger.SetMode(LogMode.REFRESH_VIEW)
                 '然后获取单元格
                 If Me.dicNameColumn.ContainsKey(curField.Name) = False Then
@@ -587,8 +659,8 @@ Public Class ReoGridWorksheetView
 
         '将文字经过ReverseMapper映射成转换后的value
         Dim value As Object
-        If Not fieldMetaData.ReverseMapper Is Nothing Then
-            value = fieldMetaData.ReverseMapper.Invoke(text)
+        If Not fieldMetaData.BackwordMapper Is Nothing Then
+            value = fieldMetaData.BackwordMapper.Invoke(text)
         Else
             value = text
         End If

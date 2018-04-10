@@ -2,7 +2,7 @@
 Imports System.Text
 Imports System.Text.RegularExpressions
 
-Public Class JsonWebAPIInfo
+Public Class JsonRESTAPIInfo
     Public Property URLTemplate As String
     Public Property HTTPMethod As HTTPMethod
     Public Property RequestBodyTemplate As String
@@ -11,12 +11,11 @@ Public Class JsonWebAPIInfo
     Private jsEngine As New Jint.Engine
 
     Public Sub New()
-        jsEngine.SetValue("log", New Action(Of String)(AddressOf Console.WriteLine))
+        'jsEngine.SetValue("log", New Action(Of String)(AddressOf Console.WriteLine))
         jsEngine.Execute(<string>
                              function mapProperty(objs,propName){
                                 var result = []
                                 for(var i=0;i&lt;objs.length;i++){
-        log('mapProperty: '+JSON.stringify(objs[i]))
                                     result.push(objs[i][propName])
                                 }
                                 return result

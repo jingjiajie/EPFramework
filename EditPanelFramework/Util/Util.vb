@@ -51,4 +51,11 @@ Friend Class Util
         Return result
     End Function
 
+    Public Shared Function Times(Of T)(data As T, repeatTimes As Long) As T()
+        Dim result(repeatTimes - 1) As T
+        For i = 0 To repeatTimes - 1
+            result(i) = data
+        Next
+        Return result
+    End Function
 End Class

@@ -5,19 +5,19 @@ Imports System.Text
 Imports System.Web.Script.Serialization
 Imports Jint.Native
 
-Public Class JsonWebAPIModelAdapter
+Public Class JsonRESTSynchronizer
+    Implements ISynchronizer
     Private _model As IModel
 
     Private jsEngine As New Jint.Engine
 
-    Public Property AddAPI As JsonWebAPIInfo
-    Public Property UpdateAPI As JsonWebAPIInfo
-    Public Property RemoveAPI As JsonWebAPIInfo
-    Public Property PullAPI As JsonWebAPIInfo
+    Public Property AddAPI As JsonRESTAPIInfo
+    Public Property UpdateAPI As JsonRESTAPIInfo
+    Public Property RemoveAPI As JsonRESTAPIInfo
+    Public Property PullAPI As JsonRESTAPIInfo
 
-    Public Property AddCallback As Action(Of HttpWebResponse, WebException)
-    Public Property UpdateCallback As Action(Of HttpWebResponse, WebException)
-    Public Property RemoveCallback As Action(Of HttpWebResponse, WebException)
+    Public Property PushFinishedCallback As Action
+    Public Property PushFailedCallback As Func(Of HttpWebResponse, WebException, Boolean)
     Public Property PullCallback As Action(Of HttpWebResponse, WebException)
 
     Public Property Model As IModel
@@ -66,7 +66,7 @@ Public Class JsonWebAPIModelAdapter
             Dim fullRow As Dictionary(Of String, Object) = Me.DataRowToDictionary(Me.Model.GetRows({row}).Rows(0))
             indexFullRows(i) = New IndexRowPair(row, rowID, fullRow)
 
-            Dim action = New UpdateRowAction(Me.UpdateAPI, indexFullRows, Me.UpdateCallback)
+            Dim action = New UpdateRowAction(Me.UpdateAPI, indexFullRows)
             modelActions.Add(action)
         Next
     End Sub
@@ -78,7 +78,7 @@ Public Class JsonWebAPIModelAdapter
         End If
         Dim rows = (From indexRow In e.RemovedRows
                     Select indexRow.RowData).ToArray
-        Dim action = New RemoveRowAction(Me.RemoveAPI, e.RemovedRows, Me.RemoveCallback)
+        Dim action = New RemoveRowAction(Me.RemoveAPI, e.RemovedRows)
         modelActions.Add(action)
     End Sub
 
@@ -94,7 +94,7 @@ Public Class JsonWebAPIModelAdapter
             Dim fullRow As Dictionary(Of String, Object) = Me.DataRowToDictionary(Me.Model.GetRows({index}).Rows(0))
             indexFullRows(i) = New IndexRowPair(index, rowID, fullRow)
         Next
-        Dim action = New UpdateRowAction(Me.UpdateAPI, indexFullRows, Me.UpdateCallback)
+        Dim action = New UpdateRowAction(Me.UpdateAPI, indexFullRows)
         modelActions.Add(action)
     End Sub
 
@@ -105,11 +105,11 @@ Public Class JsonWebAPIModelAdapter
         End If
         Dim rows = (From indexRow In e.AddedRows
                     Select indexRow.RowData).ToArray
-        Dim action = New AddRowAction(Me.AddAPI, e.AddedRows, Me.AddCallback)
+        Dim action = New AddRowAction(Me.AddAPI, e.AddedRows)
         modelActions.Add(action)
     End Sub
 
-    Public Function PullFromServer()
+    Public Function PullFromServer() As Boolean Implements ISynchronizer.PullFromServer
         Logger.SetMode(LogMode.MODEL_ADAPTER)
         Try
             Console.WriteLine(Me.PullAPI.HTTPMethod.ToString & " " & Me.PullAPI.GetURL)
@@ -182,7 +182,7 @@ Public Class JsonWebAPIModelAdapter
             If selectionRanges.Count = 0 AndAlso dataTable.Rows.Count > 0 Then
                 selectionRanges.Add(New Range(0, 0, 1, 1))
             End If
-            Call Me.Model.Refresh(dataTable, selectionRanges.ToArray)
+            Call Me.Model.Refresh(dataTable, selectionRanges.ToArray, Util.Times(SynchronizationState.SYNCHRONIZED, dataTable.Rows.Count))
 
             Call Me.PullCallback?.Invoke(response, Nothing)
         Catch ex As WebException
@@ -191,7 +191,7 @@ Public Class JsonWebAPIModelAdapter
         Return True
     End Function
 
-    Public Function PushToServer()
+    Public Function PushToServer() As Boolean Implements ISynchronizer.PushToServer
         Logger.SetMode(LogMode.MODEL_ADAPTER)
         If Me.Model Is Nothing Then
             Logger.PutMessage("Model not setted")
@@ -204,49 +204,72 @@ Public Class JsonWebAPIModelAdapter
         Me.modelActions.Clear()
 
         For Each action In optimizedActions
-            Dim ret = action.DoSync()
-            If ret = False Then
+            Dim rowGuids = (From indexRowPair In action.IndexRowPairs Select indexRowPair.RowID).ToArray
+            Try
+                Dim response = action.DoSync()
+                'TODO 不等于200就认为失败吗？
+                If response.StatusCode <> 200 Then
+                    Me.modelActions.Add(action)
+                    Me.Model.UpdateRowSynchronizationStates(rowGuids, Util.Times(SynchronizationState.UNSYNCHRONIZED, rowGuids.Length))
+                End If
+            Catch ex As WebException
                 Me.modelActions.Add(action)
-                Continue For
+                Me.Model.UpdateRowSynchronizationStates(rowGuids, Util.Times(SynchronizationState.UNSYNCHRONIZED, rowGuids.Length))
+                If Me.PushFailedCallback Is Nothing Then Continue For
+                Dim ifContinue = Me.PushFailedCallback.Invoke(ex.Response, ex)
+                If Not ifContinue Then
+                    Return False
+                End If
+            End Try
+
+            '将相应行的同步状态更新为已同步，删除行就不用同步了，因为行已经被删了。
+            If TypeOf (action) IsNot RemoveRowAction Then
+                Me.Model.UpdateRowSynchronizationStates(rowGuids, Util.Times(SynchronizationState.SYNCHRONIZED, rowGuids.Length))
             End If
         Next
+
+        Call Me.PushFinishedCallback?.Invoke
         Return True
     End Function
 
-    Public Sub SetAddAPI(url As String, method As HTTPMethod, bodyJsonTemplate As String, callback As Action(Of HttpWebResponse, WebException))
-        Dim apiInfo = New JsonWebAPIInfo()
+    Public Sub SetPushFinishedCallback(callback As Action)
+        Me.PushFinishedCallback = callback
+    End Sub
+
+    Public Sub SetPushFailedCallback(callback As Func(Of HttpWebResponse, WebException, Boolean))
+        Me.PushFailedCallback = callback
+    End Sub
+
+    Public Sub SetAddAPI(url As String, method As HTTPMethod, bodyJsonTemplate As String)
+        Dim apiInfo = New JsonRESTAPIInfo()
         apiInfo.URLTemplate = url
         apiInfo.HTTPMethod = method
         apiInfo.RequestBodyTemplate = bodyJsonTemplate
         Me.AddAPI = apiInfo
-        Me.AddCallback = callback
     End Sub
 
-    Public Sub SetUpdateAPI(url As String, method As HTTPMethod, bodyJsonTemplate As String, callback As Action(Of HttpWebResponse, WebException))
-        Dim apiInfo = New JsonWebAPIInfo()
+    Public Sub SetUpdateAPI(url As String, method As HTTPMethod, bodyJsonTemplate As String)
+        Dim apiInfo = New JsonRESTAPIInfo()
         apiInfo.URLTemplate = url
         apiInfo.HTTPMethod = method
         apiInfo.RequestBodyTemplate = bodyJsonTemplate
         Me.UpdateAPI = apiInfo
-        Me.UpdateCallback = callback
     End Sub
 
-    Public Sub SetRemoveAPI(url As String, method As HTTPMethod, bodyJsonTemplate As String, callback As Action(Of HttpWebResponse, WebException))
-        Dim apiInfo = New JsonWebAPIInfo()
+    Public Sub SetRemoveAPI(url As String, method As HTTPMethod, bodyJsonTemplate As String)
+        Dim apiInfo = New JsonRESTAPIInfo()
         apiInfo.URLTemplate = url
         apiInfo.HTTPMethod = method
         apiInfo.RequestBodyTemplate = bodyJsonTemplate
         Me.RemoveAPI = apiInfo
-        Me.RemoveCallback = callback
     End Sub
 
-    Public Sub SetPullAPI(url As String, method As HTTPMethod, responseJsonTemplate As String, callback As Action(Of HttpWebResponse, WebException))
-        Dim apiInfo = New JsonWebAPIInfo()
+    Public Sub SetPullAPI(url As String, method As HTTPMethod, responseJsonTemplate As String)
+        Dim apiInfo = New JsonRESTAPIInfo()
         apiInfo.URLTemplate = url
         apiInfo.HTTPMethod = method
         apiInfo.ResponseBodyTemplate = responseJsonTemplate
         Me.PullAPI = apiInfo
-        Me.PullCallback = callback
     End Sub
 
     Protected Function DataRowToDictionary(dataRow As DataRow) As Dictionary(Of String, Object)
@@ -260,40 +283,24 @@ Public Class JsonWebAPIModelAdapter
 
     '=======================================================================================
     Private MustInherit Class ModelAdapterAction
-        Public Property APIInfo As JsonWebAPIInfo
-        Public Overridable Property ResponseCallback As Action(Of HttpWebResponse, WebException)
+        Public Property APIInfo As JsonRESTAPIInfo
+        Public Property IndexRowPairs As IndexRowPair()
 
-        Public Overridable Function DoSync() As Boolean
-            Dim response As HttpWebResponse
-            Try
-                If TypeOf Me Is AddRowAction Then
+        Public Overridable Function DoSync() As HttpWebResponse
+            Console.WriteLine(Me.APIInfo.HTTPMethod.ToString & " " & Me.APIInfo.GetURL & vbCrLf & Me.APIInfo.GetRequestBody)
 
-                End If
-                Console.WriteLine(Me.APIInfo.HTTPMethod.ToString & " " & Me.APIInfo.GetURL & vbCrLf & Me.APIInfo.GetRequestBody)
-
-                Dim httpWebRequest = CType(WebRequest.Create(Me.APIInfo.GetURL), HttpWebRequest)
-                httpWebRequest.Method = Me.APIInfo.HTTPMethod.ToString
-                If Me.APIInfo.HTTPMethod = HTTPMethod.POST OrElse Me.APIInfo.HTTPMethod = HTTPMethod.PUT Then
-                    httpWebRequest.ContentType = "application/json"
-                    Dim requestBody = Me.APIInfo.GetRequestBody
-                    Dim bytes = Encoding.UTF8.GetBytes(requestBody)
-                    Dim stream = httpWebRequest.GetRequestStream
-                    stream.Write(bytes, 0, bytes.Length)
-                End If
-
-                response = httpWebRequest.GetResponse
-            Catch ex As WebException
-                Call Me.ResponseCallback?.Invoke(CType(ex.Response, HttpWebResponse), ex)
-                Return False
-            End Try
-
-            Call Me.ResponseCallback?.Invoke(response, Nothing)
-            '返回200认为成功，否则认为失败。//TODO 这儿应该能让用户定制
-            If response.StatusCode = HttpStatusCode.OK Then
-                Return True
-            Else
-                Return False
+            Dim httpWebRequest = CType(WebRequest.Create(Me.APIInfo.GetURL), HttpWebRequest)
+            httpWebRequest.Method = Me.APIInfo.HTTPMethod.ToString
+            If Me.APIInfo.HTTPMethod = HTTPMethod.POST OrElse Me.APIInfo.HTTPMethod = HTTPMethod.PUT Then
+                httpWebRequest.ContentType = "application/json"
+                Dim requestBody = Me.APIInfo.GetRequestBody
+                Dim bytes = Encoding.UTF8.GetBytes(requestBody)
+                Dim stream = httpWebRequest.GetRequestStream
+                stream.Write(bytes, 0, bytes.Length)
             End If
+
+            Dim response = httpWebRequest.GetResponse
+            Return response
         End Function
 
         Protected Shared Function IndexRowPairsToJson(indexRowPairs As IndexRowPair()) As String
@@ -307,15 +314,12 @@ Public Class JsonWebAPIModelAdapter
     Private Class AddRowAction
         Inherits ModelAdapterAction
 
-        Public Property IndexRowPairs As IndexRowPair()
-
-        Public Sub New(apiInfo As JsonWebAPIInfo, indexRowPairs As IndexRowPair(), callback As Action(Of HttpWebResponse, WebException))
+        Public Sub New(apiInfo As JsonRESTAPIInfo, indexRowPairs As IndexRowPair())
             Me.APIInfo = apiInfo
             Me.IndexRowPairs = indexRowPairs
-            Me.ResponseCallback = callback
         End Sub
 
-        Public Overrides Function DoSync() As Boolean
+        Public Overrides Function DoSync() As HttpWebResponse
             Dim dataJson = IndexRowPairsToJson(Me.IndexRowPairs)
             Me.APIInfo.SetJsonRequestParameter("$data", dataJson)
             Return MyBase.DoSync()
@@ -325,16 +329,13 @@ Public Class JsonWebAPIModelAdapter
     Private Class UpdateRowAction
         Inherits ModelAdapterAction
 
-        Public Property IndexRowPairs As IndexRowPair()
-
-        Public Sub New(apiInfo As JsonWebAPIInfo, indexRowPairs As IndexRowPair(), callback As Action(Of HttpWebResponse, WebException))
+        Public Sub New(apiInfo As JsonRESTAPIInfo, indexRowPairs As IndexRowPair())
             Me.APIInfo = apiInfo
             Me.IndexRowPairs = indexRowPairs
-            Me.ResponseCallback = callback
         End Sub
 
 
-        Public Overrides Function DoSync() As Boolean
+        Public Overrides Function DoSync() As HttpWebResponse
             Dim dataJson = IndexRowPairsToJson(Me.IndexRowPairs)
             Me.APIInfo.SetJsonRequestParameter("$data", dataJson)
             Return MyBase.DoSync()
@@ -344,16 +345,13 @@ Public Class JsonWebAPIModelAdapter
     Private Class RemoveRowAction
         Inherits ModelAdapterAction
 
-        Public Property IndexRowPairs As IndexRowPair()
-
-        Public Sub New(apiInfo As JsonWebAPIInfo, indexRowPairs As IndexRowPair(), callback As Action(Of HttpWebResponse, WebException))
+        Public Sub New(apiInfo As JsonRESTAPIInfo, indexRowPairs As IndexRowPair())
             Me.APIInfo = apiInfo
             Me.IndexRowPairs = indexRowPairs
-            Me.ResponseCallback = callback
         End Sub
 
 
-        Public Overrides Function DoSync() As Boolean
+        Public Overrides Function DoSync() As HttpWebResponse
             Dim dataJson = IndexRowPairsToJson(Me.IndexRowPairs)
             Me.APIInfo.SetJsonRequestParameter("$data", dataJson)
             Return MyBase.DoSync()
@@ -374,7 +372,7 @@ Public Class JsonWebAPIModelAdapter
                             End If
                             Dim lastAction = dicRowIDActions(indexRowPair.RowID)
                             If lastAction Is Nothing Then
-                                dicRowIDActions(indexRowPair.RowID) = New AddRowAction(addRowAction.APIInfo, {indexRowPair}, addRowAction.ResponseCallback)
+                                dicRowIDActions(indexRowPair.RowID) = New AddRowAction(addRowAction.APIInfo, {indexRowPair})
                             ElseIf lastAction.GetType() = GetType(RemoveRowAction) Then
                                 Continue For
                             ElseIf lastAction.GetType = GetType(UpdateRowAction) Then
@@ -386,7 +384,7 @@ Public Class JsonWebAPIModelAdapter
                                         indexRowPair.RowData.Add(field.Key, field.Value)
                                     End If
                                 Next
-                                dicRowIDActions(indexRowPair.RowID) = New AddRowAction(addRowAction.APIInfo, {indexRowPair}, addRowAction.ResponseCallback)
+                                dicRowIDActions(indexRowPair.RowID) = New AddRowAction(addRowAction.APIInfo, {indexRowPair})
                             End If
                         Next
 
@@ -394,9 +392,14 @@ Public Class JsonWebAPIModelAdapter
                         Dim removeRowAction = CType(action, RemoveRowAction)
                         For Each indexRowPair In removeRowAction.IndexRowPairs
                             If Not dicRowIDActions.ContainsKey(indexRowPair.RowID) Then
-                                dicRowIDActions.Add(indexRowPair.RowID, New RemoveRowAction(removeRowAction.APIInfo, {indexRowPair}, removeRowAction.ResponseCallback))
+                                dicRowIDActions.Add(indexRowPair.RowID, New RemoveRowAction(removeRowAction.APIInfo, {indexRowPair}))
                             Else
-                                dicRowIDActions(indexRowPair.RowID) = New RemoveRowAction(removeRowAction.APIInfo, {indexRowPair}, removeRowAction.ResponseCallback)
+                                Dim lastAction = dicRowIDActions(indexRowPair.RowID)
+                                If TypeOf (lastAction) Is AddRowAction Then
+                                    dicRowIDActions.Remove(indexRowPair.RowID)
+                                Else
+                                    dicRowIDActions(indexRowPair.RowID) = New RemoveRowAction(removeRowAction.APIInfo, {indexRowPair})
+                                End If
                             End If
                         Next
 
@@ -408,7 +411,7 @@ Public Class JsonWebAPIModelAdapter
                             End If
                             Dim lastAction = dicRowIDActions(indexRowPair.RowID)
                             If lastAction Is Nothing Then
-                                dicRowIDActions(indexRowPair.RowID) = New UpdateRowAction(updateRowAction.APIInfo, {indexRowPair}, updateRowAction.ResponseCallback)
+                                dicRowIDActions(indexRowPair.RowID) = New UpdateRowAction(updateRowAction.APIInfo, {indexRowPair})
                             ElseIf lastAction.GetType() = GetType(RemoveRowAction) Then
                                 Continue For
                             ElseIf lastAction.GetType = GetType(UpdateRowAction) Then

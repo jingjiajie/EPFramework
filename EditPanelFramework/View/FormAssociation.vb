@@ -14,6 +14,7 @@ Partial Public Class FormAssociation
 
     Public Property Selected As Boolean = False
     Public Property StayVisible As Boolean = False '是否保持可视
+    Public Property StayUnvisible As Boolean = False '是否保持不可视
 
     Public Sub SetAssociationFunc(func As Func(Of String, AssociationItem()))
         Me.AssociationFunc = func
@@ -158,6 +159,7 @@ Partial Public Class FormAssociation
     End Sub
 
     Public Shadows Sub Show()
+        If Not Me.StayUnvisible Then Return
         If Me.Visible = False Then
             MyBase.Show()
         End If

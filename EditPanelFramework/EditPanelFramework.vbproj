@@ -76,31 +76,28 @@
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form2.Designer.vb">
-      <DependentUpon>Form2.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Form2.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="MetaData\EditPanelMetaData.vb" />
     <Compile Include="Logger\Logger.vb" />
     <Compile Include="MetaData\EditPanelModeMetaData.vb" />
     <Compile Include="MetaData\FieldMetaData.vb" />
     <Compile Include="MetaData\FieldMethod.vb" />
-    <Compile Include="Model\ModelAdapters\JsonWebAPIModelAdapter.vb" />
-    <Compile Include="Model\ModelAdapters\HTTPMethod.vb" />
-    <Compile Include="Model\ModelEventArgs\ModelCellUpdatedEventArgs.vb" />
-    <Compile Include="Model\ModelEventArgs\ModelRefreshedEventArgs.vb" />
-    <Compile Include="Model\ModelEventArgs\ModelSelectionRangeChangedEventArgs.vb" />
-    <Compile Include="Model\ModelEventArgs\ModelRowAddedEventArgs.vb" />
-    <Compile Include="Model\ModelEventArgs\ModelRowRemovedEventArgs.vb" />
-    <Compile Include="Model\ModelEventArgs\ModelRowUpdatedEventArgs.vb" />
+    <Compile Include="Model\DataStructures\IndexRowSynchronizationStatePair.vb" />
+    <Compile Include="Model\DataStructures\SynchronizaionState.vb" />
+    <Compile Include="Model\EventArgs\ModelRowSynchronizationStateChangedEventArgs.vb" />
+    <Compile Include="Synchronizer\JsonRESTSynchronizer.vb" />
+    <Compile Include="Synchronizer\DataStructures\HTTPMethod.vb" />
+    <Compile Include="Model\EventArgs\ModelCellUpdatedEventArgs.vb" />
+    <Compile Include="Model\EventArgs\ModelRefreshedEventArgs.vb" />
+    <Compile Include="Model\EventArgs\ModelSelectionRangeChangedEventArgs.vb" />
+    <Compile Include="Model\EventArgs\ModelRowAddedEventArgs.vb" />
+    <Compile Include="Model\EventArgs\ModelRowRemovedEventArgs.vb" />
+    <Compile Include="Model\EventArgs\ModelRowUpdatedEventArgs.vb" />
     <Compile Include="Model\IModel.vb" />
-    <Compile Include="Model\ModelDataStructures\IndexRowPair.vb" />
+    <Compile Include="Model\DataStructures\IndexRowPair.vb" />
     <Compile Include="Model\Model.vb" />
-    <Compile Include="Model\ModelDataStructures\PositionCellPair.vb" />
-    <Compile Include="Model\ModelDataStructures\Range.vb" />
-    <Compile Include="Model\ModelEventArgs\RangeChangedEventArgs.vb" />
+    <Compile Include="Model\DataStructures\PositionCellPair.vb" />
+    <Compile Include="Model\DataStructures\Range.vb" />
+    <Compile Include="Model\EventArgs\RangeChangedEventArgs.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -116,6 +113,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Synchronizer\ISynchronizer.vb" />
     <Compile Include="Util\Util.vb" />
     <Compile Include="View\AssociationItem.vb" />
     <Compile Include="View\FormAssociation.Designer.vb">
@@ -131,9 +129,6 @@
     <Compile Include="View\ViewBase.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Form2.resx">
-      <DependentUpon>Form2.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
@@ -158,7 +153,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\ModelAdapters\JsonWebAPIInfo.vb" />
+    <Compile Include="Synchronizer\DataStructures\JsonRESTAPIInfo.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

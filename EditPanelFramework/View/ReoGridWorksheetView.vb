@@ -9,20 +9,46 @@ Imports unvell.ReoGrid.Events
 Public Class ReoGridWorksheetView
     Inherits ViewBase(Of Worksheet)
 
+    Private Enum SyncMode
+        SYNC
+        NOT_SYNC
+    End Enum
+
+    Private COLOR_UNSYNCHRONIZED As Color = Color.AliceBlue
+    Private COLOR_SYNCHRONIZED As Color = Color.Transparent
+
     Private dicCellDataChangedEvent As New Dictionary(Of Integer, FieldMethod) 'CellDataChanged时触发的事件列表
     Private dicTextChangedEvent As New Dictionary(Of Integer, FieldMethod) '编辑框文本改变时触发的事件列表
     Private dicBeforeSelectionRangeChangeEvent As New Dictionary(Of Integer, FieldMethod) '选择编辑框改变时触发的事件列表
     Private dicNameColumn As New Dictionary(Of String, Integer)
     Private textBox As TextBox = Nothing
     Private formAssociation As FormAssociation
-    Private RowInited As New List(Of Integer) '已经初始化过的行，保证每行只初始化一次
     Private Workbook As ReoGridControl = Nothing
+
+    Private RowInited As New List(Of Integer) '已经初始化过的行，保证每行只初始化一次
+    Private dicCellEdited As New Dictionary(Of CellPosition, Boolean)
+    Private _curSyncMode = SyncMode.NOT_SYNC
+    Private Property CurSyncMode As SyncMode
+        Get
+            Return Me._curSyncMode
+        End Get
+        Set(value As SyncMode)
+            If Me._curSyncMode = value Then Return
+            Console.WriteLine("CurSyncMode Changing:" & CStr(value))
+            Me._curSyncMode = value
+            If value = SyncMode.SYNC Then
+                Me.formAssociation.StayUnvisible = False
+            Else
+                Me.formAssociation.StayUnvisible = True
+            End If
+        End Set
+    End Property
+
 
     Private canChangeSelectionRange As Boolean = True
 
     Public Sub New(reoGridControl As ReoGridControl)
         Me.Panel = reoGridControl.CurrentWorksheet
-        Me.Panel.RowCount = 0
         Dim worksheet = Me.Panel
         Me.Workbook = reoGridControl
         worksheet.StartEdit()
@@ -49,6 +75,7 @@ Public Class ReoGridWorksheetView
         AddHandler Me.Model.RowRemoved, AddressOf Me.ModelRowRemovedEvent
         AddHandler Me.Model.SelectionRangeChanged, AddressOf Me.ModelSelectionRangeChangedEvent
         AddHandler Me.Model.Refreshed, AddressOf Me.ModelRefreshedEvent
+        AddHandler Me.Model.RowSynchronizationStateChanged, AddressOf Me.ModelRowSynchronizationStateChangedEvent
 
         Call Me.ImportData()
     End Sub
@@ -60,27 +87,62 @@ Public Class ReoGridWorksheetView
         RemoveHandler Me.Model.RowRemoved, AddressOf Me.ModelRowRemovedEvent
         RemoveHandler Me.Model.SelectionRangeChanged, AddressOf Me.ModelSelectionRangeChangedEvent
         RemoveHandler Me.Model.Refreshed, AddressOf Me.ModelRefreshedEvent
+        RemoveHandler Me.Model.RowSynchronizationStateChanged, AddressOf Me.ModelRowSynchronizationStateChangedEvent
+    End Sub
 
+    Protected Sub ModelRowSynchronizationStateChangedEvent(e As ModelRowSynchronizationStateChangedEventArgs)
+        Dim rows = (From r In e.SynchronizationStateUpdatedRows Select r.Index).ToArray
+        Call Me.RefreshRowSynchronizationStates(rows)
     End Sub
 
     Protected Sub ModelSelectionRangeChangedEvent(e As ModelSelectionRangeChangedEventArgs)
         Logger.Debug("==ReoGrid ModelSelectionRangeChanged " & Str(Me.GetHashCode))
+        If Me.Model.RowCount = 0 Then
+            Me.CurSyncMode = SyncMode.NOT_SYNC
+            Call Me.ShowDefaultPage()
+            Return
+        End If
+        If Me.CurSyncMode = SyncMode.NOT_SYNC Then
+            Me.CurSyncMode = SyncMode.SYNC
+            Call Me.ImportData()
+            Return
+        End If
         Call Me.RefreshSelectionRange()
     End Sub
 
     Protected Sub ModelRefreshedEvent(e As ModelRefreshedEventArgs)
         Logger.Debug("==ReoGrid ModelRefreshedEvent")
+        If Me.Model.RowCount = 0 Then
+            Me.CurSyncMode = SyncMode.NOT_SYNC
+            Call Me.ShowDefaultPage()
+            Return
+        End If
+        If Me.CurSyncMode = SyncMode.NOT_SYNC Then
+            Me.CurSyncMode = SyncMode.SYNC
+            Call Me.ImportData()
+            Return
+        End If
         Call Me.ImportData()
+        Call Me.RefreshSelectionRange()
+        Call Me.RefreshRowSynchronizationStates()
     End Sub
 
     Protected Sub ModelRowUpdatedEvent(e As ModelRowUpdatedEventArgs)
         Logger.Debug("==ReoGrid ModelDataUpdatedEvent")
+        If Me.CurSyncMode = SyncMode.NOT_SYNC Then
+            Call Me.ImportData()
+            Return
+        End If
         Dim rows As Long() = (From item In e.UpdatedRows Select item.Index).ToArray
         Me.ImportData(rows)
     End Sub
 
     Protected Sub ModelRowAddedEvent(e As ModelRowAddedEventArgs)
         Dim oriRows As Long() = (From item In e.AddedRows Select item.Index).ToArray
+        If Me.CurSyncMode = SyncMode.NOT_SYNC Then
+            Call Me.ImportData()
+            Return
+        End If
         Logger.Debug("Reogrid Added Rows: " & oriRows.ToString)
         '原始行每次插入之后，行号会变，所以做调整
         Dim realRowsASC = (From r In oriRows Order By r Ascending Select r).ToArray
@@ -97,11 +159,24 @@ Public Class ReoGridWorksheetView
 
     Protected Sub ModelCellUpdatedEvent(e As ModelCellUpdatedEventArgs)
         Logger.Debug("==ReoGrid ModelCellUpdatedEvent: " + Str(Me.GetHashCode))
+        If Me.CurSyncMode = SyncMode.NOT_SYNC Then
+            Call Me.ImportData()
+            Return
+        End If
         Dim rows As Long() = (From item In e.UpdatedCells Select item.Row).ToArray
         Me.ImportData(rows)
     End Sub
 
     Protected Sub ModelRowRemovedEvent(e As ModelRowRemovedEventArgs)
+        If Me.Model.RowCount = 0 Then
+            Me.CurSyncMode = SyncMode.NOT_SYNC
+            Call Me.ShowDefaultPage()
+            Return
+        End If
+        If Me.CurSyncMode = SyncMode.NOT_SYNC Then
+            Call Me.ImportData()
+            Return
+        End If
         '去掉选区变化事件，防止删除行时触发选区变化事件，造成无用刷新和警告
         RemoveHandler Me.Panel.BeforeSelectionRangeChange, AddressOf Me.BeforeSelectionRangeChange
         For Each indexDataRow In e.RemovedRows
@@ -114,6 +189,7 @@ Public Class ReoGridWorksheetView
 
     Protected Sub RefreshSelectionRange()
         Logger.SetMode(LogMode.REFRESH_VIEW)
+        If Me.CurSyncMode = SyncMode.NOT_SYNC Then Return
         If Me.Model.SelectionRange.Length <= 0 Then
             Me.Panel.SelectionRange = RangePosition.Empty
             Return
@@ -127,6 +203,43 @@ Public Class ReoGridWorksheetView
         AddHandler Me.Panel.BeforeSelectionRangeChange, AddressOf Me.BeforeSelectionRangeChange
     End Sub
 
+    Protected Sub RefreshRowSynchronizationStates(Optional rows As Long() = Nothing)
+        If Me.CurSyncMode = SyncMode.NOT_SYNC Then Return
+        Logger.SetMode(LogMode.REFRESH_VIEW)
+        If rows Is Nothing Then
+            rows = Me.Range(0, Me.Model.RowCount)
+        End If
+        For Each row In rows
+            Dim state = Me.Model.GetRowSynchronizationState(row)
+            If row >= Me.Panel.RowCount Then
+                Logger.PutMessage($"Row number {row} exceeded max row in the ReoGridView")
+                Return
+            End If
+            If state = SynchronizationState.SYNCHRONIZED Then
+                Me.Panel.SetRangeBorders(row, 0, 1, Me.Panel.ColumnCount, BorderPositions.All, RangeBorderStyle.Empty)
+                Me.Panel.SetRangeStyles(row, 0, 1, Me.Panel.ColumnCount, New WorksheetRangeStyle() With {
+                    .Flag = PlainStyleFlag.BackColor,
+                    .BackColor = Me.COLOR_SYNCHRONIZED
+                   })
+            ElseIf state = SynchronizationState.UNSYNCHRONIZED Then
+                Me.Panel.SetRangeBorders(row, 0, 1, Me.Panel.ColumnCount, BorderPositions.All, RangeBorderStyle.SilverSolid)
+                Me.Panel.SetRangeStyles(row, 0, 1, Me.Panel.ColumnCount, New WorksheetRangeStyle() With {
+                    .Flag = PlainStyleFlag.BackColor,
+                    .BackColor = Me.COLOR_UNSYNCHRONIZED
+                                    })
+            End If
+        Next
+    End Sub
+
+    Protected Sub ShowDefaultPage()
+        Me.CurSyncMode = SyncMode.NOT_SYNC
+        '设定表格初始有10行，非同步模式
+        Me.Panel.DeleteRangeData(RangePosition.EntireRange)
+        Me.Panel.Rows = 10
+        '设定提示文本
+        Me.Panel.Item(0, 0) = "暂无数据"
+    End Sub
+
     Protected Overrides Sub InitEditPanel()
         Logger.SetMode(LogMode.INIT_VIEW)
 
@@ -136,8 +249,6 @@ Public Class ReoGridWorksheetView
             Return
         End If
 
-        '设定表格初始有一行
-        Me.Panel.Rows = 1
         '禁止自动判断单元格格式
         Me.Panel.SetSettings(WorksheetSettings.Edit_AutoFormatCell, False)
         '清空列Name和列号的对应关系
@@ -183,10 +294,12 @@ Public Class ReoGridWorksheetView
         Call Me.InitRow(Me.Panel.SelectionRange.Row)
         Call Me.BindRowToJsEngine(Me.Panel.SelectionRange.Row)
         Call Me.BindAssociation(0) '最开始默认0,0的时候，不会触发选取更改。所以手动绑定一下单元格联想
+        Call Me.ShowDefaultPage() '显示默认页
     End Sub
 
     Private Sub InitRow(row As Integer)
         Logger.SetMode(LogMode.INIT_VIEW)
+        If Me.CurSyncMode = SyncMode.NOT_SYNC Then Return
         Dim fieldMetaData As FieldMetaData() = Me.MetaData.GetFieldMetaData(Me.Mode)
         If fieldMetaData Is Nothing Then
             Logger.PutMessage("Metadata of mode """ + Me.Mode + """ not found!")
@@ -220,15 +333,18 @@ Public Class ReoGridWorksheetView
     End Sub
 
     Protected Sub RowAddedEvent()
+        If Me.CurSyncMode = SyncMode.NOT_SYNC Then Return
         Call Me.ExportRows()
     End Sub
 
     Protected Sub RowUpdatedEvent()
+        If Me.CurSyncMode = SyncMode.NOT_SYNC Then Return
         Call Me.ExportRows()
     End Sub
 
     Protected Sub CellUpdatedEvent()
-        Call Me.ExportCellsAndAddedRows()
+        If Me.CurSyncMode = SyncMode.NOT_SYNC Then Return
+        Call Me.ExportCells()
     End Sub
 
     Private Sub CellMouseDown(sender As Object, e As EventArgs)
@@ -265,6 +381,7 @@ Public Class ReoGridWorksheetView
 
     '选择行改变时初始化新的行，只初始化选区首行
     Private Sub BeforeSelectionRangeChange(sender As Object, e As BeforeSelectionChangeEventArgs)
+        If Me.CurSyncMode = SyncMode.NOT_SYNC Then Return
         If Me.canChangeSelectionRange = False Then
             e.IsCancelled = True
             Return
@@ -352,6 +469,10 @@ Public Class ReoGridWorksheetView
 
     Private Sub CellDataChanged(sender As Object, e As CellEventArgs)
         Logger.Debug("ReoGrid View CellDataChanged: " & Str(Me.GetHashCode))
+        If Me.CurSyncMode = SyncMode.NOT_SYNC Then Return
+        If Not Me.dicCellEdited.ContainsKey(e.Cell.Position) Then
+            Me.dicCellEdited.Add(e.Cell.Position, True)
+        End If
         Dim worksheet = Me.Panel
         Dim row = e.Cell.Row
         Dim col = e.Cell.Column
@@ -435,6 +556,15 @@ Public Class ReoGridWorksheetView
     Protected Function ImportData(Optional rows As Long() = Nothing) As Boolean
         Logger.Debug("==ReoGrid ImportData: " + Str(Me.GetHashCode))
         Logger.SetMode(LogMode.REFRESH_VIEW)
+        If Me.Model.RowCount = 0 Then
+            Me.CurSyncMode = SyncMode.NOT_SYNC
+            Call Me.ShowDefaultPage()
+            Return True
+        ElseIf Me.CurSyncMode = SyncMode.NOT_SYNC Then
+            Me.Panel.Rows = 1
+            Me.CurSyncMode = SyncMode.SYNC
+        End If
+
         If Me.Mode Is Nothing Then
             Logger.PutMessage("Mode is not setted")
             Return False
@@ -456,7 +586,7 @@ Public Class ReoGridWorksheetView
         Dim dataTable = Me.Model.GetDataTable
         '清空ReoGrid相应行
         If rows Is Nothing Then
-            Me.Panel.Rows = 0
+            Me.Panel.DeleteRangeData(RangePosition.EntireRange)
             Me.Panel.Rows = dataTable.Rows.Count
             Me.RowInited.Clear()
         Else
@@ -553,55 +683,42 @@ Public Class ReoGridWorksheetView
     Protected Sub ExportRows()
         Logger.Debug("==ReoGrid ExportData")
         Logger.SetMode(LogMode.SYNC_FROM_VIEW)
+        If Me.CurSyncMode = SyncMode.NOT_SYNC Then Return
 
-        Dim rowsUpdated As Long() = Me.Range(Me.Panel.SelectionRange.Row, System.Math.Min(Me.Model.RowCount, Me.Panel.SelectionRange.EndRow + 1))
-        Dim updateData = New Dictionary(Of String, Object)() {}
-        Dim rowsAdded = New Long() {}
-        Dim addedData = New Dictionary(Of String, Object)() {}
+        Dim rowsUpdated As List(Of Long) = Me.Range(Me.Panel.SelectionRange.Row, System.Math.Min(Me.Model.RowCount, Me.Panel.SelectionRange.EndRow + 1)).ToList
+        Dim updateData = New List(Of Dictionary(Of String, Object))
 
-        If rowsUpdated.Length > 0 Then
-            ReDim updateData(rowsUpdated.Length - 1)
-        End If
-
-        If Me.Panel.Rows > Me.Model.RowCount Then
-            rowsAdded = Me.Range(Me.Model.RowCount + 1, Me.Panel.Rows + 1)
-            ReDim addedData(rowsAdded.Length - 1)
-        End If
-
-        Dim curUpdateDataIndex = 0 'rowsUpdated的每一项和updateData的每一项相对应
+        '删除掉没有真正修改内容的行
+        rowsUpdated.RemoveAll(Function(row)
+                                  For i = 0 To Me.Model.ColumnCount - 1
+                                      If Me.dicCellEdited.ContainsKey(New CellPosition(row, i)) Then Return False
+                                  Next
+                                  Return True
+                              End Function)
+        'rowsUpdated的每一项和updateData的每一项相对应
         For Each curReoGridRowNum In rowsUpdated
-            updateData(curUpdateDataIndex) = Me.RowToDictionary(curReoGridRowNum)
-            curUpdateDataIndex += 1
+            updateData.Add(Me.RowToDictionary(curReoGridRowNum))
         Next
 
-        Dim curAddDataIndex = 0 'rowsAdded的每一项和addedData的每一项相对应
-        For Each curReoGridRowNum In rowsAdded
-            addedData(curAddDataIndex) = Me.RowToDictionary(curReoGridRowNum)
-            curAddDataIndex += 1
-        Next
-
-        If rowsAdded.Length > 0 Then
-            RemoveHandler Me.Model.RowAdded, AddressOf Me.ModelRowAddedEvent
-            Me.Model.AddRows(addedData)
-            AddHandler Me.Model.RowAdded, AddressOf Me.ModelRowAddedEvent
-        End If
-
-        If rowsUpdated.Length > 0 Then
+        If rowsUpdated.Count > 0 Then
             RemoveHandler Me.Model.RowUpdated, AddressOf Me.ModelRowUpdatedEvent
-            Me.Model.UpdateRows(rowsUpdated, updateData)
+            Me.Model.UpdateRows(rowsUpdated.ToArray, updateData.ToArray)
             AddHandler Me.Model.RowUpdated, AddressOf Me.ModelRowUpdatedEvent
         End If
+
+        Call Me.dicCellEdited.Clear()
     End Sub
 
-    Protected Sub ExportCellsAndAddedRows()
+    Protected Sub ExportCells()
         Logger.Debug("==ReoGrid ExportCell: " + Str(Me.GetHashCode))
         Logger.SetMode(LogMode.SYNC_FROM_VIEW)
+        If Me.CurSyncMode = SyncMode.NOT_SYNC Then Return
 
         If Me.Panel.SelectionRange.Cols <> 1 Then
             Throw New Exception("ExportCells() can only be used when single column selected")
         End If
 
-        Dim rowsUpdated As Long() = Me.Range(Me.Panel.SelectionRange.Row, System.Math.Min(Me.Model.RowCount, Me.Panel.SelectionRange.EndRow + 1))
+        Dim rowsUpdated As List(Of Long) = Me.Range(Me.Panel.SelectionRange.Row, System.Math.Min(Me.Model.RowCount, Me.Panel.SelectionRange.EndRow + 1)).ToList
         Dim colUpdated As Integer = Me.Panel.SelectionRange.Col
         Dim fieldName = (From item In Me.dicNameColumn Where item.Value = colUpdated Select item.Key).FirstOrDefault
         Dim fieldMetaData = (From fm In Me.MetaData.GetFieldMetaData(Me.Mode) Where fm.Name = fieldName Select fm).FirstOrDefault
@@ -609,42 +726,29 @@ Public Class ReoGridWorksheetView
             Logger.PutMessage("FieldMetaData not found of column index: " & Str(colUpdated))
             Return
         End If
-        Dim updateCellData = New Object() {}
-        Dim rowsAdded = New Long() {}
-        Dim addedRowData = New Object() {}
+        Dim updateCellData = New List(Of Object)
 
-        If rowsUpdated.Length > 0 Then
-            ReDim updateCellData(rowsUpdated.Length - 1)
-        End If
+        '删除掉没有真正修改内容的行
+        rowsUpdated.RemoveAll(Function(row)
+                                  If Me.dicCellEdited.ContainsKey(New CellPosition(row, colUpdated)) Then
+                                      Return False
+                                  Else
+                                      Return True
+                                  End If
+                              End Function)
 
-        If Me.Panel.Rows > Me.Model.RowCount Then
-            rowsAdded = Me.Range(Me.Model.RowCount + 1, Me.Panel.Rows + 1)
-            ReDim addedRowData(rowsAdded.Length - 1)
-        End If
-
-        Dim curUpdateDataIndex = 0 'rowsUpdated的每一项和updateData的每一项相对应
+        'rowsUpdated的每一项和updateData的每一项相对应
         For Each curReoGridRowNum In rowsUpdated
-            updateCellData(curUpdateDataIndex) = Me.GetMappedCellData(curReoGridRowNum, colUpdated, fieldMetaData)
-            curUpdateDataIndex += 1
+            Call updateCellData.Add(Me.GetMappedCellData(curReoGridRowNum, colUpdated, fieldMetaData))
         Next
 
-        Dim curAddDataIndex = 0 'rowsAdded的每一项和addedData的每一项相对应
-        For Each curReoGridRowNum In rowsAdded
-            addedRowData(curAddDataIndex) = Me.RowToDictionary(curReoGridRowNum)
-            curAddDataIndex += 1
-        Next
-
-        If rowsAdded.Length > 0 Then
-            RemoveHandler Me.Model.RowAdded, AddressOf Me.ModelRowAddedEvent
-            Me.Model.AddRows(addedRowData)
-            AddHandler Me.Model.RowAdded, AddressOf Me.ModelRowAddedEvent
-        End If
-
-        If rowsUpdated.Length > 0 Then
+        If rowsUpdated.Count > 0 Then
             RemoveHandler Me.Model.CellUpdated, AddressOf Me.ModelCellUpdatedEvent
-            Me.Model.UpdateCells(rowsUpdated, Me.Times(fieldName, rowsUpdated.LongLength), updateCellData)
+            Me.Model.UpdateCells(rowsUpdated.ToArray, Util.Times(fieldName, rowsUpdated.LongCount), updateCellData.ToArray)
             AddHandler Me.Model.CellUpdated, AddressOf Me.ModelCellUpdatedEvent
         End If
+
+        Call Me.dicCellEdited.Clear()
     End Sub
 
     Protected Function GetMappedCellData(row As Long, col As Integer, fieldMetaData As FieldMetaData)
@@ -696,14 +800,6 @@ Public Class ReoGridWorksheetView
             dic.Add(curField.Name, value)
         Next
         Return dic
-    End Function
-
-    Protected Function Times(Of T)(data As T, repeatTimes As Long) As T()
-        Dim result(repeatTimes - 1) As T
-        For i = 0 To repeatTimes - 1
-            result(i) = data
-        Next
-        Return result
     End Function
 
     Private Function DropdownListCellItemsToArray(items As DropdownListCell.DropdownItemsCollection) As Object()

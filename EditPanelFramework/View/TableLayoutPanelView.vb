@@ -10,6 +10,7 @@ Public Class TableLayoutPanelView
     Private switcherLocalEvents As Boolean = True '本View内部事件开关，包括文本框文字变化等。不包括外部，例如Model数据变化事件开关
     Private dicFieldNameColumn As New Dictionary(Of String, Integer)
     Private dicFieldUpdated As New Dictionary(Of String, Boolean)
+    Private dicFieldEdited As New Dictionary(Of String, Boolean)
 
     Public Sub New(tableLayout As TableLayoutPanel)
         Me.Panel = tableLayout
@@ -200,6 +201,8 @@ Public Class TableLayoutPanelView
                                               Logger.Debug("TableLayoutView TextBox Leave Save Data: " & Str(Me.GetHashCode))
                                               Call Me.CellUpdateEvent(textBox.Name)
                                           End Sub
+                '绑定内容改变记录更新事件
+                AddHandler textBox.TextChanged, AddressOf Me.ContentChangedEvent
             Else '否则可以用ComboBox体现
                 Dim comboBox As New ComboBox With {
                     .Name = curField.Name,
@@ -231,6 +234,8 @@ Public Class TableLayoutPanelView
                                                Logger.Debug("TableLayoutView ComboBox Leave Save Data: " & Str(Me.GetHashCode))
                                                Call Me.CellUpdateEvent(comboBox.Name)
                                            End Sub
+                '绑定内容改变记录更新事件
+                AddHandler comboBox.SelectedIndexChanged, AddressOf Me.ContentChangedEvent
                 Me.Panel.Controls.Add(comboBox)
             End If
         Next
@@ -246,6 +251,15 @@ Public Class TableLayoutPanelView
                                    End Sub
 
         Call Me.BindViewToJsEngine()
+    End Sub
+
+    '这里不包含用户事件，用户事件在创建时用Lambda表达式置入了已经
+    Private Sub ContentChangedEvent(sender As Object, e As EventArgs)
+        If Me.switcherLocalEvents = False Then Return
+        Dim controlName = CType(sender, Control).Name
+        If Not Me.dicFieldEdited.ContainsKey(controlName) Then
+            Me.dicFieldEdited.Add(controlName, True)
+        End If
     End Sub
 
     Public Function ImportData() As Boolean
@@ -308,7 +322,7 @@ Public Class TableLayoutPanelView
                 Continue For
             End If
             '根据Control是文本框还是ComboBox，有不一样的行为
-            Me.switcherLocalEvents = False '关闭本地事件开关， 放置连锁事件
+            Me.switcherLocalEvents = False '关闭本地事件开关， 防止连锁事件
             Select Case curControl.GetType()
                 Case GetType(TextBox)
                     Dim textBox = CType(curControl, TextBox)
@@ -333,6 +347,7 @@ Public Class TableLayoutPanelView
 
     Public Sub ExportField(fieldName As String)
         Logger.SetMode(LogMode.SYNC_FROM_VIEW)
+        If Not Me.dicFieldEdited.ContainsKey(fieldName) Then Return
         Dim modelSelectedRow = Me.GetModelSelectedRow
         If modelSelectedRow < 0 Then
             Logger.PutMessage("TableLayoutPanelView export cell data failed, Invalid selection range in model")
@@ -352,10 +367,14 @@ Public Class TableLayoutPanelView
         RemoveHandler Me.Model.CellUpdated, AddressOf Me.ModelCellUpdatedEvent
         Me.Model.UpdateCell(modelSelectedRow, fieldName, value)
         AddHandler Me.Model.CellUpdated, AddressOf Me.ModelCellUpdatedEvent
+        Me.dicFieldEdited.Remove(fieldName)
     End Sub
 
     Public Sub ExportData()
         Logger.SetMode(LogMode.SYNC_FROM_VIEW)
+        If Me.dicFieldEdited.Count = 0 Then
+            Return
+        End If
         Dim modelSelectedRow = Me.GetModelSelectedRow
         If modelSelectedRow < 0 Then
             Logger.PutMessage("TableLayoutPanelView export data failed, Invalid selection range in model")
@@ -370,7 +389,7 @@ Public Class TableLayoutPanelView
         End If
         Dim dicData As New Dictionary(Of String, Object)
         For Each curField As FieldMetaData In Me.MetaData.GetFieldMetaData(Me.Mode)
-            '如果字段不可见，则不pull
+            '如果字段不可见，则忽略
             If Not curField.Visible Then Continue For
             Dim value = Me.GetMappedValue(curField.Name, curField)
             If value Is Nothing Then Continue For
@@ -378,7 +397,10 @@ Public Class TableLayoutPanelView
             '将新的值加入更新字典中
             dicData.Add(curField.Name, value)
         Next
-        Me.Model.UpdateRow(modelSelectedRow, dicData)
+        RemoveHandler Me.Model.RowUpdated, AddressOf Me.ModelRowUpdatedEvent
+        Call Me.Model.UpdateRow(modelSelectedRow, dicData)
+        AddHandler Me.Model.RowUpdated, AddressOf Me.ModelRowUpdatedEvent
+        Call Me.dicFieldEdited.Clear()
     End Sub
 
     Private Function GetMappedValue(fieldName As String, fieldMetaData As FieldMetaData) As Object

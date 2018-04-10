@@ -17,7 +17,7 @@ namespace Test
     {
         private IModel model;
         private IView tableLayoutView,reoGridView;
-        private JsonWebAPIModelAdapter adapter;
+        private JsonRESTSynchronizer adapter;
 
         public Form1()
         {
@@ -41,42 +41,31 @@ namespace Test
             this.reoGridView = new ReoGridWorksheetView(this.reoGridControl1);
             this.reoGridView.SetMetaDataFromJson(strMetadata, this);
             this.reoGridView.Model = this.model;
-            this.adapter = new JsonWebAPIModelAdapter();
+            this.adapter = new JsonRESTSynchronizer();
             this.adapter.Model = this.model;
-            this.adapter.SetPullAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/{}",HTTPMethod.GET,"$data",null);
-            this.adapter.SetUpdateAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/",HTTPMethod.PUT,"$data",
-                (res, err) => {
-                    if (err == null)
-                    {
-                        MessageBox.Show("修改成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else
-                    {
-                        MessageBox.Show("修改失败！\n" + err.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                });
-            this.adapter.SetAddAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/", HTTPMethod.POST, "$data",
-                (res, err) => {
-                    if (err == null)
-                    {
-                        MessageBox.Show("修改成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else
-                    {
-                        MessageBox.Show("修改失败！\n" + err.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                });
-            this.adapter.SetRemoveAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/{mapProperty($data,'id')}", HTTPMethod.DELETE,null,
-                (res, err) => {
-                    if (err == null)
-                    {
-                        MessageBox.Show("修改成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else
-                    {
-                        MessageBox.Show("修改失败！\n" + err.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                });
+            this.adapter.SetPullAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/{}",HTTPMethod.GET,"$data");
+            this.adapter.SetUpdateAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/",HTTPMethod.PUT,"$data");
+            this.adapter.SetAddAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/", HTTPMethod.POST, "$data");
+            this.adapter.SetRemoveAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/{mapProperty($data,'id')}", HTTPMethod.DELETE, null);
+            this.adapter.SetPushFinishedCallback(()=>
+            {
+                MessageBox.Show("保存成功！","提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            });
+
+            this.adapter.SetPushFailedCallback((res, err) =>
+            {
+                string message;
+                if (res != null)
+                {
+                    message = new StreamReader(res.GetResponseStream()).ReadToEnd();
+                }
+                else
+                {
+                    message = err.Message;
+                }
+                MessageBox.Show("保存失败：" + message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            });
         }
 
         private void button2_Click(object sender, EventArgs e)

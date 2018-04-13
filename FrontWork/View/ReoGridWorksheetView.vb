@@ -1,4 +1,4 @@
-﻿Imports EditPanelFramework
+﻿Imports FrontWork
 Imports Jint.Native
 Imports System.Linq
 Imports System.Threading
@@ -60,6 +60,7 @@ Public Class ReoGridWorksheetView
             End If
         Next
         Me.formAssociation = New FormAssociation(Me.textBox)
+        formAssociation.StayUnvisible = True
         If Me.textBox Is Nothing Then
             Logger.SetMode(LogMode.INIT_VIEW)
             Logger.PutMessage("Table textbox not found")
@@ -615,7 +616,7 @@ Public Class ReoGridWorksheetView
                     text = curField.ForwardMapper.Invoke(text)
                 End If
 
-                If String.IsNullOrWhiteSpace(text) Then Continue For '如果推的内容是空白，就不显示在格里了，节约创建单元格的内存空间
+                If String.IsNullOrEmpty(text) Then Continue For '如果推的内容是空白，就不显示在格里了，节约创建单元格的内存空间
                 Logger.SetMode(LogMode.REFRESH_VIEW)
                 '然后获取单元格
                 If Me.dicNameColumn.ContainsKey(curField.Name) = False Then

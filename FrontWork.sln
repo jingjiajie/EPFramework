@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "EditPanelFramework", "EditPanelFramework\EditPanelFramework.vbproj", "{32AD3F4C-4A95-4B21-8B9B-5AFB8DAAFDDA}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "FrontWork", "FrontWork\FrontWork.vbproj", "{32AD3F4C-4A95-4B21-8B9B-5AFB8DAAFDDA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{DB56AB7E-B6B6-4FBC-80F0-DDEE6F37A158}"
 EndProject

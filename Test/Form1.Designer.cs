@@ -34,6 +34,8 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
+            this.searchWidget1 = new FrontWork.SearchWidget();
+            this.pagerWidget1 = new FrontWork.PagerWidget();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -42,7 +44,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.Font = new System.Drawing.Font("黑体", 10F);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 12);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 105);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -53,7 +55,7 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("黑体", 10F);
-            this.button1.Location = new System.Drawing.Point(528, 94);
+            this.button1.Location = new System.Drawing.Point(528, 187);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(160, 71);
             this.button1.TabIndex = 1;
@@ -67,7 +69,7 @@
             this.reoGridControl1.ColumnHeaderContextMenuStrip = null;
             this.reoGridControl1.Font = new System.Drawing.Font("黑体", 10F);
             this.reoGridControl1.LeadHeaderContextMenuStrip = null;
-            this.reoGridControl1.Location = new System.Drawing.Point(-2, 295);
+            this.reoGridControl1.Location = new System.Drawing.Point(-2, 388);
             this.reoGridControl1.Name = "reoGridControl1";
             this.reoGridControl1.RowHeaderContextMenuStrip = null;
             this.reoGridControl1.Script = null;
@@ -83,7 +85,7 @@
             // button2
             // 
             this.button2.Font = new System.Drawing.Font("黑体", 10F);
-            this.button2.Location = new System.Drawing.Point(740, 96);
+            this.button2.Location = new System.Drawing.Point(740, 189);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(160, 69);
             this.button2.TabIndex = 3;
@@ -94,7 +96,7 @@
             // button3
             // 
             this.button3.Font = new System.Drawing.Font("黑体", 10F);
-            this.button3.Location = new System.Drawing.Point(740, 15);
+            this.button3.Location = new System.Drawing.Point(740, 108);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(160, 68);
             this.button3.TabIndex = 4;
@@ -105,7 +107,7 @@
             // button4
             // 
             this.button4.Font = new System.Drawing.Font("黑体", 10F);
-            this.button4.Location = new System.Drawing.Point(740, 171);
+            this.button4.Location = new System.Drawing.Point(740, 264);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(160, 68);
             this.button4.TabIndex = 5;
@@ -113,11 +115,31 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
+            // searchWidget1
+            // 
+            this.searchWidget1.Location = new System.Drawing.Point(-2, 1);
+            this.searchWidget1.MetaData = null;
+            this.searchWidget1.Mode = "default";
+            this.searchWidget1.Name = "searchWidget1";
+            this.searchWidget1.Size = new System.Drawing.Size(1260, 98);
+            this.searchWidget1.TabIndex = 6;
+            // 
+            // pagerWidget1
+            // 
+            this.pagerWidget1.CurrentPage = ((long)(0));
+            this.pagerWidget1.Location = new System.Drawing.Point(-2, 720);
+            this.pagerWidget1.Name = "pagerWidget1";
+            this.pagerWidget1.Size = new System.Drawing.Size(1260, 73);
+            this.pagerWidget1.TabIndex = 7;
+            this.pagerWidget1.TotalPage = ((long)(0));
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(925, 620);
+            this.ClientSize = new System.Drawing.Size(1509, 793);
+            this.Controls.Add(this.pagerWidget1);
+            this.Controls.Add(this.searchWidget1);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
@@ -125,7 +147,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "Form1";
-            this.Text = "EPFramework测试";
+            this.Text = "FrontWork框架测试";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
@@ -139,6 +161,8 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
+        private FrontWork.SearchWidget searchWidget1;
+        private FrontWork.PagerWidget pagerWidget1;
     }
 }
 

@@ -8,11 +8,11 @@ Public Class JsonRESTAPIInfo
     Public Property RequestBodyTemplate As String
     Public Property ResponseBodyTemplate As String
 
-    Private jsEngine As New Jint.Engine
+    Private requestJSEngine As New Jint.Engine
+    Private responseJSEngine As New Jint.Engine
 
     Public Sub New()
-        'jsEngine.SetValue("log", New Action(Of String)(AddressOf Console.WriteLine))
-        jsEngine.Execute(<string>
+        Dim strMapProperty = <string>
                              function mapProperty(objs,propName){
                                 var result = []
                                 for(var i=0;i&lt;objs.length;i++){
@@ -20,16 +20,30 @@ Public Class JsonRESTAPIInfo
                                 }
                                 return result
                              }
-                         </string>)
+                         </string>.Value
+        requestJSEngine.Execute(strMapProperty)
+        responseJSEngine.Execute(strMapProperty)
+    End Sub
+
+    Public Sub SetResponseParameter(paramName As String, Optional value As Object = Nothing)
+        Me.responseJSEngine.SetValue(paramName, value)
     End Sub
 
     Public Sub SetRequestParameter(paramName As String, value As Object)
-        Me.jsEngine.SetValue(paramName, value)
+        Me.requestJSEngine.SetValue(paramName, value)
+    End Sub
+
+    Public Sub SetJsonResponseParameter(paramName As String, jsonString As String)
+        Try
+            Me.responseJSEngine.Execute($"{paramName} = JSON.parse('{jsonString}');")
+        Catch
+            Throw New Exception($"Invalid jsonString: ""{jsonString}""")
+        End Try
     End Sub
 
     Public Sub SetJsonRequestParameter(paramName As String, jsonString As String)
         Try
-            Me.jsEngine.Execute($"{paramName} = JSON.parse('{jsonString}');")
+            Me.requestJSEngine.Execute($"{paramName} = JSON.parse('{jsonString}');")
         Catch
             Throw New Exception($"Invalid jsonString: ""{jsonString}""")
         End Try
@@ -38,17 +52,17 @@ Public Class JsonRESTAPIInfo
     Public Function GetURL() As String
         Logger.SetMode(LogMode.MODEL_ADAPTER)
         Dim resultURL As New StringBuilder(Me.URLTemplate)
-        Dim curMatch = Regex.Match(Me.URLTemplate, "{([^}]*)}")
+        Dim curMatch = Regex.Match(Me.URLTemplate, "\{(((?<clojure>\{)|(?<-clojure>\})|[^{}])+(?(clojure)(?!)))\}")
         Do While curMatch.Success '遍历匹配到的各个"{表达式}"
             Dim expr As String = curMatch.Groups(1).Value
             Dim value As String
-            If String.IsNullOrWhiteSpace(expr) Then
+            If String.IsNullOrEmpty(expr) Then
                 value = "{}"
             Else
                 Try
-                    value = Me.jsEngine.Execute($"JSON.stringify({expr})").GetCompletionValue.ToString
+                    value = Me.requestJSEngine.Execute($"JSON.stringify({expr})").GetCompletionValue.ToString
                 Catch
-                    Logger.PutMessage($"Invalid expression: ""{expr}""")
+                    Throw New Exception($"Invalid expression: ""{expr}""")
                     Return Nothing
                 End Try
             End If
@@ -60,13 +74,13 @@ Public Class JsonRESTAPIInfo
     End Function
 
     Public Function GetRequestBody() As String
-        If String.IsNullOrWhiteSpace(Me.RequestBodyTemplate) Then Return String.Empty
-        Return Me.jsEngine.Execute($"JSON.stringify({RequestBodyTemplate})").GetCompletionValue.ToString
+        If String.IsNullOrEmpty(Me.RequestBodyTemplate) Then Return String.Empty
+        Return Me.requestJSEngine.Execute($"JSON.stringify({RequestBodyTemplate})").GetCompletionValue.ToString
     End Function
 
-    Public Function GetParamValuesFromResponse(responseBody As String, paramNames As String()) As Object()
+    Public Function GetResponseParameters(responsebody As String, paramNames As String()) As Object()
         Logger.SetMode(LogMode.MODEL_ADAPTER)
-        Dim paramPaths = Me.GetResponseBodyTemplateParamPaths(responseBody, paramNames)
+        Dim paramPaths = Me.GetResponseBodyTemplateParamPaths(responsebody, paramNames)
         Dim result(paramNames.Length - 1) As Object
 
         For i = 0 To paramNames.Length - 1
@@ -77,7 +91,7 @@ Public Class JsonRESTAPIInfo
                 Continue For
             End If
 
-            Dim responseJsValue = Me.jsEngine.Execute("$_EPFResponse=" & responseBody).GetValue("$_EPFResponse")
+            Dim responseJsValue = Me.requestJSEngine.Execute("$_EPFResponse=" & responsebody).GetValue("$_EPFResponse")
             Dim paramPath = paramPaths(paramName)
             Dim curJsValue As JsValue = responseJsValue
             '根据参数的路径去寻找参数
@@ -91,14 +105,12 @@ Public Class JsonRESTAPIInfo
 
     Private Function GetResponseBodyTemplateParamPaths(responseBody As String, paramNames As String()) As Dictionary(Of String, String())
         Dim result As New Dictionary(Of String, String())
-        Dim jsEngine = New Jint.Engine
-        jsEngine.Execute("objsToFind = {};")
+        Me.responseJSEngine.Execute("objsToFind = {};")
 
         For Each paramName In paramNames
-            jsEngine.Execute($"{paramName} = new Object();")
-            jsEngine.Execute($"objsToFind['{paramName}'] = {paramName};")
+            'Me.responseJSEngine.Execute($"{paramName} = new Object();")
+            Me.responseJSEngine.Execute($"objsToFind['{paramName}'] = {paramName};")
         Next
-        jsEngine.SetValue("log", New Action(Of String)(AddressOf Console.WriteLine))
         Dim strFindData = '从给定jsonTemplate中寻找$data变量
             <string>
                 var objPaths = {}
@@ -142,15 +154,15 @@ Public Class JsonRESTAPIInfo
                     return res
                 }
             </string>.Value
-        jsEngine.Execute(strFindData)
+        Me.responseJSEngine.Execute(strFindData)
         Try
-            jsEngine.Execute(String.Format("var $_EPFTargetObject = {0}", Me._ResponseBodyTemplate))
+            Me.responseJSEngine.Execute(String.Format("var $_EPFTargetObject = {0}", Me._ResponseBodyTemplate))
         Catch
             Throw New Exception("Invalid ResponseBodyTemplate")
         End Try
-        jsEngine.Execute("fillObjPath($_EPFTargetObject)")
+        Me.responseJSEngine.Execute("fillObjPath($_EPFTargetObject)")
         For Each paramName In paramNames
-            Dim dataPath = jsEngine.Execute($"objPaths['{paramName}']").GetCompletionValue
+            Dim dataPath = Me.responseJSEngine.Execute($"objPaths['{paramName}']").GetCompletionValue
             If dataPath.IsUndefined OrElse dataPath.IsNull Then
                 Logger.PutMessage($"{paramName} not found!")
                 Continue For

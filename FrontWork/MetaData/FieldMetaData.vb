@@ -72,7 +72,7 @@ Public Class FieldMetaData
                 Logger.PutMessage("can not resolve property:""" + key + """ in json configure")
                 Continue For
             ElseIf prop.PropertyType <> GetType(FieldMethod) Then '如果不是函数，则直接赋值
-                prop.SetValue(newFieldMetaData, value)
+                prop.SetValue(newFieldMetaData, value, Nothing)
             Else '如果是函数，特殊处理
                 Dim jsProp = item.Value.Value
                 If jsProp.IsString Then '如果为字符串，则调用Controller的方法
@@ -99,7 +99,7 @@ Public Class FieldMetaData
                                 Return
                             End Try
                         End Sub
-                    prop.SetValue(newFieldMetaData, fieldMethod)
+                    prop.SetValue(newFieldMetaData, fieldMethod, Nothing)
                 Else '否则，认为是js的方法
                     Dim jsMethod = jsProp
                     Dim fieldMethod As New FieldMethod
@@ -115,7 +115,7 @@ Public Class FieldMetaData
                                 Exit Sub
                             End Try
                         End Sub
-                    prop.SetValue(newFieldMetaData, fieldMethod)
+                    prop.SetValue(newFieldMetaData, fieldMethod, Nothing)
                 End If
             End If
         Next

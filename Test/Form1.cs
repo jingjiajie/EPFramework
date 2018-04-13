@@ -9,7 +9,7 @@ using System.Net;
 using System.Text;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
-using EditPanelFramework;
+using FrontWork;
 
 namespace Test
 {
@@ -17,7 +17,8 @@ namespace Test
     {
         private IModel model;
         private IView tableLayoutView,reoGridView;
-        private JsonRESTSynchronizer adapter;
+        private JsonRESTSynchronizer synchronizer;
+        private SearchWidgetJsonRESTAdapter searchWidgetJsonRESTAdapter;
 
         public Form1()
         {
@@ -41,18 +42,18 @@ namespace Test
             this.reoGridView = new ReoGridWorksheetView(this.reoGridControl1);
             this.reoGridView.SetMetaDataFromJson(strMetadata, this);
             this.reoGridView.Model = this.model;
-            this.adapter = new JsonRESTSynchronizer();
-            this.adapter.Model = this.model;
-            this.adapter.SetPullAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/{}",HTTPMethod.GET,"$data");
-            this.adapter.SetUpdateAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/",HTTPMethod.PUT,"$data");
-            this.adapter.SetAddAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/", HTTPMethod.POST, "$data");
-            this.adapter.SetRemoveAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/{mapProperty($data,'id')}", HTTPMethod.DELETE, null);
-            this.adapter.SetPushFinishedCallback(()=>
+            this.synchronizer = new JsonRESTSynchronizer();
+            this.synchronizer.Model = this.model;
+            this.synchronizer.SetPullAPI(@"http://localhost.fiddler:9000/ledger/WMS_Template/person/{{""conditions"":$conditions,""orders"":$orders}}",HTTPMethod.GET,"$data");
+            this.synchronizer.SetUpdateAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/",HTTPMethod.PUT,"$data");
+            this.synchronizer.SetAddAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/", HTTPMethod.POST, "$data");
+            this.synchronizer.SetRemoveAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/{mapProperty($data,'id')}", HTTPMethod.DELETE, null);
+            this.synchronizer.SetPushFinishedCallback(()=>
             {
                 MessageBox.Show("保存成功！","提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             });
 
-            this.adapter.SetPushFailedCallback((res, err) =>
+            this.synchronizer.SetPushFailedCallback((res, err) =>
             {
                 string message;
                 if (res != null)
@@ -66,16 +67,36 @@ namespace Test
                 MessageBox.Show("保存失败：" + message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             });
+            this.searchWidget1.SetMetaData(strMetadata);
+            this.searchWidgetJsonRESTAdapter = new SearchWidgetJsonRESTAdapter();
+            this.searchWidgetJsonRESTAdapter.Bind(this.searchWidget1, this.synchronizer);
+            
+
+            this.pagerWidget1.TotalPage = 10;
+            this.pagerWidget1.CurrentPage = 5;
+        }
+
+        private void SearchWidget1_OnSearch(SearchArgs args)
+        {
+            Console.WriteLine(args.Conditions[0].Key);
+            Console.WriteLine(args.Conditions[0].Relation);
+            Console.WriteLine(args.Conditions[0].Values[0]);
+            if (args.Orders?.Length > 0)
+            {
+                Console.WriteLine(args.Orders[0].Key);
+                Console.WriteLine(args.Orders[0].Order);
+            }
+
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            this.adapter.PushToServer();
+            this.synchronizer.PushToServer();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.adapter.PullFromServer();
+            this.synchronizer.PullFromServer();
         }
 
         private void button4_Click(object sender, EventArgs e)

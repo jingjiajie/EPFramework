@@ -32,7 +32,7 @@ Friend Class Util
         Else '源类型是数组，则直接遍历转型
             Dim objPropertyLength = objType.GetProperty("Length")
             Dim objMethodGetValue = objType.GetMethod("GetValue", New Type() {GetType(Integer)})
-            Dim objLength = CType(objPropertyLength.GetValue(obj), Integer)
+            Dim objLength = CType(objPropertyLength.GetValue(obj, Nothing), Integer)
             Dim result(objLength - 1) As TElem
             For i As Integer = 0 To objLength - 1
                 Dim srcValue = objMethodGetValue.Invoke(obj, New Object() {i})

@@ -114,7 +114,9 @@ Public Class JsonRESTSynchronizer
         Try
             Console.WriteLine(Me.PullAPI.HTTPMethod.ToString & " " & Me.PullAPI.GetURL)
 
-            Dim httpWebRequest = CType(WebRequest.Create(Me.PullAPI.GetURL), HttpWebRequest)
+            Dim url = Me.PullAPI.GetURL
+            Dim httpWebRequest = CType(WebRequest.Create(url), HttpWebRequest)
+            httpWebRequest.Timeout = 5000
             httpWebRequest.Method = Me.PullAPI.HTTPMethod.ToString
             If Me.PullAPI.HTTPMethod = HTTPMethod.PUT OrElse Me.PullAPI.HTTPMethod = HTTPMethod.POST Then
                 httpWebRequest.ContentType = "application/json"
@@ -126,7 +128,8 @@ Public Class JsonRESTSynchronizer
 
             Dim response As HttpWebResponse = httpWebRequest.GetResponse
             Dim responseStreamReader = New StreamReader(response.GetResponseStream())
-            Dim data = Me.PullAPI.GetParamValuesFromResponse(responseStreamReader.ReadToEnd, {"$data"})(0)
+            Me.PullAPI.SetResponseParameter("$data")
+            Dim data = Me.PullAPI.GetResponseParameters(responseStreamReader.ReadToEnd, {"$data"})(0)
             If data Is Nothing Then Return False
 
             '清空actions

@@ -80,9 +80,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EditPanelFramework\EditPanelFramework.vbproj">
+    <ProjectReference Include="..\FrontWork\FrontWork.vbproj">
       <Project>{32ad3f4c-4a95-4b21-8b9b-5afb8daafdda}</Project>
-      <Name>EditPanelFramework</Name>
+      <Name>FrontWork</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -4,7 +4,7 @@
 
     Public Overrides Function ToString() As String
         Dim str As String = String.Format("{0,-15}", Word)
-        If String.IsNullOrWhiteSpace(Hint) = False Then
+        If String.IsNullOrEmpty(Hint) = False Then
             str += " -" & Hint
         End If
 

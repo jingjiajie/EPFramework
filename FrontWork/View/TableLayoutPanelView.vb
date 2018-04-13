@@ -1,4 +1,4 @@
-﻿Imports EditPanelFramework
+﻿Imports FrontWork
 Imports Jint.Native
 Imports System.Linq
 

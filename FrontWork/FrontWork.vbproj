@@ -5,13 +5,14 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{32AD3F4C-4A95-4B21-8B9B-5AFB8DAAFDDA}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <StartupObject>EditPanelFramework.My.MyApplication</StartupObject>
-    <RootNamespace>EditPanelFramework</RootNamespace>
-    <AssemblyName>EditPanelFramework</AssemblyName>
+    <OutputType>Library</OutputType>
+    <StartupObject>
+    </StartupObject>
+    <RootNamespace>FrontWork</RootNamespace>
+    <AssemblyName>FrontWork</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <MyType>WindowsForms</MyType>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -21,7 +22,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>EditPanelFramework.xml</DocumentationFile>
+    <DocumentationFile>FrontWork.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -32,7 +33,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>EditPanelFramework.xml</DocumentationFile>
+    <DocumentationFile>FrontWork.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -50,7 +51,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Jint, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2e92ba9c8d81157f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Jint.2.11.58\lib\net45\Jint.dll</HintPath>
+      <HintPath>..\packages\Jint.2.11.58\lib\net40\Jint.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -127,6 +128,21 @@
     <Compile Include="View\ReoGridWorksheetView.vb" />
     <Compile Include="View\TableLayoutPanelView.vb" />
     <Compile Include="View\ViewBase.vb" />
+    <Compile Include="Widgets\DataStructures\PageChangedEventArgs.vb" />
+    <Compile Include="Widgets\DataStructures\SearchArgs.vb" />
+    <Compile Include="Widgets\PagerWidget.Designer.vb">
+      <DependentUpon>PagerWidget.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Widgets\PagerWidget.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Widgets\SearchWidgetJsonRESTAdapter.vb" />
+    <Compile Include="Widgets\SearchWidget.Designer.vb">
+      <DependentUpon>SearchWidget.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Widgets\SearchWidget.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -137,6 +153,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\FormAssociation.resx">
       <DependentUpon>FormAssociation.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\PagerWidget.resx">
+      <DependentUpon>PagerWidget.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\SearchWidget.resx">
+      <DependentUpon>SearchWidget.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

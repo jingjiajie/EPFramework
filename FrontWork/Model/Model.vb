@@ -1,5 +1,5 @@
 ﻿Imports System.Linq
-Imports EditPanelFramework
+Imports FrontWork
 
 Public Class Model
     Implements IModel

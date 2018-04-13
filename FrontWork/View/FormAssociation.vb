@@ -22,6 +22,8 @@ Partial Public Class FormAssociation
 
     Public Sub New(ByVal textBox As TextBox)
         InitializeComponent()
+        Call MyBase.Show()
+        Call MyBase.Hide()
         Me.textBox = textBox
         AddHandler textBox.PreviewKeyDown, AddressOf textBox_PreviewKeyDown
         AddHandler textBox.TextChanged, AddressOf textBox_TextChanged
@@ -68,7 +70,8 @@ Partial Public Class FormAssociation
 
     Public Sub RefreshAssociation()
         Static newestListBoxDataTime = DateTime.Now
-        If String.IsNullOrWhiteSpace(textBox.Text) OrElse Me.AssociationFunc Is Nothing Then
+        If Me.StayUnvisible Then Return
+        If String.IsNullOrEmpty(textBox.Text) OrElse Me.AssociationFunc Is Nothing Then
             Me.Hide()
             Return
         End If
@@ -151,15 +154,17 @@ Partial Public Class FormAssociation
     End Sub
 
     Private Sub GiveBackFocus()
-        Me.textBox.Focus()
-        If textBox.SelectionLength > 0 Then
-            textBox.SelectionLength = 0
-            textBox.SelectionStart = textBox.Text.Length
+        If Me.textBox IsNot Nothing Then
+            Me.textBox.Focus()
+            If textBox.SelectionLength > 0 Then
+                textBox.SelectionLength = 0
+                textBox.SelectionStart = textBox.Text.Length
+            End If
         End If
     End Sub
 
     Public Shadows Sub Show()
-        If Not Me.StayUnvisible Then Return
+        If Me.StayUnvisible Then Return
         If Me.Visible = False Then
             MyBase.Show()
         End If

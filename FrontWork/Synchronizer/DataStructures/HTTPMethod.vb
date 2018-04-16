@@ -4,6 +4,20 @@
     Public Shared Property PUT As New HTTPMethod
     Public Shared Property DELETE As New HTTPMethod
 
+    Public Shared Function Parse(methodString As String) As HTTPMethod
+        If methodString.Equals("GET", StringComparison.OrdinalIgnoreCase) Then
+            Return [GET]
+        ElseIf methodString.Equals("POST", StringComparison.OrdinalIgnoreCase) Then
+            Return POST
+        ElseIf methodString.Equals("PUT", StringComparison.OrdinalIgnoreCase) Then
+            Return PUT
+        ElseIf methodString.Equals("DELETE", StringComparison.OrdinalIgnoreCase) Then
+            Return DELETE
+        Else
+            Throw New Exception($"Invalid HTTP Method: {methodString}")
+        End If
+    End Function
+
     Public Overrides Function ToString() As String
         If Me Is HTTPMethod.GET Then
             Return "GET"

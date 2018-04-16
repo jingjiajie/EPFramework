@@ -1,7 +1,7 @@
 ﻿Imports System.Threading
 Friend Enum LogMode As Integer
     DEFAULT_MODE
-    PARSING_METADATA
+    PARSING_Configuration
     INIT_VIEW
     LOAD_MODE_METHODLISTENER
     REFRESH_VIEW
@@ -26,7 +26,7 @@ Friend Class Logger
             {LogMode.INIT_VIEW, New LogConfig("Initializing view")},
             {LogMode.REFRESH_VIEW, New LogConfig("Refreshing view")},
             {LogMode.SYNC_FROM_VIEW, New LogConfig("Synchronizing data from view")},
-            {LogMode.PARSING_METADATA, New LogConfig("Parsing metadata")},
+            {LogMode.PARSING_Configuration, New LogConfig("Parsing Configuration")},
             {LogMode.LOAD_MODE_METHODLISTENER, New LogConfig("Loading mode MethodListener")},
             {LogMode.MODEL_ADAPTER, New LogConfig("Model Adapter failure")}
         }
@@ -46,7 +46,7 @@ Friend Class Logger
             Case LogLevel.INFOMATION
                 levelHint = "Info"
         End Select
-        Console.WriteLine("[EPF][" + levelHint + "] " + curErrorConfig.Prefix + ": " + message)
+        Console.WriteLine("[FrontWork][" + levelHint + "] " + curErrorConfig.Prefix + ": " + message)
     End Sub
 
     Public Shared Sub Debug(message As String)

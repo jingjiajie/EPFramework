@@ -1,4 +1,5 @@
-﻿Imports System.IO
+﻿Imports System.ComponentModel
+Imports System.IO
 Imports System.Linq
 Imports System.Net
 Imports System.Text
@@ -6,19 +7,31 @@ Imports System.Web.Script.Serialization
 Imports Jint.Native
 
 Public Class JsonRESTSynchronizer
+    Inherits UserControl
     Implements ISynchronizer
     Private _model As IModel
+    Private _configuration As Configuration
 
     Private jsEngine As New Jint.Engine
+    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
+    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents Label1 As Label
+    Friend WithEvents Label2 As Label
 
+    <Browsable(False)>
     Public Property AddAPI As JsonRESTAPIInfo
+
+    <Browsable(False)>
     Public Property UpdateAPI As JsonRESTAPIInfo
+
+    <Browsable(False)>
     Public Property RemoveAPI As JsonRESTAPIInfo
+
+    <Browsable(False)>
     Public Property PullAPI As JsonRESTAPIInfo
 
+    <Browsable(False)>
     Public Property PushFinishedCallback As Action
-    Public Property PushFailedCallback As Func(Of HttpWebResponse, WebException, Boolean)
-    Public Property PullCallback As Action(Of HttpWebResponse, WebException)
 
     Public Property Model As IModel
         Get
@@ -31,6 +44,22 @@ Public Class JsonRESTSynchronizer
             Me._model = value
             If Me._model IsNot Nothing Then
                 Call Me.BindModel()
+            End If
+        End Set
+    End Property
+
+    Public Property Configuration As Configuration Implements ISynchronizer.Configuration
+        Get
+            Return Me._configuration
+        End Get
+        Set(value As Configuration)
+            If Me._configuration IsNot Nothing Then
+                RemoveHandler Me._configuration.ConfigurationChanged, AddressOf Me.ConfigurationChanged
+            End If
+            Me._configuration = value
+            If Me._configuration IsNot Nothing Then
+                AddHandler Me._configuration.ConfigurationChanged, AddressOf Me.ConfigurationChanged
+                Call Me.InitSynchronizer()
             End If
         End Set
     End Property
@@ -49,6 +78,45 @@ Public Class JsonRESTSynchronizer
         RemoveHandler Me.Model.RowUpdated, AddressOf Me.ModelRowUpdatedEvent
         RemoveHandler Me.Model.CellUpdated, AddressOf Me.ModelCellUpdatedEvent
         RemoveHandler Me.Model.RowRemoved, AddressOf Me.ModelRowRemovedEvent
+    End Sub
+
+    Private Sub InitSynchronizer()
+        If Me._configuration Is Nothing Then Return
+        Dim httpAPIConfigs = Me._configuration.GetHTTPAPIConfigurations
+        For Each apiConfig In httpAPIConfigs
+            If apiConfig.APIType.Equals("pushFinishedCallback", StringComparison.OrdinalIgnoreCase) Then
+                Me.PushFinishedCallback =
+                Sub()
+                    Call apiConfig.Callback.Invoke()
+                End Sub
+                Continue For
+            End If
+
+            Dim newAPIInfo As New JsonRESTAPIInfo
+            newAPIInfo.URLTemplate = apiConfig.URL
+            If Not String.IsNullOrWhiteSpace(apiConfig.Method) Then
+                newAPIInfo.HTTPMethod = HTTPMethod.Parse(apiConfig.Method)
+            End If
+            newAPIInfo.RequestBodyTemplate = apiConfig.RequestBody
+            newAPIInfo.ResponseBodyTemplate = apiConfig.ResponseBody
+            newAPIInfo.Callback =
+                Function(res, ex) As Boolean
+                    Return apiConfig.Callback.Invoke(res, ex)
+                End Function
+            If apiConfig.APIType.Equals("pull", StringComparison.OrdinalIgnoreCase) Then
+                Me.PullAPI = newAPIInfo
+            ElseIf apiConfig.APIType.Equals("add", StringComparison.OrdinalIgnoreCase) Then
+                Me.AddAPI = newAPIInfo
+            ElseIf apiConfig.APIType.Equals("update", StringComparison.OrdinalIgnoreCase) Then
+                Me.UpdateAPI = newAPIInfo
+            ElseIf apiConfig.APIType.Equals("remove", StringComparison.OrdinalIgnoreCase) Then
+                Me.RemoveAPI = newAPIInfo
+            End If
+        Next
+    End Sub
+
+    Private Sub ConfigurationChanged(sender As Object, e As EventArgs)
+        Call Me.InitSynchronizer()
     End Sub
 
     Private Sub ModelCellUpdatedEvent(e As ModelCellUpdatedEventArgs)
@@ -187,9 +255,9 @@ Public Class JsonRESTSynchronizer
             End If
             Call Me.Model.Refresh(dataTable, selectionRanges.ToArray, Util.Times(SynchronizationState.SYNCHRONIZED, dataTable.Rows.Count))
 
-            Call Me.PullCallback?.Invoke(response, Nothing)
+            Call Me.PullAPI.Callback?.Invoke(response, Nothing)
         Catch ex As WebException
-            Call Me.PullCallback?.Invoke(CType(ex.Response, HttpWebResponse), ex)
+            Call Me.PullAPI.Callback?.Invoke(CType(ex.Response, HttpWebResponse), ex)
         End Try
         Return True
     End Function
@@ -218,8 +286,8 @@ Public Class JsonRESTSynchronizer
             Catch ex As WebException
                 Me.modelActions.Add(action)
                 Me.Model.UpdateRowSynchronizationStates(rowGuids, Util.Times(SynchronizationState.UNSYNCHRONIZED, rowGuids.Length))
-                If Me.PushFailedCallback Is Nothing Then Continue For
-                Dim ifContinue = Me.PushFailedCallback.Invoke(ex.Response, ex)
+                If action.APIInfo.Callback Is Nothing Then Continue For
+                Dim ifContinue = action.APIInfo.Callback.Invoke(ex.Response, ex)
                 If Not ifContinue Then
                     Return False
                 End If
@@ -234,14 +302,6 @@ Public Class JsonRESTSynchronizer
         Call Me.PushFinishedCallback?.Invoke
         Return True
     End Function
-
-    Public Sub SetPushFinishedCallback(callback As Action)
-        Me.PushFinishedCallback = callback
-    End Sub
-
-    Public Sub SetPushFailedCallback(callback As Func(Of HttpWebResponse, WebException, Boolean))
-        Me.PushFailedCallback = callback
-    End Sub
 
     Public Sub SetAddAPI(url As String, method As HTTPMethod, bodyJsonTemplate As String)
         Dim apiInfo = New JsonRESTAPIInfo()
@@ -444,4 +504,87 @@ Public Class JsonRESTSynchronizer
             Return dicRowIDActions.Values.ToArray
         End Function
     End Class
+
+    Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(JsonRESTSynchronizer))
+        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.TableLayoutPanel1.SuspendLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SuspendLayout()
+        '
+        'TableLayoutPanel1
+        '
+        Me.TableLayoutPanel1.ColumnCount = 1
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel1.Controls.Add(Me.PictureBox1, 0, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.Label1, 0, 2)
+        Me.TableLayoutPanel1.Controls.Add(Me.Label2, 0, 1)
+        Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 0)
+        Me.TableLayoutPanel1.Margin = New System.Windows.Forms.Padding(0)
+        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
+        Me.TableLayoutPanel1.RowCount = 3
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(180, 180)
+        Me.TableLayoutPanel1.TabIndex = 0
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.BackgroundImage = CType(resources.GetObject("PictureBox1.BackgroundImage"), System.Drawing.Image)
+        Me.PictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
+        Me.PictureBox1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.PictureBox1.Location = New System.Drawing.Point(0, 0)
+        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(0)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(180, 120)
+        Me.PictureBox1.TabIndex = 0
+        Me.PictureBox1.TabStop = False
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label1.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.0!)
+        Me.Label1.Location = New System.Drawing.Point(3, 150)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(174, 30)
+        Me.Label1.TabIndex = 1
+        Me.Label1.Text = "Synchronizer"
+        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label2.Font = New System.Drawing.Font("Microsoft YaHei UI", 8.0!)
+        Me.Label2.Location = New System.Drawing.Point(0, 120)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(0)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(180, 30)
+        Me.Label2.TabIndex = 2
+        Me.Label2.Text = "REST&&JSON"
+        Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'JsonRESTSynchronizer
+        '
+        Me.Controls.Add(Me.TableLayoutPanel1)
+        Me.Margin = New System.Windows.Forms.Padding(0)
+        Me.Name = "JsonRESTSynchronizer"
+        Me.Size = New System.Drawing.Size(180, 180)
+        Me.TableLayoutPanel1.ResumeLayout(False)
+        Me.TableLayoutPanel1.PerformLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ResumeLayout(False)
+
+    End Sub
+
+    Private Sub JsonRESTSynchronizer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        If Not Me.DesignMode Then Me.Visible = False
+        Call Me.InitializeComponent()
+    End Sub
 End Class

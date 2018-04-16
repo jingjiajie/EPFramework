@@ -57,6 +57,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
@@ -77,15 +78,21 @@
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MetaData\EditPanelMetaData.vb" />
+    <Compile Include="Configuration\Configuration.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\EventArgs\ConfigurationChangedEventArgs.vb" />
+    <Compile Include="Configuration\HTTPAPIConfiguration.vb" />
     <Compile Include="Logger\Logger.vb" />
-    <Compile Include="MetaData\EditPanelModeMetaData.vb" />
-    <Compile Include="MetaData\FieldMetaData.vb" />
-    <Compile Include="MetaData\FieldMethod.vb" />
+    <Compile Include="Configuration\ModeConfiguration.vb" />
+    <Compile Include="Configuration\FieldConfiguration.vb" />
+    <Compile Include="Configuration\FieldMethod.vb" />
     <Compile Include="Model\DataStructures\IndexRowSynchronizationStatePair.vb" />
     <Compile Include="Model\DataStructures\SynchronizaionState.vb" />
     <Compile Include="Model\EventArgs\ModelRowSynchronizationStateChangedEventArgs.vb" />
-    <Compile Include="Synchronizer\JsonRESTSynchronizer.vb" />
+    <Compile Include="Synchronizer\JsonRESTSynchronizer.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Synchronizer\DataStructures\HTTPMethod.vb" />
     <Compile Include="Model\EventArgs\ModelCellUpdatedEventArgs.vb" />
     <Compile Include="Model\EventArgs\ModelRefreshedEventArgs.vb" />
@@ -95,7 +102,9 @@
     <Compile Include="Model\EventArgs\ModelRowUpdatedEventArgs.vb" />
     <Compile Include="Model\IModel.vb" />
     <Compile Include="Model\DataStructures\IndexRowPair.vb" />
-    <Compile Include="Model\Model.vb" />
+    <Compile Include="Model\Model.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Model\DataStructures\PositionCellPair.vb" />
     <Compile Include="Model\DataStructures\Range.vb" />
     <Compile Include="Model\EventArgs\RangeChangedEventArgs.vb" />
@@ -117,6 +126,12 @@
     <Compile Include="Synchronizer\ISynchronizer.vb" />
     <Compile Include="Util\Util.vb" />
     <Compile Include="View\AssociationItem.vb" />
+    <Compile Include="View\BasicView.Designer.vb">
+      <DependentUpon>BasicView.vb</DependentUpon>
+    </Compile>
+    <Compile Include="View\BasicView.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="View\FormAssociation.Designer.vb">
       <DependentUpon>FormAssociation.vb</DependentUpon>
     </Compile>
@@ -125,40 +140,58 @@
     </Compile>
     <Compile Include="View\IMethodListener.vb" />
     <Compile Include="View\IView.vb" />
-    <Compile Include="View\ReoGridWorksheetView.vb" />
-    <Compile Include="View\TableLayoutPanelView.vb" />
-    <Compile Include="View\ViewBase.vb" />
-    <Compile Include="Widgets\DataStructures\PageChangedEventArgs.vb" />
-    <Compile Include="Widgets\DataStructures\SearchArgs.vb" />
-    <Compile Include="Widgets\PagerWidget.Designer.vb">
-      <DependentUpon>PagerWidget.vb</DependentUpon>
+    <Compile Include="View\ReoGridView.Designer.vb">
+      <DependentUpon>ReoGridView.vb</DependentUpon>
     </Compile>
-    <Compile Include="Widgets\PagerWidget.vb">
+    <Compile Include="View\ReoGridView.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Widgets\SearchWidgetJsonRESTAdapter.vb" />
-    <Compile Include="Widgets\SearchWidget.Designer.vb">
-      <DependentUpon>SearchWidget.vb</DependentUpon>
+    <Compile Include="View\DataStructures\PageChangedEventArgs.vb" />
+    <Compile Include="View\DataStructures\OnSearchEventArgs.vb" />
+    <Compile Include="View\PagerView.Designer.vb">
+      <DependentUpon>PagerView.vb</DependentUpon>
     </Compile>
-    <Compile Include="Widgets\SearchWidget.vb">
+    <Compile Include="View\PagerView.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Adapters\SearchViewJsonRESTAdapter.vb" />
+    <Compile Include="View\SearchView.Designer.vb">
+      <DependentUpon>SearchView.vb</DependentUpon>
+    </Compile>
+    <Compile Include="View\SearchView.vb">
       <SubType>UserControl</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Configuration\Configuration.resx">
+      <DependentUpon>Configuration.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Model\Model.resx">
+      <DependentUpon>Model.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Synchronizer\JsonRESTSynchronizer.resx">
+      <DependentUpon>JsonRESTSynchronizer.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\BasicView.resx">
+      <DependentUpon>BasicView.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\FormAssociation.resx">
       <DependentUpon>FormAssociation.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Widgets\PagerWidget.resx">
-      <DependentUpon>PagerWidget.vb</DependentUpon>
+    <EmbeddedResource Include="View\PagerView.resx">
+      <DependentUpon>PagerView.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Widgets\SearchWidget.resx">
-      <DependentUpon>SearchWidget.vb</DependentUpon>
+    <EmbeddedResource Include="View\ReoGridView.resx">
+      <DependentUpon>ReoGridView.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\SearchView.resx">
+      <DependentUpon>SearchView.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +209,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Synchronizer\DataStructures\JsonRESTAPIInfo.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{94E38DFF-614B-4CBD-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Images\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

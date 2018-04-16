@@ -1,59 +1,52 @@
-﻿Imports System.Linq
+﻿Imports System.ComponentModel
+Imports System.Linq
 Imports FrontWork
 
 Public Class Model
+    Inherits UserControl
     Implements IModel
 
     Private _selectionRange As Range() = New Range() {}
-    Private _mode As String
-    Private _metaData As EditPanelMetaData
+    Private _configuration As Configuration
     Private _dicRowGuid As New Dictionary(Of DataRow, Guid)
+    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
+    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents Label1 As Label
     Private _dicRowSyncState As New Dictionary(Of DataRow, SynchronizationState)
 
-    Public Property Mode As String
+    <Description("配置中心对象"), Category("FrontWork")>
+    Public Property Configuration As Configuration Implements IModel.Configuration
         Get
-            Return Me._mode
+            Return Me._configuration
         End Get
-        Set(value As String)
-            Me._mode = value
-            If Me._metaData IsNot Nothing Then
-                Call Me.RefreshDataTable()
-            End If
+        Set(value As Configuration)
+            Me._configuration = value
+            Call Me.InitDataTable()
+            AddHandler Me._configuration.ConfigurationChanged, AddressOf Me.ConfigurationChanged
         End Set
     End Property
-    Public Property MetaData As EditPanelMetaData
-        Get
-            Return Me._metaData
-        End Get
-        Set(value As EditPanelMetaData)
-            Me._metaData = value
-            If Me._mode IsNot Nothing Then
-                Call Me.RefreshDataTable()
-            End If
-        End Set
-    End Property
+
     Private Property Data As New DataTable
 
-    Public Sub New(metaData As String, Optional mode As String = "default")
-        Me.MetaData = EditPanelMetaData.FromJson(New Jint.Engine, metaData)
-        If Me.MetaData Is Nothing Then
-            Throw New Exception("Invalid metaData")
-        End If
-        Me.Mode = mode
+    Public Sub New()
+
     End Sub
 
+    <Browsable(False)>
     Public ReadOnly Property RowCount As Long Implements IModel.RowCount
         Get
             Return Me.Data.Rows.Count
         End Get
     End Property
 
+    <Browsable(False)>
     Public ReadOnly Property ColumnCount As Long Implements IModel.ColumnCount
         Get
             Return Me.Data.Columns.Count
         End Get
     End Property
 
+    <Browsable(False)>
     Public Property SelectionRange As Range() Implements IModel.SelectionRange
         Get
             Return Me._selectionRange
@@ -69,6 +62,7 @@ Public Class Model
         End Set
     End Property
 
+    <Browsable(False)>
     Public Property FirstSelectionRange As Range Implements IModel.FirstSelectionRange
         Get
             If Me.SelectionRange Is Nothing Then Return Nothing
@@ -76,7 +70,9 @@ Public Class Model
             Return Me.SelectionRange(0)
         End Get
         Set(value As Range)
-            If Me.SelectionRange Is Nothing Then
+            If value Is Nothing Then
+                Me.SelectionRange = {}
+            ElseIf Me.SelectionRange Is Nothing Then
                 Me.SelectionRange = {value}
             ElseIf Me.SelectionRange.Length = 0 Then
                 Me.SelectionRange = {value}
@@ -86,6 +82,7 @@ Public Class Model
         End Set
     End Property
 
+    <Browsable(False)>
     Public Property SelectionRange(i) As Range
         Get
             Return Me._selectionRange(i)
@@ -99,13 +96,16 @@ Public Class Model
         End Set
     End Property
 
-    Private Sub RefreshDataTable()
-        If Me.MetaData Is Nothing Then Return
-        If Me.Mode Is Nothing Then Return
+    Private Sub ConfigurationChanged(sender As Object, e As ConfigurationChangedEventArgs)
+        Call Me.InitDataTable()
+    End Sub
+
+    Private Sub InitDataTable()
+        If Me.Configuration Is Nothing Then Return
 
         Call Me.Data.Columns.Clear()
-        Dim fieldMetaData = Me.MetaData.GetFieldMetaData(Me.Mode)
-        For Each curField In fieldMetaData
+        Dim fieldConfiguration = Me.Configuration.GetFieldConfigurations
+        For Each curField In fieldConfiguration
             Me.Data.Columns.Add(curField.Name)
         Next
     End Sub
@@ -520,4 +520,73 @@ Public Class Model
     Public Event CellUpdated(e As ModelCellUpdatedEventArgs) Implements IModel.CellUpdated
     Public Event SelectionRangeChanged(e As ModelSelectionRangeChangedEventArgs) Implements IModel.SelectionRangeChanged
     Public Event RowSynchronizationStateChanged(e As ModelRowSynchronizationStateChangedEventArgs) Implements IModel.RowSynchronizationStateChanged
+
+    Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Model))
+        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.TableLayoutPanel1.SuspendLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SuspendLayout()
+        '
+        'TableLayoutPanel1
+        '
+        Me.TableLayoutPanel1.ColumnCount = 1
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel1.Controls.Add(Me.PictureBox1, 0, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.Label1, 0, 1)
+        Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 0)
+        Me.TableLayoutPanel1.Margin = New System.Windows.Forms.Padding(0)
+        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
+        Me.TableLayoutPanel1.RowCount = 2
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(160, 160)
+        Me.TableLayoutPanel1.TabIndex = 0
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.BackgroundImage = CType(resources.GetObject("PictureBox1.BackgroundImage"), System.Drawing.Image)
+        Me.PictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
+        Me.PictureBox1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.PictureBox1.Location = New System.Drawing.Point(0, 0)
+        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(0)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(160, 120)
+        Me.PictureBox1.TabIndex = 0
+        Me.PictureBox1.TabStop = False
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label1.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.5!)
+        Me.Label1.Location = New System.Drawing.Point(0, 120)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(0)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(160, 40)
+        Me.Label1.TabIndex = 1
+        Me.Label1.Text = "Model"
+        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Model
+        '
+        Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
+        Me.Controls.Add(Me.TableLayoutPanel1)
+        Me.DoubleBuffered = True
+        Me.Name = "Model"
+        Me.Size = New System.Drawing.Size(160, 160)
+        Me.TableLayoutPanel1.ResumeLayout(False)
+        Me.TableLayoutPanel1.PerformLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ResumeLayout(False)
+
+    End Sub
+
+    Private Sub Model_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        If Not Me.DesignMode Then Me.Visible = False
+        Call Me.InitializeComponent()
+    End Sub
 End Class

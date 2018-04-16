@@ -29,7 +29,7 @@ Partial Public Class FormAssociation
         AddHandler textBox.TextChanged, AddressOf textBox_TextChanged
         AddHandler textBox.Leave, AddressOf textBox_Leave
         AddHandler textBox.VisibleChanged, AddressOf textBox_VisibleChanged
-        AddHandler Me.FindParentForm(textBox).LocationChanged, AddressOf textBoxBaseForm_LocationChanged
+        AddHandler Me.FindTopParentControl(textBox).LocationChanged, AddressOf textBoxBaseForm_LocationChanged
         AddHandler Me.GotFocus, AddressOf formAssociate_GotFocus
     End Sub
 
@@ -50,13 +50,11 @@ Partial Public Class FormAssociation
         End If
     End Sub
 
-    Private Function FindParentForm(ByVal c As Control) As Form
-        If TypeOf c Is Form Then
-            Return TryCast(c, Form)
-        ElseIf c.Parent IsNot Nothing Then
-            Return FindParentForm(c.Parent)
+    Private Function FindTopParentControl(ByVal c As Control) As Control
+        If c.Parent Is Nothing Then
+            Return c
         Else
-            Return Nothing
+            Return FindTopParentControl(c.Parent)
         End If
     End Function
 
@@ -204,5 +202,9 @@ Partial Public Class FormAssociation
 
     Private Sub listBox_Click(ByVal sender As Object, ByVal e As EventArgs) Handles listBox.Click
         GiveBackFocus()
+    End Sub
+
+    Private Sub listBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles listBox.SelectedIndexChanged
+
     End Sub
 End Class

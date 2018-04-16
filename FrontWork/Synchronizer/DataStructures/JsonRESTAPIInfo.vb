@@ -1,4 +1,5 @@
 ﻿Imports Jint.Native
+Imports System.Net
 Imports System.Text
 Imports System.Text.RegularExpressions
 
@@ -7,6 +8,7 @@ Public Class JsonRESTAPIInfo
     Public Property HTTPMethod As HTTPMethod
     Public Property RequestBodyTemplate As String
     Public Property ResponseBodyTemplate As String
+    Public Property Callback As Func(Of HttpWebResponse, WebException, Boolean)
 
     Private requestJSEngine As New Jint.Engine
     Private responseJSEngine As New Jint.Engine

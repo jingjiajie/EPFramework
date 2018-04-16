@@ -34,6 +34,7 @@
     Sub Refresh(dataTable As DataTable, selectionRange As Range(), syncStates As SynchronizationState())
 
     '属性相关
+    Property Configuration As Configuration
     ReadOnly Property RowCount As Long
     ReadOnly Property ColumnCount As Long
     Property SelectionRange As Range()

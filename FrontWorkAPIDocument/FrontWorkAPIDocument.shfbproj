@@ -27,7 +27,7 @@
       <Argument Key="maxVersionParts" Value="" xmlns="" />
     </TransformComponentArguments>
     <HelpFileFormat>Website</HelpFileFormat>
-    <SyntaxFilters>C#, Visual Basic</SyntaxFilters>
+    <SyntaxFilters>C#, Visual Basic, F#</SyntaxFilters>
     <PresentationStyle>VS2013</PresentationStyle>
     <CleanIntermediates>True</CleanIntermediates>
     <KeepLogFile>True</KeepLogFile>
@@ -47,17 +47,6 @@
     <SdkLinkTarget>Blank</SdkLinkTarget>
     <VisibleItems>InheritedMembers, Protected, ProtectedInternalAsProtected, NonBrowsable</VisibleItems>
     <ApiFilter>
-      <Filter entryType="Namespace" fullName="FrontWork" isExposed="True">
-  <Filter entryType="Class" fullName="FrontWork.EditPanelMetaData" filterName="EditPanelMetaData" isExposed="False" />
-  <Filter entryType="Class" fullName="FrontWork.EditPanelModeMetaData" filterName="EditPanelModeMetaData" isExposed="False" />
-  <Filter entryType="Class" fullName="FrontWork.FieldMetaData" filterName="FieldMetaData" isExposed="False" />
-  <Filter entryType="Class" fullName="FrontWork.FieldMethod" filterName="FieldMethod" isExposed="False" />
-  <Filter entryType="Class" fullName="FrontWork.FormAssociation" filterName="FormAssociation" isExposed="False" />
-  <Filter entryType="Enumeration" fullName="FrontWork.FormAssociation.MoveDirection" filterName="FormAssociation.MoveDirection" isExposed="False" />
-  <Filter entryType="Class" fullName="FrontWork.HTTPMethod" filterName="HTTPMethod" isExposed="False" />
-  <Filter entryType="Enumeration" fullName="FrontWork.SynchronizationState" filterName="SynchronizationState" isExposed="False" />
-  <Filter entryType="Class" fullName="FrontWork.ViewBase`1" filterName="ViewBase`1" isExposed="False" />
-</Filter>
     </ApiFilter>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform

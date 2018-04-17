@@ -7,6 +7,10 @@ Imports unvell.ReoGrid
 Imports unvell.ReoGrid.CellTypes
 Imports unvell.ReoGrid.Events
 
+''' <summary>
+''' ReoGrid表格视图，将配置的数据以表格的形式呈现出来。
+''' 表格控件使用ReoGrid开源控件，感谢ReoGrid作者提供的优秀控件。
+''' </summary>
 Public Class ReoGridView
     Implements IView
 
@@ -14,7 +18,12 @@ Public Class ReoGridView
 
     End Sub
 
-    Private Enum SyncMode
+    ''' <summary>
+    ''' 同步模式
+    ''' SYNC        与Model保持同步
+    ''' NOT_SYNC    与Model脱离同步
+    ''' </summary>
+    Protected Enum SyncMode
         SYNC
         NOT_SYNC
     End Enum
@@ -40,7 +49,12 @@ Public Class ReoGridView
     Private Property Panel As Worksheet
     Private Property JsEngine As New Jint.Engine
 
-    Private Property CurSyncMode As SyncMode
+    ''' <summary>
+    ''' 同步模式，是否和Model数据是同步的
+    ''' （如果Model没有数据，本视图上显示“暂无数据”，就处于不同步状态）
+    ''' </summary>
+    ''' <returns>同步模式</returns>
+    Protected Property CurSyncMode As SyncMode
         Get
             Return Me._curSyncMode
         End Get
@@ -56,6 +70,11 @@ Public Class ReoGridView
         End Set
     End Property
 
+    ''' <summary>
+    ''' 绑定的Model对象，用来存取数据
+    ''' </summary>
+    ''' <returns>Model对象</returns>
+    <Description("Model对象"), Category("FrontWork")>
     Public Property Model As IModel
         Get
             Return Me._model
@@ -71,6 +90,11 @@ Public Class ReoGridView
         End Set
     End Property
 
+    ''' <summary>
+    ''' 绑定的配置中心对象，用来获取配置
+    ''' </summary>
+    ''' <returns>配置中心对象</returns>
+    <Description("配置中心对象"), Category("FrontWork")>
     Public Property Configuration As Configuration Implements IView.Configuration
         Get
             Return Me._configuration
@@ -94,6 +118,9 @@ Public Class ReoGridView
         Me.Workbook = Me.ReoGridControl
     End Sub
 
+    ''' <summary>
+    ''' 绑定Model，为Model绑定各种事件，实现视图和Model的数据同步
+    ''' </summary>
     Protected Sub BindModel()
         AddHandler Me.Model.CellUpdated, AddressOf Me.ModelCellUpdatedEvent
         AddHandler Me.Model.RowUpdated, AddressOf Me.ModelRowUpdatedEvent
@@ -106,6 +133,9 @@ Public Class ReoGridView
         Call Me.ImportData()
     End Sub
 
+    ''' <summary>
+    ''' 解绑Model，取消所有该视图绑定的事件
+    ''' </summary>
     Protected Sub UnbindModel()
         RemoveHandler Me.Model.CellUpdated, AddressOf Me.ModelCellUpdatedEvent
         RemoveHandler Me.Model.RowUpdated, AddressOf Me.ModelRowUpdatedEvent
@@ -120,12 +150,12 @@ Public Class ReoGridView
         Call Me.InitEditPanel()
     End Sub
 
-    Protected Sub ModelRowSynchronizationStateChangedEvent(e As ModelRowSynchronizationStateChangedEventArgs)
+    Private Sub ModelRowSynchronizationStateChangedEvent(e As ModelRowSynchronizationStateChangedEventArgs)
         Dim rows = (From r In e.SynchronizationStateUpdatedRows Select r.Index).ToArray
         Call Me.RefreshRowSynchronizationStates(rows)
     End Sub
 
-    Protected Sub ModelSelectionRangeChangedEvent(e As ModelSelectionRangeChangedEventArgs)
+    Private Sub ModelSelectionRangeChangedEvent(e As ModelSelectionRangeChangedEventArgs)
         Logger.Debug("==ReoGrid ModelSelectionRangeChanged " & Str(Me.GetHashCode))
         If Me.Model.RowCount = 0 Then
             Me.CurSyncMode = SyncMode.NOT_SYNC
@@ -140,7 +170,7 @@ Public Class ReoGridView
         Call Me.RefreshSelectionRange()
     End Sub
 
-    Protected Sub ModelRefreshedEvent(e As ModelRefreshedEventArgs)
+    Private Sub ModelRefreshedEvent(e As ModelRefreshedEventArgs)
         Logger.Debug("==ReoGrid ModelRefreshedEvent")
         If Me.Model.RowCount = 0 Then
             Me.CurSyncMode = SyncMode.NOT_SYNC
@@ -157,7 +187,7 @@ Public Class ReoGridView
         Call Me.RefreshRowSynchronizationStates()
     End Sub
 
-    Protected Sub ModelRowUpdatedEvent(e As ModelRowUpdatedEventArgs)
+    Private Sub ModelRowUpdatedEvent(e As ModelRowUpdatedEventArgs)
         Logger.Debug("==ReoGrid ModelDataUpdatedEvent")
         If Me.CurSyncMode = SyncMode.NOT_SYNC Then
             Call Me.ImportData()
@@ -167,7 +197,7 @@ Public Class ReoGridView
         Me.ImportData(rows)
     End Sub
 
-    Protected Sub ModelRowAddedEvent(e As ModelRowAddedEventArgs)
+    Private Sub ModelRowAddedEvent(e As ModelRowAddedEventArgs)
         Dim oriRows As Long() = (From item In e.AddedRows Select item.Index).ToArray
         If Me.CurSyncMode = SyncMode.NOT_SYNC Then
             Call Me.ImportData()
@@ -187,7 +217,7 @@ Public Class ReoGridView
         Call Me.ImportData(realRowsASC)
     End Sub
 
-    Protected Sub ModelCellUpdatedEvent(e As ModelCellUpdatedEventArgs)
+    Private Sub ModelCellUpdatedEvent(e As ModelCellUpdatedEventArgs)
         Logger.Debug("==ReoGrid ModelCellUpdatedEvent: " + Str(Me.GetHashCode))
         If Me.CurSyncMode = SyncMode.NOT_SYNC Then
             Call Me.ImportData()
@@ -197,7 +227,7 @@ Public Class ReoGridView
         Me.ImportData(rows)
     End Sub
 
-    Protected Sub ModelRowRemovedEvent(e As ModelRowRemovedEventArgs)
+    Private Sub ModelRowRemovedEvent(e As ModelRowRemovedEventArgs)
         If Me.Model.RowCount = 0 Then
             Me.CurSyncMode = SyncMode.NOT_SYNC
             Call Me.ShowDefaultPage()
@@ -217,6 +247,9 @@ Public Class ReoGridView
         AddHandler Me.Panel.BeforeSelectionRangeChange, AddressOf Me.BeforeSelectionRangeChange
     End Sub
 
+    ''' <summary>
+    ''' 从Model同步选区
+    ''' </summary>
     Protected Sub RefreshSelectionRange()
         Logger.SetMode(LogMode.REFRESH_VIEW)
         If Me.CurSyncMode = SyncMode.NOT_SYNC Then Return
@@ -233,6 +266,10 @@ Public Class ReoGridView
         AddHandler Me.Panel.BeforeSelectionRangeChange, AddressOf Me.BeforeSelectionRangeChange
     End Sub
 
+    ''' <summary>
+    ''' 从Model同步各行同步状态
+    ''' </summary>
+    ''' <param name="rows"></param>
     Protected Sub RefreshRowSynchronizationStates(Optional rows As Long() = Nothing)
         If Me.CurSyncMode = SyncMode.NOT_SYNC Then Return
         Logger.SetMode(LogMode.REFRESH_VIEW)
@@ -261,6 +298,9 @@ Public Class ReoGridView
         Next
     End Sub
 
+    ''' <summary>
+    ''' 显示默认页面
+    ''' </summary>
     Protected Sub ShowDefaultPage()
         Me.CurSyncMode = SyncMode.NOT_SYNC
         '设定表格初始有10行，非同步模式
@@ -270,6 +310,9 @@ Public Class ReoGridView
         Me.Panel.Item(0, 0) = "暂无数据"
     End Sub
 
+    ''' <summary>
+    ''' 初始化视图（允许重复调用）
+    ''' </summary>
     Protected Sub InitEditPanel()
         Logger.SetMode(LogMode.INIT_VIEW)
         Call Me.Panel.Reset()
@@ -343,7 +386,7 @@ Public Class ReoGridView
             AddHandler Me.Panel.BeforeSelectionRangeChange, AddressOf BeforeSelectionRangeChange
             '编辑事件
             AddHandler Me.Panel.CellDataChanged, AddressOf Me.CellDataChanged
-            AddHandler Me.textBox.TextChanged, AddressOf Me.TextChanged
+            AddHandler Me.textBox.TextChanged, AddressOf Me.textBoxTextChanged
             AddHandler Me.textBox.Leave, Sub()
                                              Me.Workbook.Focus()
                                          End Sub
@@ -390,17 +433,17 @@ Public Class ReoGridView
         RowInited.Add(row)
     End Sub
 
-    Protected Sub RowAddedEvent()
+    Private Sub RowAddedEvent()
         If Me.CurSyncMode = SyncMode.NOT_SYNC Then Return
         Call Me.ExportRows()
     End Sub
 
-    Protected Sub RowUpdatedEvent()
+    Private Sub RowUpdatedEvent()
         If Me.CurSyncMode = SyncMode.NOT_SYNC Then Return
         Call Me.ExportRows()
     End Sub
 
-    Protected Sub CellUpdatedEvent()
+    Private Sub CellUpdatedEvent()
         If Me.CurSyncMode = SyncMode.NOT_SYNC Then Return
         Call Me.ExportCells()
     End Sub
@@ -505,7 +548,7 @@ Public Class ReoGridView
         End If
     End Sub
 
-    Private Sub TextChanged(sender As Object, e As EventArgs)
+    Private Sub textBoxTextChanged(sender As Object, e As EventArgs)
         Static switcher = True '事件开关，False为关，True为开
         If switcher = False Then Return '开关关掉则直接返回
         Logger.Debug("ReoGrid View textChanged: " & Str(Me.GetHashCode))
@@ -611,6 +654,11 @@ Public Class ReoGridView
         Next
     End Sub
 
+    ''' <summary>
+    ''' 从Model导入数据
+    ''' </summary>
+    ''' <param name="rows">要导入的行</param>
+    ''' <returns>是否导入成功</returns>
     Protected Function ImportData(Optional rows As Long() = Nothing) As Boolean
         Logger.Debug("==ReoGrid ImportData: " + Str(Me.GetHashCode))
         Logger.SetMode(LogMode.REFRESH_VIEW)
@@ -703,7 +751,7 @@ Public Class ReoGridView
     ''' </summary>
     ''' <param name="n"></param>
     ''' <returns></returns>
-    Protected Function Range(n As Integer) As Long()
+    Private Function Range(n As Integer) As Long()
         Return Me.Range(0, n)
     End Function
 
@@ -713,7 +761,7 @@ Public Class ReoGridView
     ''' <param name="start"></param>
     ''' <param name="end"></param>
     ''' <returns></returns>
-    Protected Function Range(start As Long, [end] As Long) As Long()
+    Private Function Range(start As Long, [end] As Long) As Long()
         Dim array([end] - start - 1) As Long
         For i = 0 To array.Length - 1
             array(i) = start + i
@@ -721,7 +769,10 @@ Public Class ReoGridView
         Return array
     End Function
 
-
+    ''' <summary>
+    ''' 清空行
+    ''' </summary>
+    ''' <param name="rows">要清空的行</param>
     Protected Sub ClearRows(rows As Long())
         RemoveHandler Me.Panel.CellDataChanged, AddressOf Me.CellDataChanged
         For Each row In rows
@@ -734,6 +785,9 @@ Public Class ReoGridView
         AddHandler Me.Panel.CellDataChanged, AddressOf Me.CellDataChanged
     End Sub
 
+    ''' <summary>
+    ''' 导出选中行的数据到Model
+    ''' </summary>
     Protected Sub ExportRows()
         Logger.Debug("==ReoGrid ExportData")
         Logger.SetMode(LogMode.SYNC_FROM_VIEW)
@@ -763,6 +817,9 @@ Public Class ReoGridView
         Call Me.dicCellEdited.Clear()
     End Sub
 
+    ''' <summary>
+    ''' 导出选中的单元格的数据到Model
+    ''' </summary>
     Protected Sub ExportCells()
         Logger.Debug("==ReoGrid ExportCell: " + Str(Me.GetHashCode))
         Logger.SetMode(LogMode.SYNC_FROM_VIEW)
@@ -805,6 +862,13 @@ Public Class ReoGridView
         Call Me.dicCellEdited.Clear()
     End Sub
 
+    ''' <summary>
+    ''' 获取单元格数据结果（经过Mapper等之后的最终结果）
+    ''' </summary>
+    ''' <param name="row">行</param>
+    ''' <param name="col">列</param>
+    ''' <param name="fieldConfiguration">字段的Configuration</param>
+    ''' <returns></returns>
     Protected Function GetMappedCellData(row As Long, col As Integer, fieldConfiguration As FieldConfiguration)
         Dim curReoGridCell = Me.Panel.GetCell(row, col)
         '获取Cell中的文字
@@ -825,6 +889,11 @@ Public Class ReoGridView
         Return value
     End Function
 
+    ''' <summary>
+    ''' 将整行数据转换成字典
+    ''' </summary>
+    ''' <param name="row">行号</param>
+    ''' <returns>生成的字典</returns>
     Protected Function RowToDictionary(row As Long) As Dictionary(Of String, Object)
         Dim dic = New Dictionary(Of String, Object)
 

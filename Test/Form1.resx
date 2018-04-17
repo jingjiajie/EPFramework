@@ -218,20 +218,29 @@
 </value>
   </data>
   <data name="configuration.ConfigurationString" xml:space="preserve">
-    <value>[{mode:'default',
-fields:[
-           {name:'id',displayName:'ID',visible:false},
-           {name:'name',displayName:'姓名',association:'nameAssociation'},
-           {name:'password',displayName:'密码',association:'nameAssociation'},
-           {name:'role',displayName:'角色'},
-           {name:'authorityString',displayName:'权限字符串'}],
-httpAPIs:[
-    {apiType:'pull',
-     url:'http://localhost.fiddler:9000/ledger/WMS_Template/person/{{"conditions":$conditions,"orders":$orders}}', 
-     method:'GET',
-     responseBody:'$data'
-    }
-]
+    <value>[{
+    mode:"default",
+    fields:[{name:"id",displayName:"ID",visible:false}, 
+            {name:"name",displayName:"姓名",association:"nameAssociation"},
+            {name:"password",displayName:"密码",association:"nameAssociation"},
+            {name:"role",displayName:"角色"},
+            {name:"authorityString",displayName:"权限字符串"}],
+    httpAPIs:[ {apiType:"pull",
+                url:"http://localhost:9001/WMS_Template/person/{{conditions:$conditions,orders:$orders}}",
+                method:"GET",
+                responseBody:"$data"},
+               {apiType:"update",
+                url:"http://localhost:9001/WMS_Template/person/",
+                method:"PUT",
+                requestBody:"$data"},
+                {apiType:"add",
+                url:"http://localhost:9001/WMS_Template/person/",
+                method:"POST",
+                requestBody:"$data"},
+                {apiType:"remove",
+                url:"http://localhost:9001/WMS_Template/person/{mapProperty($data,'id')}",
+                method:"DELETE"}
+            ]
 }]</value>
   </data>
   <data name="model1.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

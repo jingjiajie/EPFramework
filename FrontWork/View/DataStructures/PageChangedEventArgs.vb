@@ -1,4 +1,11 @@
-﻿Public Class PageChangedEventArgs
+﻿''' <summary>
+''' 页码变化事件参数
+''' </summary>
+Public Class PageChangedEventArgs
+    ''' <summary>
+    ''' 当前页（从1开始）
+    ''' </summary>
+    ''' <returns></returns>
     Public Property CurrentPage As Long
 
     Public Sub New(currentPage As Long)

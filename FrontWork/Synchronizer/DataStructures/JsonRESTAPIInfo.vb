@@ -14,8 +14,14 @@ Public Class JsonRESTAPIInfo
     Private responseJSEngine As New Jint.Engine
 
     Public Sub New()
+        requestJSEngine.SetValue("log", New Action(Of String)(AddressOf Console.WriteLine))
+        responseJSEngine.SetValue("log", New Action(Of String)(AddressOf Console.WriteLine))
         Dim strMapProperty = <string>
                              function mapProperty(objs,propName){
+                                if(typeof(objs)!='object' || typeof(propName)!='string'){
+                                    log("mapProperty usage: mapProperty(&lt;object&gt;,&lt;propertyName&gt;)");
+                                    return null;
+                                }
                                 var result = []
                                 for(var i=0;i&lt;objs.length;i++){
                                     result.push(objs[i][propName])
@@ -63,8 +69,8 @@ Public Class JsonRESTAPIInfo
             Else
                 Try
                     value = Me.requestJSEngine.Execute($"JSON.stringify({expr})").GetCompletionValue.ToString
-                Catch
-                    Throw New Exception($"Invalid expression: ""{expr}""")
+                Catch ex As Exception
+                    Throw New Exception($"Invalid expression: ""{expr}""" & vbCrLf & $"Message: {ex.Message}")
                     Return Nothing
                 End Try
             End If

@@ -125,7 +125,7 @@
     </Compile>
     <Compile Include="Synchronizer\ISynchronizer.vb" />
     <Compile Include="Util\Util.vb" />
-    <Compile Include="View\AssociationItem.vb" />
+    <Compile Include="View\DataStructures\AssociationItem.vb" />
     <Compile Include="View\BasicView.Designer.vb">
       <DependentUpon>BasicView.vb</DependentUpon>
     </Compile>
@@ -138,7 +138,7 @@
     <Compile Include="View\FormAssociation.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\IMethodListener.vb" />
+    <Compile Include="Configuration\IMethodListener.vb" />
     <Compile Include="View\IView.vb" />
     <Compile Include="View\ReoGridView.Designer.vb">
       <DependentUpon>ReoGridView.vb</DependentUpon>
@@ -154,7 +154,9 @@
     <Compile Include="View\PagerView.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Adapters\SearchViewJsonRESTAdapter.vb" />
+    <Compile Include="Adapters\SearchViewJsonRESTAdapter.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="View\SearchView.Designer.vb">
       <DependentUpon>SearchView.vb</DependentUpon>
     </Compile>
@@ -163,6 +165,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Adapters\SearchViewJsonRESTAdapter.resx">
+      <DependentUpon>SearchViewJsonRESTAdapter.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Configuration\Configuration.resx">
       <DependentUpon>Configuration.vb</DependentUpon>
     </EmbeddedResource>
@@ -215,6 +220,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ConfigurationEditor\ConfigurationEditor.csproj">
+      <Project>{69ce0fb9-99cf-4a40-a0ab-e39f5050054e}</Project>
+      <Name>ConfigurationEditor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

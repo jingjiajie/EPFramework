@@ -1,10 +1,22 @@
-﻿Public Class PagerView
+﻿Imports System.ComponentModel
+
+Public Class PagerView
     Implements IView
     Private _currentPage As Long = 1
     Private _totalPage As Long
 
+    ''' <summary>
+    ''' 配置中心对象，用来获取配置
+    ''' </summary>
+    ''' <returns>配置中心对象</returns>
+    <Description("配置中心对象"), Category("FrontWork")>
     Public Property Configuration As Configuration Implements IView.Configuration
 
+    ''' <summary>
+    ''' 当前页码，从1开始
+    ''' </summary>
+    ''' <returns>当前页码</returns>
+    <Description("当前页（从1开始）"), Category("FrontWork")>
     Public Property CurrentPage As Long
         Get
             Return Me._currentPage
@@ -20,6 +32,11 @@
         End Set
     End Property
 
+    ''' <summary>
+    ''' 总页码，从1开始
+    ''' </summary>
+    ''' <returns>总页码</returns>
+    <Description("总页码（从1开始）"), Category("FrontWork")>
     Public Property TotalPage As Long
         Get
             Return Me._totalPage
@@ -33,6 +50,10 @@
         End Set
     End Property
 
+    ''' <summary>
+    ''' 当前页码改变事件（可能由于用户点击下一页，或者程序改变CurrentPage触发）
+    ''' </summary>
+    ''' <param name="args">页码改变事件参数</param>
     Public Event OnCurrentPageChanged(args As PageChangedEventArgs)
 
     Private Sub TableLayoutPanel1_Paint(sender As Object, e As PaintEventArgs) Handles TableLayoutPanel1.Paint

@@ -4,6 +4,10 @@
     Public Shared Property PUT As New HTTPMethod
     Public Shared Property DELETE As New HTTPMethod
 
+    Private Sub New()
+
+    End Sub
+
     Public Shared Function Parse(methodString As String) As HTTPMethod
         If methodString.Equals("GET", StringComparison.OrdinalIgnoreCase) Then
             Return [GET]

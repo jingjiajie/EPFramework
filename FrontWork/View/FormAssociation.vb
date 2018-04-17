@@ -1,8 +1,14 @@
 ﻿Imports System.Threading
 
+''' <summary>
+''' 联想窗口，为视图提供输入联想功能
+''' </summary>
 Partial Public Class FormAssociation
     Inherits Form
 
+    ''' <summary>
+    ''' 联想项移动方向，向上或者向下移动
+    ''' </summary>
     Public Enum MoveDirection
         UP
         DOWN
@@ -12,14 +18,36 @@ Partial Public Class FormAssociation
 
     Private Property AssociationFunc As Func(Of String, AssociationItem())
 
+    ''' <summary>
+    ''' 是否处于已选中联想项目状态。从用户回车选中，到下次联想开始之前，此项为True
+    ''' </summary>
+    ''' <returns>选中状态</returns>
     Public Property Selected As Boolean = False
-    Public Property StayVisible As Boolean = False '是否保持可视
-    Public Property StayUnvisible As Boolean = False '是否保持不可视
 
+    ''' <summary>
+    ''' 是否保持可视，此项为true，则联想窗口不会隐藏
+    ''' </summary>
+    ''' <returns></returns>
+    Public Property StayVisible As Boolean = False
+
+    ''' <summary>
+    ''' 是否保持隐藏，此项为true，则联想窗口不会显示
+    ''' </summary>
+    ''' <returns></returns>
+    Public Property StayUnvisible As Boolean = False
+
+    ''' <summary>
+    ''' 设置联想函数，联想前会调用此函数，将返回值作为联想提示结果
+    ''' </summary>
+    ''' <param name="func">联想函数，参数为用户已经输入的字符串。返回所有联想结果</param>
     Public Sub SetAssociationFunc(func As Func(Of String, AssociationItem()))
         Me.AssociationFunc = func
     End Sub
 
+    ''' <summary>
+    ''' 构造函数，构造时绑定编辑框。联想窗口自动为编辑框添加相应事件，在输入时弹出联想提示
+    ''' </summary>
+    ''' <param name="textBox">要绑定的编辑框</param>
     Public Sub New(ByVal textBox As TextBox)
         InitializeComponent()
         Call MyBase.Show()
@@ -66,7 +94,10 @@ Partial Public Class FormAssociation
         Me.Selected = False
     End Sub
 
-    Public Sub RefreshAssociation()
+    ''' <summary>
+    ''' 刷新联想
+    ''' </summary>
+    Protected Sub RefreshAssociation()
         Static newestListBoxDataTime = DateTime.Now
         If Me.StayUnvisible Then Return
         If String.IsNullOrEmpty(textBox.Text) OrElse Me.AssociationFunc Is Nothing Then
@@ -131,6 +162,10 @@ Partial Public Class FormAssociation
         Me.GiveBackFocus()
     End Sub
 
+    ''' <summary>
+    ''' 移动选择项
+    ''' </summary>
+    ''' <param name="direction">方向，上移或者下移</param>
     Public Sub MoveSelection(ByVal direction As MoveDirection)
         If direction = MoveDirection.UP Then
             If Me.listBox.SelectedIndex > 0 Then

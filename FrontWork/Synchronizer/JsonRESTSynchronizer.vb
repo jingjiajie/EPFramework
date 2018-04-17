@@ -19,20 +19,26 @@ Public Class JsonRESTSynchronizer
     Friend WithEvents Label2 As Label
 
     <Browsable(False)>
+    <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Public Property AddAPI As JsonRESTAPIInfo
 
     <Browsable(False)>
+    <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Public Property UpdateAPI As JsonRESTAPIInfo
 
     <Browsable(False)>
+    <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Public Property RemoveAPI As JsonRESTAPIInfo
 
     <Browsable(False)>
+    <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Public Property PullAPI As JsonRESTAPIInfo
 
     <Browsable(False)>
+    <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Public Property PushFinishedCallback As Action
 
+    <Description("Model对象"), Category("FrontWork")>
     Public Property Model As IModel
         Get
             Return Me._model
@@ -48,6 +54,7 @@ Public Class JsonRESTSynchronizer
         End Set
     End Property
 
+    <Description("配置中心对象"), Category("FrontWork")>
     Public Property Configuration As Configuration Implements ISynchronizer.Configuration
         Get
             Return Me._configuration
@@ -59,12 +66,16 @@ Public Class JsonRESTSynchronizer
             Me._configuration = value
             If Me._configuration IsNot Nothing Then
                 AddHandler Me._configuration.ConfigurationChanged, AddressOf Me.ConfigurationChanged
-                Call Me.InitSynchronizer()
             End If
+            Call Me.ConfigurationChanged(Me, New EventArgs)
         End Set
     End Property
 
     Private modelActions As New List(Of ModelAdapterAction)
+
+    Public Sub New()
+
+    End Sub
 
     Private Sub BindModel()
         AddHandler Me.Model.RowAdded, AddressOf Me.ModelRowAddedEvent
@@ -86,9 +97,9 @@ Public Class JsonRESTSynchronizer
         For Each apiConfig In httpAPIConfigs
             If apiConfig.APIType.Equals("pushFinishedCallback", StringComparison.OrdinalIgnoreCase) Then
                 Me.PushFinishedCallback =
-                Sub()
-                    Call apiConfig.Callback.Invoke()
-                End Sub
+                    Sub()
+                        Call apiConfig.Callback?.Invoke()
+                    End Sub
                 Continue For
             End If
 
@@ -101,7 +112,7 @@ Public Class JsonRESTSynchronizer
             newAPIInfo.ResponseBodyTemplate = apiConfig.ResponseBody
             newAPIInfo.Callback =
                 Function(res, ex) As Boolean
-                    Return apiConfig.Callback.Invoke(res, ex)
+                    Return apiConfig.Callback?.Invoke(res, ex)
                 End Function
             If apiConfig.APIType.Equals("pull", StringComparison.OrdinalIgnoreCase) Then
                 Me.PullAPI = newAPIInfo
@@ -121,8 +132,7 @@ Public Class JsonRESTSynchronizer
 
     Private Sub ModelCellUpdatedEvent(e As ModelCellUpdatedEventArgs)
         If Me.UpdateAPI Is Nothing Then
-            Logger.PutMessage("Update API not setted!")
-            Return
+            Throw New Exception("Update API not set!")
         End If
         Dim updatedCells = e.UpdatedCells
         Dim indexFullRows(updatedCells.Length - 1) As IndexRowPair
@@ -141,8 +151,7 @@ Public Class JsonRESTSynchronizer
 
     Private Sub ModelRowRemovedEvent(e As ModelRowRemovedEventArgs)
         If Me.RemoveAPI Is Nothing Then
-            Logger.PutMessage("Remove API not setted!")
-            Return
+            Throw New Exception("Remove API not setted!")
         End If
         Dim rows = (From indexRow In e.RemovedRows
                     Select indexRow.RowData).ToArray
@@ -152,8 +161,7 @@ Public Class JsonRESTSynchronizer
 
     Private Sub ModelRowUpdatedEvent(e As ModelRowUpdatedEventArgs)
         If Me.UpdateAPI Is Nothing Then
-            Logger.PutMessage("Update API not setted!")
-            Return
+            Throw New Exception("Update API not setted!")
         End If
         Dim indexFullRows(e.UpdatedRows.Length - 1) As IndexRowPair
         For i = 0 To e.UpdatedRows.Length - 1
@@ -168,8 +176,7 @@ Public Class JsonRESTSynchronizer
 
     Private Sub ModelRowAddedEvent(e As ModelRowAddedEventArgs)
         If Me.AddAPI Is Nothing Then
-            Logger.PutMessage("Add API not setted!")
-            Return
+            Throw New Exception("Add API not set!")
         End If
         Dim rows = (From indexRow In e.AddedRows
                     Select indexRow.RowData).ToArray
@@ -179,6 +186,9 @@ Public Class JsonRESTSynchronizer
 
     Public Function PullFromServer() As Boolean Implements ISynchronizer.PullFromServer
         Logger.SetMode(LogMode.MODEL_ADAPTER)
+        If Me.PullAPI Is Nothing Then
+            Throw New Exception("Pull API Not set!")
+        End If
         Try
             Console.WriteLine(Me.PullAPI.HTTPMethod.ToString & " " & Me.PullAPI.GetURL)
 
@@ -265,8 +275,7 @@ Public Class JsonRESTSynchronizer
     Public Function PushToServer() As Boolean Implements ISynchronizer.PushToServer
         Logger.SetMode(LogMode.MODEL_ADAPTER)
         If Me.Model Is Nothing Then
-            Logger.PutMessage("Model not setted")
-            Return False
+            Throw New Exception("Model not set!")
         End If
 
         '将Actions进行优化
@@ -281,11 +290,15 @@ Public Class JsonRESTSynchronizer
                 'TODO 不等于200就认为失败吗？
                 If response.StatusCode <> 200 Then
                     Me.modelActions.Add(action)
-                    Me.Model.UpdateRowSynchronizationStates(rowGuids, Util.Times(SynchronizationState.UNSYNCHRONIZED, rowGuids.Length))
+                    If TypeOf action IsNot RemoveRowAction Then
+                        Me.Model.UpdateRowSynchronizationStates(rowGuids, Util.Times(SynchronizationState.UNSYNCHRONIZED, rowGuids.Length))
+                    End If
                 End If
             Catch ex As WebException
                 Me.modelActions.Add(action)
-                Me.Model.UpdateRowSynchronizationStates(rowGuids, Util.Times(SynchronizationState.UNSYNCHRONIZED, rowGuids.Length))
+                If TypeOf action IsNot RemoveRowAction Then
+                    Me.Model.UpdateRowSynchronizationStates(rowGuids, Util.Times(SynchronizationState.UNSYNCHRONIZED, rowGuids.Length))
+                End If
                 If action.APIInfo.Callback Is Nothing Then Continue For
                 Dim ifContinue = action.APIInfo.Callback.Invoke(ex.Response, ex)
                 If Not ifContinue Then
@@ -501,7 +514,27 @@ Public Class JsonRESTSynchronizer
                         Next
                 End Select
             Next
-            Return dicRowIDActions.Values.ToArray
+            '将所有删除请求合并成一个
+            Dim nonRemoveActions As New List(Of ModelAdapterAction)
+            Dim lastRemoveAction As RemoveRowAction = Nothing
+            Dim removeIndexRowPairs As New List(Of IndexRowPair)
+            For Each curAction In dicRowIDActions.Values
+                If TypeOf curAction Is RemoveRowAction Then
+                    lastRemoveAction = curAction
+                    removeIndexRowPairs.AddRange(curAction.IndexRowPairs)
+                Else
+                    nonRemoveActions.Add(curAction)
+                End If
+            Next
+            If lastRemoveAction IsNot Nothing Then
+                lastRemoveAction.IndexRowPairs = removeIndexRowPairs.ToArray
+            End If
+            '生成最终结果
+            Dim result = nonRemoveActions
+            If lastRemoveAction IsNot Nothing Then
+                result.Add(lastRemoveAction)
+            End If
+            Return result.ToArray
         End Function
     End Class
 
@@ -586,5 +619,9 @@ Public Class JsonRESTSynchronizer
     Private Sub JsonRESTSynchronizer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If Not Me.DesignMode Then Me.Visible = False
         Call Me.InitializeComponent()
+    End Sub
+
+    Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PictureBox1.Click
+
     End Sub
 End Class

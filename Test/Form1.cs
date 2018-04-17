@@ -30,6 +30,7 @@ namespace Test
                                               {name:'role',displayName:'角色'},
                                               {name:'authorityString',displayName:'权限字符串'}]
                                   }]";
+            //this.jsonRESTSynchronizer1.Configuration = this.configuration;
             //this.synchronizer = new JsonRESTSynchronizer();
             //this.synchronizer.Model = this.model;
             //this.synchronizer.SetPullAPI(@"http://localhost.fiddler:9000/ledger/WMS_Template/person/{{""conditions"":$conditions,""orders"":$orders}}",HTTPMethod.GET,"$data");
@@ -84,7 +85,7 @@ namespace Test
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //this.synchronizer.PullFromServer();
+            this.jsonRESTSynchronizer1.PullFromServer();
         }
 
         private void button4_Click(object sender, EventArgs e)

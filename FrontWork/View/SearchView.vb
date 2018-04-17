@@ -1,12 +1,25 @@
-﻿Imports System.Linq
+﻿Imports System.ComponentModel
+Imports System.Linq
 
+''' <summary>
+''' 搜索视图。提供基本的搜索条件，比较条件，排序条件等功能。
+''' 配合各种适配器来适配不同的同步器，从而实现按搜索条件将数据从后端检索并同步到Model中
+''' </summary>
 Public Class SearchView
     Inherits UserControl
     Implements IView
     Private _configuration As Configuration
 
+    ''' <summary>
+    ''' 用户按下查询按键触发的事件
+    ''' </summary>
     Public Event OnSearch As EventHandler(Of OnSearchEventArgs)
 
+    ''' <summary>
+    ''' 配置中心对象，用来获取配置
+    ''' </summary>
+    ''' <returns></returns>
+    <Description("配置中心对象"), Category("FrontWork")>
     Public Property Configuration As Configuration Implements IView.Configuration
         Get
             Return Me._configuration
@@ -23,8 +36,12 @@ Public Class SearchView
         End Set
     End Property
 
+    ''' <summary>
+    ''' 初始化搜索视图，允许重复调用
+    ''' </summary>
     Protected Sub InitEditPanel()
         Call Me.ComboBoxSearchKey.Items.Clear()
+        Call Me.ComboBoxOrderKey.Items.Add("无")
         Call Me.ComboBoxOrderKey.Items.Clear()
         Call Me.ComboBoxOrderKey.Items.Add("无")
 
@@ -50,7 +67,7 @@ Public Class SearchView
     End Sub
 
     Private Sub ButtonSearch_Click(sender As Object, e As EventArgs) Handles ButtonSearch.Click
-        Dim eventArgs = Me.GetSearchArgs
+        Dim eventArgs = Me.GetSearchEventArgs
         RaiseEvent OnSearch(Me, eventArgs)
     End Sub
 
@@ -58,26 +75,33 @@ Public Class SearchView
         Call Me.InitEditPanel()
     End Sub
 
-    Public Function GetSearchArgs() As OnSearchEventArgs
+    ''' <summary>
+    ''' 根据用户的搜索条件设置，生成OnSearchEventArgs
+    ''' </summary>
+    ''' <returns>返回生成的OnSearchEventArgs</returns>
+    Protected Function GetSearchEventArgs() As OnSearchEventArgs
         If Me.Configuration Is Nothing Then
             Throw New Exception("Configuration not set in SearchWidget")
         End If
         Dim newSearchArgs = New OnSearchEventArgs
 
-        Dim searchDisplayName = Me.ComboBoxSearchKey.SelectedItem?.ToString
-        Dim relation As OnSearchEventArgs.Relation
-        Dim searchValue = Me.TextBoxSearchCondition.Text
-        Dim searchName = (From m In Me.Configuration.GetFieldConfigurations()
-                          Where m.DisplayName = searchDisplayName
-                          Select m.Name).First
-        Select Case Me.ComboBoxSearchRelation.SelectedIndex
-            Case 0
-                relation = OnSearchEventArgs.Relation.EQUAL
-            Case 1
-                relation = OnSearchEventArgs.Relation.GREATER_THAN
-            Case 2
-                relation = OnSearchEventArgs.Relation.LESS_THAN
-        End Select
+        If Me.ComboBoxSearchKey.SelectedIndex <> 0 Then
+            Dim searchDisplayName = Me.ComboBoxSearchKey.SelectedItem?.ToString
+            Dim relation As OnSearchEventArgs.Relation
+            Dim searchValue = Me.TextBoxSearchCondition.Text
+            Dim searchName = (From m In Me.Configuration.GetFieldConfigurations()
+                              Where m.DisplayName = searchDisplayName
+                              Select m.Name).First
+            Select Case Me.ComboBoxSearchRelation.SelectedIndex
+                Case 0
+                    relation = OnSearchEventArgs.Relation.EQUAL
+                Case 1
+                    relation = OnSearchEventArgs.Relation.GREATER_THAN
+                Case 2
+                    relation = OnSearchEventArgs.Relation.LESS_THAN
+            End Select
+            newSearchArgs.Conditions = {New OnSearchEventArgs.SearchConditionItem(searchName, relation, {searchValue})}
+        End If
 
         If Me.ComboBoxOrderKey.SelectedIndex <> 0 Then
             Dim orderDisplayName = Me.ComboBoxOrderKey.SelectedItem?.ToString
@@ -93,7 +117,6 @@ Public Class SearchView
             End Select
             newSearchArgs.Orders = {New OnSearchEventArgs.OrderConditionItem(orderName, order)}
         End If
-        newSearchArgs.Conditions = {New OnSearchEventArgs.SearchConditionItem(searchName, relation, {searchValue})}
         Return newSearchArgs
     End Function
 
@@ -102,6 +125,16 @@ Public Class SearchView
             Me.ComboBoxOrder.Enabled = False
         Else
             Me.ComboBoxOrder.Enabled = True
+        End If
+    End Sub
+
+    Private Sub ComboBoxSearchKey_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBoxSearchKey.SelectedIndexChanged
+        If Me.ComboBoxSearchKey.SelectedIndex = 0 Then
+            Me.ComboBoxSearchRelation.Enabled = False
+            Me.TextBoxSearchCondition.Enabled = False
+        Else
+            Me.ComboBoxSearchRelation.Enabled = True
+            Me.TextBoxSearchCondition.Enabled = True
         End If
     End Sub
 End Class

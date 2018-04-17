@@ -543,7 +543,7 @@ Public Class Model
         Me.TableLayoutPanel1.RowCount = 2
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(160, 160)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(180, 180)
         Me.TableLayoutPanel1.TabIndex = 0
         '
         'PictureBox1
@@ -554,7 +554,7 @@ Public Class Model
         Me.PictureBox1.Location = New System.Drawing.Point(0, 0)
         Me.PictureBox1.Margin = New System.Windows.Forms.Padding(0)
         Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(160, 120)
+        Me.PictureBox1.Size = New System.Drawing.Size(180, 140)
         Me.PictureBox1.TabIndex = 0
         Me.PictureBox1.TabStop = False
         '
@@ -563,10 +563,10 @@ Public Class Model
         Me.Label1.AutoSize = True
         Me.Label1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Label1.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.5!)
-        Me.Label1.Location = New System.Drawing.Point(0, 120)
+        Me.Label1.Location = New System.Drawing.Point(0, 140)
         Me.Label1.Margin = New System.Windows.Forms.Padding(0)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(160, 40)
+        Me.Label1.Size = New System.Drawing.Size(180, 40)
         Me.Label1.TabIndex = 1
         Me.Label1.Text = "Model"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -577,7 +577,7 @@ Public Class Model
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.DoubleBuffered = True
         Me.Name = "Model"
-        Me.Size = New System.Drawing.Size(160, 160)
+        Me.Size = New System.Drawing.Size(180, 180)
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.TableLayoutPanel1.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()

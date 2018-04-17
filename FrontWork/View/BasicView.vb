@@ -1,5 +1,6 @@
 ﻿Imports FrontWork
 Imports Jint.Native
+Imports System.ComponentModel
 Imports System.Linq
 
 Public Class BasicView
@@ -11,6 +12,11 @@ Public Class BasicView
 
     Private Property JsEngine As New Jint.Engine
 
+    ''' <summary>
+    ''' Model对象，用来存取数据
+    ''' </summary>
+    ''' <returns>Model对象</returns>
+    <Description("Model对象"), Category("FrontWork")>
     Public Property Model As IModel
         Get
             Return Me._model
@@ -26,6 +32,11 @@ Public Class BasicView
         End Set
     End Property
 
+    ''' <summary>
+    ''' 配置中心对象，用来获取配置
+    ''' </summary>
+    ''' <returns>配置中心对象</returns>
+    <Description("配置中心对象"), Category("FrontWork")>
     Public Property Configuration As Configuration Implements IView.Configuration
         Get
             Return Me._configuration
@@ -62,6 +73,9 @@ Public Class BasicView
         Me.Panel = Me.TableLayoutPanel
     End Sub
 
+    ''' <summary>
+    ''' 绑定新的Model，将本View的各种事件绑定到Model上以实现数据变化的同步
+    ''' </summary>
     Protected Sub BindModel()
         AddHandler Me.Model.RowUpdated, AddressOf Me.ModelRowUpdatedEvent
         AddHandler Me.Model.RowAdded, AddressOf Me.ModelRowAddedEvent
@@ -73,6 +87,9 @@ Public Class BasicView
         Me.ImportData()
     End Sub
 
+    ''' <summary>
+    ''' 解绑Model，取消本视图绑定的所有事件
+    ''' </summary>
     Protected Sub UnbindModel()
         RemoveHandler Me.Model.CellUpdated, AddressOf Me.ModelCellUpdatedEvent
         RemoveHandler Me.Model.RowUpdated, AddressOf Me.ModelRowUpdatedEvent
@@ -177,6 +194,9 @@ Public Class BasicView
         Next
     End Sub
 
+    ''' <summary>
+    ''' 初始化视图（从配置中心读取配置），允许重复调用
+    ''' </summary>
     Protected Sub InitEditPanel()
         '如果基本信息不足，则直接返回
         Logger.SetMode(LogMode.INIT_VIEW)
@@ -323,7 +343,11 @@ Public Class BasicView
         End If
     End Sub
 
-    Public Function ImportData() As Boolean
+    ''' <summary>
+    ''' 从Model导入数据
+    ''' </summary>
+    ''' <returns>是否导入成功</returns>
+    Protected Function ImportData() As Boolean
         Logger.SetMode(LogMode.REFRESH_VIEW)
         If Me.Configuration Is Nothing Then
             Logger.PutMessage("Configuration is not setted")
@@ -402,7 +426,11 @@ Public Class BasicView
         Return True
     End Function
 
-    Public Sub ExportField(fieldName As String)
+    ''' <summary>
+    ''' 导出字段数据到Model
+    ''' </summary>
+    ''' <param name="fieldName">要导出的字段名</param>
+    Protected Sub ExportField(fieldName As String)
         Logger.SetMode(LogMode.SYNC_FROM_VIEW)
         If Not Me.dicFieldEdited.ContainsKey(fieldName) Then Return
         Dim modelSelectedRow = Me.GetModelSelectedRow
@@ -427,7 +455,10 @@ Public Class BasicView
         Me.dicFieldEdited.Remove(fieldName)
     End Sub
 
-    Public Sub ExportData()
+    ''' <summary>
+    ''' 导出所有数据到Model
+    ''' </summary>
+    Protected Sub ExportData()
         Logger.SetMode(LogMode.SYNC_FROM_VIEW)
         If Me.dicFieldEdited.Count = 0 Then
             Return
@@ -460,7 +491,13 @@ Public Class BasicView
         Call Me.dicFieldEdited.Clear()
     End Sub
 
-    Private Function GetMappedValue(fieldName As String, fieldConfiguration As FieldConfiguration) As Object
+    ''' <summary>
+    ''' 获取字段的数据（经过Mapper等操作之后的最终结果）
+    ''' </summary>
+    ''' <param name="fieldName">字段名</param>
+    ''' <param name="fieldConfiguration">字段Configuration</param>
+    ''' <returns>字段的数据</returns>
+    Protected Function GetMappedValue(fieldName As String, fieldConfiguration As FieldConfiguration) As Object
         '获取Control
         Dim curControl = (From control As Control In Me.Panel.Controls
                           Where control.Name = fieldName

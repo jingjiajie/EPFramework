@@ -171,11 +171,9 @@ Partial Class SearchView
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.Name = "SearchView"
         Me.Size = New System.Drawing.Size(1280, 84)
-        Me.Controls.SetChildIndex(Me.TableLayoutPanel1, 0)
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.TableLayoutPanel1.PerformLayout()
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
 

@@ -2,81 +2,198 @@
 <HelpTOC>
 
   <HelpTOCNode Title="FrontWork API中文手册" Url="html/8496c70d-305b-4d2b-a951-1d52fd6b580c.htm" />
-  <HelpTOCNode Id="524e364e-51d4-4f4d-879d-bed097c56575" Title="FrontWork" Url="html/6736a72e-129c-29bb-9465-12afd32ab221.htm">
-    <HelpTOCNode Id="11c30ab6-f620-4139-aa2a-523943a26306" Title="AssociationItem 类" Url="html/978593d3-b3ff-c8e4-b71f-6ae607ff371e.htm">
+  <HelpTOCNode Id="b9e4af80-a391-442b-97a5-363eac766ee9" Title="FrontWork" Url="html/6736a72e-129c-29bb-9465-12afd32ab221.htm">
+    <HelpTOCNode Id="19289089-2df6-4946-a3a5-3df2fc7aca24" Title="AssociationItem 类" Url="html/978593d3-b3ff-c8e4-b71f-6ae607ff371e.htm">
       <HelpTOCNode Title="AssociationItem 构造函数 " Url="html/d82ea6e7-abe3-3db5-7740-27cdbb51af12.htm" />
-      <HelpTOCNode Id="0301fb92-98dc-48e8-840f-ab771e18d76b" Title="AssociationItem 方法" Url="html/6e6454e1-4579-988f-170a-378881701795.htm">
+      <HelpTOCNode Id="e9214efb-ca60-4859-b4c0-54b9e1611517" Title="AssociationItem 方法" Url="html/6e6454e1-4579-988f-170a-378881701795.htm">
         <HelpTOCNode Title="ToString 方法 " Url="html/35e97c3a-1df6-23ea-10ab-f1a3d5e56519.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="d1ab1ab3-ff37-41ec-a0d5-cce1d9e8ca55" Title="AssociationItem 字段" Url="html/bfc632f8-4b61-c46c-94bb-7e60d6d2ea17.htm">
+      <HelpTOCNode Id="e605230a-af5d-4e4f-8d74-6fa381bbb950" Title="AssociationItem 字段" Url="html/bfc632f8-4b61-c46c-94bb-7e60d6d2ea17.htm">
         <HelpTOCNode Title="Hint 字段" Url="html/f9732340-4249-c3e9-975b-213a2910faf2.htm" />
         <HelpTOCNode Title="Word 字段" Url="html/f8e66be9-9645-fce7-f36a-fb7aa32edba4.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
+    <HelpTOCNode Id="39d1c6e7-1115-4a40-af75-aba61ef4dbfa" Title="BasicView 类" Url="html/b082f167-b01f-afa8-fa8b-98bb9bb6d41f.htm">
+      <HelpTOCNode Title="BasicView 构造函数 " Url="html/f57eafce-8f0e-598c-881f-9d14100331fd.htm" />
+      <HelpTOCNode Id="54c68f71-5b4f-4cdd-b715-32e53f27fbb8" Title="BasicView 属性" Url="html/114afee2-81ad-58da-4f18-3ba2d0b96427.htm">
+        <HelpTOCNode Title="Configuration 属性 " Url="html/f0c4a622-3a3f-c152-b913-621fd69f9aaf.htm" />
+        <HelpTOCNode Title="Model 属性 " Url="html/42691e3c-6b6f-11c8-022f-d7733a0a6d92.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="fbcedabb-b1ad-430a-a934-cabc01fda80e" Title="BasicView 方法" Url="html/6025782a-e5b4-6d36-e9d6-876eec4df08c.htm">
+        <HelpTOCNode Title="BindModel 方法 " Url="html/ad34eb21-7e0c-b4b6-1c5f-e888a594f6b4.htm" />
+        <HelpTOCNode Title="Dispose 方法 " Url="html/9d73d678-461a-6bf5-51a1-ca57f75878ca.htm" />
+        <HelpTOCNode Title="ExportData 方法 " Url="html/3a23bd23-8355-7c37-b4de-ae59bef347a1.htm" />
+        <HelpTOCNode Title="ExportField 方法 " Url="html/e722a602-9254-e947-af5e-0ae20f442ef8.htm" />
+        <HelpTOCNode Title="GetMappedValue 方法 " Url="html/3f3b8a30-ee49-3a9c-dd4d-d7e9797db1c1.htm" />
+        <HelpTOCNode Title="ImportData 方法 " Url="html/23eb2428-5dd9-b2a3-42e1-ab9ca992c22d.htm" />
+        <HelpTOCNode Title="InitEditPanel 方法 " Url="html/542d1265-bca5-cc47-3057-255a0d9fcccc.htm" />
+        <HelpTOCNode Title="UnbindModel 方法 " Url="html/a2a02427-c10a-ee40-2b34-d0e49e4d10d7.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="5bf55350-e055-4f66-b3cd-d9483bbbc71e" Title="Configuration 类" Url="html/39a3ca8e-1cb5-6e8b-0937-cfb4196027f7.htm">
+      <HelpTOCNode Title="Configuration 构造函数 " Url="html/b0aabfb9-5fe9-cdba-da6c-c2caa985b584.htm" />
+      <HelpTOCNode Id="ca2e238b-b87a-43aa-b725-635bead317f7" Title="Configuration 属性" Url="html/7e78ec82-843f-4206-f579-a8265196b74e.htm">
+        <HelpTOCNode Title="ConfigurationString 属性 " Url="html/6e8c5a8f-bf17-5904-8e18-a424139d5444.htm" />
+        <HelpTOCNode Title="Mode 属性 " Url="html/4db20ca7-150a-b6ce-d03f-d48787c8baed.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="0070c597-4363-473a-83a7-40dc65ba37f7" Title="Configuration 方法" Url="html/4b67973e-e793-ff8e-c109-678467f53d0f.htm">
+        <HelpTOCNode Title="Configurate 方法 " Url="html/df5f7436-193f-0d92-6de9-4348f3518f34.htm" />
+        <HelpTOCNode Title="ContainsMode 方法 " Url="html/3d4d8a94-88d7-98b5-620c-2275e3067ab2.htm" />
+        <HelpTOCNode Title="GetFieldConfigurations 方法 " Url="html/4bb075fe-f846-4282-0680-c94ad0ab521f.htm" />
+        <HelpTOCNode Title="GetHTTPAPIConfigurations 方法 " Url="html/13dd8083-b541-2c63-c6a1-39c6f3db374b.htm" />
+        <HelpTOCNode Title="SetMethodListener 方法 " Url="html/cd3ad926-eb92-0981-fb3a-8a8c4e94c0c6.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="47ce19a5-fe1f-41db-9ccb-5fc80a2147d9" Title="Configuration 事件" Url="html/545e1a1e-8a2e-a362-3696-97795a4d94d2.htm">
+        <HelpTOCNode Title="ConfigurationChanged 事件" Url="html/70f7dd34-3e66-9ba5-a21f-baf6704e85c8.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="025509f4-2859-4883-9541-bc483e5447cf" Title="ConfigurationChangedEventArgs 类" Url="html/f37f42d1-f93d-9baf-2710-7732dd0a269f.htm">
+      <HelpTOCNode Title="ConfigurationChangedEventArgs 构造函数 " Url="html/5ef5614d-26ee-6b47-d5a1-5e30025ed78f.htm" />
+    </HelpTOCNode>
+    <HelpTOCNode Id="02bfd1c6-2eb5-4bef-9529-bdb9c28d8d3d" Title="FieldConfiguration 类" Url="html/9d033edb-bf0f-89fe-854c-05f2933b46af.htm">
+      <HelpTOCNode Title="FieldConfiguration 构造函数 " Url="html/93692f47-28b2-ea9b-5399-643ec737b3de.htm" />
+      <HelpTOCNode Id="999cb5ca-37d0-4690-92d1-fe2f1a59772a" Title="FieldConfiguration 属性" Url="html/f41a0ddc-2a9b-9c81-c90d-6ce275c67e79.htm">
+        <HelpTOCNode Title="Association 属性 " Url="html/69fe634d-c2da-4c41-ca51-c69e9521d411.htm" />
+        <HelpTOCNode Title="BackwordMapper 属性 " Url="html/ab03a641-d19a-aed2-a8b3-7db98a51929d.htm" />
+        <HelpTOCNode Title="ContentChanged 属性 " Url="html/d193a5a9-855d-c410-43d6-7c20e05ca79f.htm" />
+        <HelpTOCNode Title="DisplayName 属性 " Url="html/f2679c8c-0a5e-7a8c-d099-c890fb8bd6d1.htm" />
+        <HelpTOCNode Title="Editable 属性 " Url="html/8844deea-39ab-a6cf-c9eb-a98b9d4471a6.htm" />
+        <HelpTOCNode Title="EditEnded 属性 " Url="html/10af0996-04f0-5ed3-b5ba-cc66fc8114e7.htm" />
+        <HelpTOCNode Title="ForwardMapper 属性 " Url="html/48f71744-8169-6b4f-66e8-44e89ecac903.htm" />
+        <HelpTOCNode Title="MethodListener 属性 " Url="html/f19a1eb8-11ab-67d4-82ef-68d2681bc627.htm" />
+        <HelpTOCNode Title="Name 属性 " Url="html/7152df72-d941-48d3-6288-723858a741b0.htm" />
+        <HelpTOCNode Title="Values 属性 " Url="html/7fac20db-aca2-5781-fac6-425cb57a9a32.htm" />
+        <HelpTOCNode Title="Visible 属性 " Url="html/2997062e-a262-a5f8-f1f7-63d76e71cee8.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="a4bf2470-3b08-4eff-8387-cd2a84e9805a" Title="FieldConfiguration 方法" Url="html/1f30bae0-f7bb-d837-4d0a-a4a727fcb7c7.htm">
+        <HelpTOCNode Title="FromJsValue 方法 " Url="html/0748987b-1433-3bd9-521b-b0cfb26ce46e.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="9a454ae1-9ee7-46a2-838e-190ead2b68fb" Title="FieldMethod 类" Url="html/f162d230-7ca2-009f-3d9f-0a9f59fa6c96.htm">
+      <HelpTOCNode Title="FieldMethod 构造函数 " Url="html/112bda8f-8124-9719-ee7d-68a94e8c9529.htm" />
+      <HelpTOCNode Id="f8b6cacf-5252-452f-a073-f1b542933da9" Title="FieldMethod 属性" Url="html/fc36eae1-27d0-3b19-ec1b-eb502d8e79d2.htm">
+        <HelpTOCNode Title="Func 属性 " Url="html/e269b55c-072d-c1fd-1141-6536300e335f.htm" />
+        <HelpTOCNode Title="Parameters 属性 " Url="html/af1f2a64-2105-2d1e-a55b-ea4d15fe3595.htm" />
+        <HelpTOCNode Title="ReturnValue 属性 " Url="html/07785aac-0e96-e505-91d3-b1db03ad0497.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="9dedb832-3d69-410c-b158-c417ac7af771" Title="FieldMethod 方法" Url="html/b4b09bc4-4f02-fc7e-96c9-d559fa74337e.htm">
+        <HelpTOCNode Title="Invoke 方法 " Url="html/3c454c68-d5d1-925e-d2b7-f63a3a811020.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="f0fa483b-0610-4b28-a6ba-b3ba685636af" Title="FormAssociation 类" Url="html/1089bcb3-c0fc-e527-46c7-f16a889e03ca.htm">
+      <HelpTOCNode Title="FormAssociation 构造函数 " Url="html/2388a586-40b3-3216-9f10-ca512004df7d.htm" />
+      <HelpTOCNode Id="d93ecfb5-6c3a-4c50-aa74-e282103fa817" Title="FormAssociation 属性" Url="html/c07ff400-7ab5-5346-ddbc-bd718ed2a9f4.htm">
+        <HelpTOCNode Title="CreateParams 属性 " Url="html/86aa4ac6-6a85-edc9-b720-a0e550e47187.htm" />
+        <HelpTOCNode Title="Selected 属性 " Url="html/320155f1-fb16-0e41-1c34-779e7b23b6ab.htm" />
+        <HelpTOCNode Title="StayUnvisible 属性 " Url="html/a3c74aae-ac03-366c-2b75-bfdb3df708e4.htm" />
+        <HelpTOCNode Title="StayVisible 属性 " Url="html/c21c0998-b373-40d9-ae94-f3b2367851b3.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="cdda46a0-16f1-4f2c-99c3-3e752d99f933" Title="FormAssociation 方法" Url="html/bacf79e7-be73-800f-0cb4-4980e76b829c.htm">
+        <HelpTOCNode Title="Dispose 方法 " Url="html/5febead8-0c8b-f186-51bd-805e7c261f0c.htm" />
+        <HelpTOCNode Title="Hide 方法 " Url="html/a10bafc7-f0d4-805a-758e-356729a7c67a.htm" />
+        <HelpTOCNode Title="MoveSelection 方法 " Url="html/c12a4317-d80b-8732-8a64-8b2d11b34f50.htm" />
+        <HelpTOCNode Title="RefreshAssociation 方法 " Url="html/8d19964c-fc11-9c0d-f2ba-6243c9092f59.htm" />
+        <HelpTOCNode Title="SetAssociationFunc 方法 " Url="html/9f930138-43a6-2f52-c950-3f228865a3c9.htm" />
+        <HelpTOCNode Title="Show 方法 " Url="html/6c347ade-b1fc-0026-3456-09d12e10ad2e.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Title="FormAssociation.MoveDirection 枚举" Url="html/5201ac02-875e-05a1-344d-4ad5db3ded10.htm" />
+    <HelpTOCNode Id="bd9986b0-24a3-490e-b9b2-7844403cebf2" Title="HTTPAPIConfiguration 类" Url="html/22e0da22-1c18-c541-25e4-1ffbba59e46c.htm">
+      <HelpTOCNode Title="HTTPAPIConfiguration 构造函数 " Url="html/8d03dece-e71f-dc22-72cc-2c2dc21ec0fe.htm" />
+      <HelpTOCNode Id="39451091-50c3-4d0f-a99d-3f07fa824f67" Title="HTTPAPIConfiguration 属性" Url="html/c6805317-1acc-b042-fe3e-de9b92fabd93.htm">
+        <HelpTOCNode Title="APIType 属性 " Url="html/bdd37b1f-2178-16ef-4c87-f59e66b4b055.htm" />
+        <HelpTOCNode Title="Callback 属性 " Url="html/b226d8b5-c893-bc9d-005c-58b6a1c071ea.htm" />
+        <HelpTOCNode Title="Method 属性 " Url="html/154b8ab2-4a18-cca0-81c1-2ee218ca29f0.htm" />
+        <HelpTOCNode Title="MethodListener 属性 " Url="html/196d97e6-d892-9927-b0cd-e8127a2106d6.htm" />
+        <HelpTOCNode Title="RequestBody 属性 " Url="html/90f33d37-98dc-422a-4362-8e350aa46e8c.htm" />
+        <HelpTOCNode Title="ResponseBody 属性 " Url="html/e490d938-8476-4d6b-b3b7-e32f013bea4d.htm" />
+        <HelpTOCNode Title="URL 属性 " Url="html/7dcf7aa9-778e-2b4e-415b-b219cf59d601.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="ea487a9a-3915-43eb-b20f-665896cd014a" Title="HTTPAPIConfiguration 方法" Url="html/a6f72562-8009-7972-3a34-4ddb05739b41.htm">
+        <HelpTOCNode Title="FromJSValue 方法 " Url="html/4dfda6e7-87f8-7626-4465-03d7da1001fd.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="398457f2-562b-4302-ae6f-31bfc9272c2e" Title="HTTPMethod 类" Url="html/4d8916ee-3529-8bf1-5871-7550cad77adb.htm">
+      <HelpTOCNode Id="eb916b0d-55b7-4cd5-8e0c-e90a254ec8df" Title="HTTPMethod 属性" Url="html/4c818f2d-0aee-79bf-adb1-d7de6a450fb0.htm">
+        <HelpTOCNode Title="DELETE 属性 " Url="html/358b1c39-74a6-8a56-3d97-d71eb463ee9c.htm" />
+        <HelpTOCNode Title="GET 属性 " Url="html/189dcfdd-f469-2700-66ba-b79727f08d2e.htm" />
+        <HelpTOCNode Title="POST 属性 " Url="html/b81b6567-f83b-d115-f61c-1d7d0f42671e.htm" />
+        <HelpTOCNode Title="PUT 属性 " Url="html/05073c77-98fa-2378-28e9-2df96f634144.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="4704a9a2-6efc-4a82-884a-35d169370156" Title="HTTPMethod 方法" Url="html/6a460bcb-b5cb-dc15-42aa-8e3ef03f0b8b.htm">
+        <HelpTOCNode Title="Parse 方法 " Url="html/d1a8fbad-bfd2-0a87-1a9f-5a85dc0641c2.htm" />
+        <HelpTOCNode Title="ToString 方法 " Url="html/cf63db82-1733-49a3-1e17-41beb27fe9c3.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="f9fbeac1-e5ba-4581-b67f-7428bf1c4358" Title="HTTPMethod 运算符" Url="html/ae2568a8-a7ac-f9c7-cd09-1dc08095d463.htm">
+        <HelpTOCNode Title="Equality 运算符 " Url="html/cfd8e8cb-44b2-5e03-40be-91e55d5e4c4a.htm" />
+        <HelpTOCNode Title="Inequality 运算符 " Url="html/d7782bda-eac0-a155-7c9d-16052f1526f9.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
     <HelpTOCNode Title="IMethodListener 接口" Url="html/a70aef6d-f254-8e32-1823-d97b41fec6e4.htm" />
-    <HelpTOCNode Id="99614a10-9033-4919-9dfc-e5005613e097" Title="IModel 接口" Url="html/02f63f09-2e98-5706-3f34-20b18e2f4a6b.htm">
-      <HelpTOCNode Id="4d9788eb-60f5-49c0-99d1-2e20fd3653ef" Title="IModel 属性" Url="html/708be624-a474-d150-8027-a0dbca7e5180.htm">
+    <HelpTOCNode Id="6879c499-e3e0-4b63-97df-e318b6456686" Title="IModel 接口" Url="html/02f63f09-2e98-5706-3f34-20b18e2f4a6b.htm">
+      <HelpTOCNode Id="a76ba9eb-9c28-4967-b0e3-77db2ae62742" Title="IModel 属性" Url="html/708be624-a474-d150-8027-a0dbca7e5180.htm">
         <HelpTOCNode Title="ColumnCount 属性 " Url="html/a3f0b7db-85d4-5532-978d-d303af508333.htm" />
+        <HelpTOCNode Title="Configuration 属性 " Url="html/7789df64-5b3c-8528-caa1-120123a59422.htm" />
         <HelpTOCNode Title="FirstSelectionRange 属性 " Url="html/5d6b2867-2021-b97e-61b6-5af0a9183c08.htm" />
         <HelpTOCNode Title="RowCount 属性 " Url="html/310eca97-03c4-de92-b1df-6a770956343b.htm" />
         <HelpTOCNode Title="SelectionRange 属性 " Url="html/5a96f253-cdb8-7cd1-2736-cd5447d67508.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="f68e0be3-590e-473d-a921-80d3e51793b2" Title="IModel 方法" Url="html/0117c530-07fc-469f-5982-d3975301ab54.htm">
+      <HelpTOCNode Id="903b355b-05a3-492e-8bd2-0bde228ce7e2" Title="IModel 方法" Url="html/0117c530-07fc-469f-5982-d3975301ab54.htm">
         <HelpTOCNode Title="AddRow 方法 " Url="html/777342d4-af47-6ed6-5795-2c75e83ccf0c.htm" />
         <HelpTOCNode Title="AddRows 方法 " Url="html/d479dab4-0cab-a3fd-283e-2527f7dbeaaf.htm" />
         <HelpTOCNode Title="GetDataTable 方法 " Url="html/4f6942ba-ecdc-4aae-3c81-acc0d4f08f9a.htm" />
         <HelpTOCNode Title="GetRowID 方法 " Url="html/df8b2868-f1a3-9626-e0da-5b57c7505bbd.htm" />
         <HelpTOCNode Title="GetRowIDs 方法 " Url="html/2f508112-27b3-b139-7110-49cd2d904545.htm" />
-        <HelpTOCNode Id="e42a5cc5-c097-49e9-90cb-f2b8808150c0" Title="GetRows 方法 " Url="html/d096d895-53b8-2780-bff8-84c139ffba4e.htm">
+        <HelpTOCNode Id="ae5bfa2e-129c-4350-85ed-f9251166ffa3" Title="GetRows 方法 " Url="html/d096d895-53b8-2780-bff8-84c139ffba4e.htm">
           <HelpTOCNode Title="GetRows 方法 (Guid[])" Url="html/663142cd-710b-a5bc-0bf4-86e1bd24bef2.htm" />
           <HelpTOCNode Title="GetRows 方法 (Int64[])" Url="html/214293f1-a6bb-5cf0-0d3d-e3da4fcd2618.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="d09d58d3-08a4-4cba-a330-275e6b150b2c" Title="GetRowSynchronizationState 方法 " Url="html/ed930ff7-7de7-be44-a28c-9892b6954d19.htm">
+        <HelpTOCNode Id="6fe6af29-d2fe-4592-84ce-667e68bca802" Title="GetRowSynchronizationState 方法 " Url="html/ed930ff7-7de7-be44-a28c-9892b6954d19.htm">
           <HelpTOCNode Title="GetRowSynchronizationState 方法 (Guid)" Url="html/96feacc0-49c5-8c0e-b06c-31c116cb79fd.htm" />
           <HelpTOCNode Title="GetRowSynchronizationState 方法 (Int64)" Url="html/c3aa258d-1864-8abd-6083-6c1058d5647c.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="4c1b2215-d362-49fa-b1f6-45bd3e657026" Title="GetRowSynchronizationStates 方法 " Url="html/bca23047-c0e8-3aaa-c202-6e4c1932f202.htm">
+        <HelpTOCNode Id="3b922f0d-dabd-4fc7-98ac-fbcadfa6875e" Title="GetRowSynchronizationStates 方法 " Url="html/bca23047-c0e8-3aaa-c202-6e4c1932f202.htm">
           <HelpTOCNode Title="GetRowSynchronizationStates 方法 (Guid[])" Url="html/6604fc1d-5895-2d97-2188-0089a38f839a.htm" />
           <HelpTOCNode Title="GetRowSynchronizationStates 方法 (Int64[])" Url="html/ee229fb7-31e8-7e4f-e294-3e3e3039a54c.htm" />
         </HelpTOCNode>
         <HelpTOCNode Title="InsertRow 方法 " Url="html/17368306-9f1b-2a5e-d490-85473d64a14f.htm" />
         <HelpTOCNode Title="InsertRows 方法 " Url="html/085accc9-5692-c896-b350-f8ff51235349.htm" />
         <HelpTOCNode Title="Refresh 方法 " Url="html/f35a7a12-e435-58ea-7b5f-bd0ef7eb1232.htm" />
-        <HelpTOCNode Id="27b171ef-4839-4429-949d-f173c80da76a" Title="RemoveRow 方法 " Url="html/27c243ca-52cc-0a20-342d-8f9ba5daffa1.htm">
+        <HelpTOCNode Id="65a7de43-f5d5-44e3-b832-ded737cb2fbf" Title="RemoveRow 方法 " Url="html/27c243ca-52cc-0a20-342d-8f9ba5daffa1.htm">
           <HelpTOCNode Title="RemoveRow 方法 (Guid)" Url="html/f9c356cf-d7cd-6d82-eb4d-a1000d7c3ec8.htm" />
           <HelpTOCNode Title="RemoveRow 方法 (Int64)" Url="html/b88a017a-9c51-15c0-30f4-587ced6df13b.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="abb5d5fd-4226-4bd0-b49c-a5b9c26c8342" Title="RemoveRows 方法 " Url="html/5e5ebfe9-27a8-854c-b5a8-1e4b77943372.htm">
+        <HelpTOCNode Id="f9438942-bb9e-4362-a7ea-c002a27f6d7e" Title="RemoveRows 方法 " Url="html/5e5ebfe9-27a8-854c-b5a8-1e4b77943372.htm">
           <HelpTOCNode Title="RemoveRows 方法 (Guid[])" Url="html/1f2ff49d-8907-e0ed-4663-407dc930885b.htm" />
           <HelpTOCNode Title="RemoveRows 方法 (Int64[])" Url="html/4734e345-bba3-52b1-654b-b25ffee0639e.htm" />
           <HelpTOCNode Title="RemoveRows 方法 (Int64, Int64)" Url="html/3f4618f7-9294-484d-4f5c-7933badbd7de.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="b3e3785e-b258-4a9f-811c-439618cd37a8" Title="UpdateCell 方法 " Url="html/382b9ecc-5693-709b-53cf-0a0dcd7753f2.htm">
+        <HelpTOCNode Id="4af0c7c8-1616-461d-9b1d-0a6661ce2329" Title="UpdateCell 方法 " Url="html/382b9ecc-5693-709b-53cf-0a0dcd7753f2.htm">
           <HelpTOCNode Title="UpdateCell 方法 (Guid, String, Object)" Url="html/5d17bdc2-3d5d-c7ff-5dbd-3c66c24b24e5.htm" />
           <HelpTOCNode Title="UpdateCell 方法 (Int64, String, Object)" Url="html/f803d0f8-08dd-a674-2b12-33e565822186.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="367b832d-b555-4f0e-9d38-e61ad7896f48" Title="UpdateCells 方法 " Url="html/58833ad6-0173-d920-896f-2b2832dfbe17.htm">
+        <HelpTOCNode Id="a04f8f79-7220-401a-8cb1-865512c6b3e9" Title="UpdateCells 方法 " Url="html/58833ad6-0173-d920-896f-2b2832dfbe17.htm">
           <HelpTOCNode Title="UpdateCells 方法 (Guid[], String[], Object[])" Url="html/7486b6dd-cfef-018b-faa3-1fff34113a7b.htm" />
           <HelpTOCNode Title="UpdateCells 方法 (Int64[], String[], Object[])" Url="html/9caafe9e-8beb-c9e3-f187-9ae6fdb61f42.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="62caa5a4-41e3-4261-b3ee-6776d45c5fcb" Title="UpdateRow 方法 " Url="html/4d02b4e7-40f7-eb96-e830-81c9bd903de8.htm">
+        <HelpTOCNode Id="3184e9b8-5848-4413-b6e6-f2de7f99b8d9" Title="UpdateRow 方法 " Url="html/4d02b4e7-40f7-eb96-e830-81c9bd903de8.htm">
           <HelpTOCNode Title="UpdateRow 方法 (Guid, Dictionary(String, Object))" Url="html/dc201ab1-630e-4c0f-04d1-19ad299af405.htm" />
           <HelpTOCNode Title="UpdateRow 方法 (Int64, Dictionary(String, Object))" Url="html/19158b2c-2f8e-ebd8-35c2-af60291429b3.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="c9ad9277-959a-4eda-9d19-f4d1996e7a26" Title="UpdateRows 方法 " Url="html/a3a0eaa3-bbb2-7aa5-659e-a243ad929457.htm">
+        <HelpTOCNode Id="ef7fdb90-a204-400b-96c9-c65386fd1644" Title="UpdateRows 方法 " Url="html/a3a0eaa3-bbb2-7aa5-659e-a243ad929457.htm">
           <HelpTOCNode Title="UpdateRows 方法 (Guid[], Dictionary(String, Object)[])" Url="html/1f00ef06-1151-fe70-0ac5-d465a1c29377.htm" />
           <HelpTOCNode Title="UpdateRows 方法 (Int64[], Dictionary(String, Object)[])" Url="html/56e9ea9a-9879-bfc5-3ec3-cfb283fcfff1.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="4e7f6221-c7ff-4156-b761-db35bc0be422" Title="UpdateRowSynchronizationState 方法 " Url="html/7a9a1fd9-312c-5861-e517-c592cfa903e1.htm">
+        <HelpTOCNode Id="aa7401e3-5d22-4124-abb3-d5b91f16f05f" Title="UpdateRowSynchronizationState 方法 " Url="html/7a9a1fd9-312c-5861-e517-c592cfa903e1.htm">
           <HelpTOCNode Title="UpdateRowSynchronizationState 方法 (Guid, SynchronizationState)" Url="html/ffc69d73-e98b-71f3-bb36-c4332ac23b65.htm" />
           <HelpTOCNode Title="UpdateRowSynchronizationState 方法 (Int64, SynchronizationState)" Url="html/ffe52b1e-bc3d-e358-d046-13b45db4a59d.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="093f1d60-6ab5-4298-a06c-dfd9aa5af0b1" Title="UpdateRowSynchronizationStates 方法 " Url="html/79ed6998-7e72-2d5a-2eb4-1984d7e49fb7.htm">
+        <HelpTOCNode Id="ebe4bf71-25c3-4792-8695-83e04e1aece5" Title="UpdateRowSynchronizationStates 方法 " Url="html/79ed6998-7e72-2d5a-2eb4-1984d7e49fb7.htm">
           <HelpTOCNode Title="UpdateRowSynchronizationStates 方法 (Guid[], SynchronizationState[])" Url="html/6cb3ef3a-22f9-8ffa-8a7f-4688c4b2ccc6.htm" />
           <HelpTOCNode Title="UpdateRowSynchronizationStates 方法 (Int64[], SynchronizationState[])" Url="html/db32640a-d753-6cbd-6006-de880045d5af.htm" />
         </HelpTOCNode>
       </HelpTOCNode>
-      <HelpTOCNode Id="f94ebba8-a601-4f5c-9060-25bc40236745" Title="IModel 事件" Url="html/6bebfaf0-3c2f-f69c-c510-c7b74d39db22.htm">
+      <HelpTOCNode Id="2a377f9f-3825-47b6-ab2d-cdf66a9c5210" Title="IModel 事件" Url="html/6bebfaf0-3c2f-f69c-c510-c7b74d39db22.htm">
         <HelpTOCNode Title="CellUpdated 事件" Url="html/c4efb20a-e859-b767-6225-bdda63a27593.htm" />
         <HelpTOCNode Title="Refreshed 事件" Url="html/3ffb9944-503d-c462-4ad7-d24849122c27.htm" />
         <HelpTOCNode Title="RowAdded 事件" Url="html/bd57f58f-5338-4d52-a761-406192992d0a.htm" />
@@ -93,56 +210,52 @@
     <HelpTOCNode Title="IModel.RowSynchronizationStateChangedEventHandler 委托" Url="html/e8711d4c-5fa2-dd17-5a21-f787ba636a3c.htm" />
     <HelpTOCNode Title="IModel.RowUpdatedEventHandler 委托" Url="html/9860d606-896d-ae24-11bc-534bc32c1c2e.htm" />
     <HelpTOCNode Title="IModel.SelectionRangeChangedEventHandler 委托" Url="html/1c638203-d14a-612f-5fe5-3d7cb1570610.htm" />
-    <HelpTOCNode Id="c116216d-fe55-434d-bccd-b93bb9f0b4c8" Title="IndexRowPair 类" Url="html/8a27a70d-1413-d642-8b18-3d4d7fbe91f5.htm">
-      <HelpTOCNode Id="6864ee08-e27f-451c-842c-f20e346c027c" Title="IndexRowPair 构造函数 " Url="html/e345e7ce-7acc-3350-287e-529a392d5783.htm">
+    <HelpTOCNode Id="262afd93-ba13-4fc5-b3bf-d09493f3383e" Title="IndexRowPair 类" Url="html/8a27a70d-1413-d642-8b18-3d4d7fbe91f5.htm">
+      <HelpTOCNode Id="c904e6d6-8364-4304-93b4-e744d4fe86bf" Title="IndexRowPair 构造函数 " Url="html/e345e7ce-7acc-3350-287e-529a392d5783.htm">
         <HelpTOCNode Title="IndexRowPair 构造函数 " Url="html/bc23573b-6118-df49-7f0b-5687fdfb516a.htm" />
         <HelpTOCNode Title="IndexRowPair 构造函数 (Int64, Guid, Dictionary(String, Object))" Url="html/8bc34612-d54a-6eae-7e74-e44ca4f4180b.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="3fa7b5ec-1d9f-4ac6-8cee-7fa99a0ae9cd" Title="IndexRowPair 属性" Url="html/d4924e51-eb8b-dea0-2013-6d7c10d1cc07.htm">
+      <HelpTOCNode Id="fd46bdb1-1c8b-43be-9b23-fe00432fb7d3" Title="IndexRowPair 属性" Url="html/d4924e51-eb8b-dea0-2013-6d7c10d1cc07.htm">
         <HelpTOCNode Title="Index 属性 " Url="html/4fb22edf-115d-d2f1-8884-3c589fb83a06.htm" />
         <HelpTOCNode Title="RowData 属性 " Url="html/07263f1a-f936-86c4-7819-e5e8ab460297.htm" />
         <HelpTOCNode Title="RowID 属性 " Url="html/4e4fa61c-9522-4828-3846-dbe8d917140f.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="301b435d-3b40-47f1-a98c-48803068dff3" Title="IndexRowSynchronizationStatePair 类" Url="html/88009482-ab16-cd40-1354-6900d55a9a98.htm">
-      <HelpTOCNode Id="f407a84d-35a1-48dd-868c-cd5f606bd1be" Title="IndexRowSynchronizationStatePair 构造函数 " Url="html/3bbbdbb6-9870-7ea5-34ba-b471d85d608b.htm">
+    <HelpTOCNode Id="decf556f-6062-413b-b572-307ad90b36d3" Title="IndexRowSynchronizationStatePair 类" Url="html/88009482-ab16-cd40-1354-6900d55a9a98.htm">
+      <HelpTOCNode Id="da5cb81b-2f07-4379-8376-629d35983d99" Title="IndexRowSynchronizationStatePair 构造函数 " Url="html/3bbbdbb6-9870-7ea5-34ba-b471d85d608b.htm">
         <HelpTOCNode Title="IndexRowSynchronizationStatePair 构造函数 " Url="html/3ba1ed6c-a413-f66c-8b34-8629a1abff59.htm" />
         <HelpTOCNode Title="IndexRowSynchronizationStatePair 构造函数 (Int64, Guid, SynchronizationState)" Url="html/a8e35257-16f2-d447-13c1-fab2e81d4f4b.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="1d8cfacc-7e9e-488e-a519-350c9ec04541" Title="IndexRowSynchronizationStatePair 属性" Url="html/94ce3def-dd8c-d9e8-3215-0518e80b5f16.htm">
+      <HelpTOCNode Id="655ce647-6bab-4ba4-82f5-c0ec3d17df5c" Title="IndexRowSynchronizationStatePair 属性" Url="html/94ce3def-dd8c-d9e8-3215-0518e80b5f16.htm">
         <HelpTOCNode Title="Index 属性 " Url="html/395c2303-74e0-380c-2cfd-f8d72902c3cc.htm" />
         <HelpTOCNode Title="RowID 属性 " Url="html/0bf46d08-43a3-b537-f8ce-cbcea098968c.htm" />
         <HelpTOCNode Title="SynchronizationState 属性 " Url="html/59125ea1-7509-6cfc-b511-2b32fe500187.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="b3ebaedf-d561-4d3d-af84-cda71eb84dd9" Title="ISynchronizer 接口" Url="html/f4ee2ae3-7ab0-ec0f-7ad8-c7605c92fe9c.htm">
-      <HelpTOCNode Id="07b10fed-66db-45ff-8f69-7ac1c04ed6f8" Title="ISynchronizer 方法" Url="html/8ffc2cfc-caf8-b357-c00a-913483188bdc.htm">
+    <HelpTOCNode Id="ba6f6ac3-e6ca-4237-bfdf-b973f74d0daf" Title="ISynchronizer 接口" Url="html/f4ee2ae3-7ab0-ec0f-7ad8-c7605c92fe9c.htm">
+      <HelpTOCNode Id="24dc952e-213c-46f6-b027-c0faf19daf16" Title="ISynchronizer 属性" Url="html/1031a3ae-e7ec-7b8a-1112-5d2ae8a4c7b3.htm">
+        <HelpTOCNode Title="Configuration 属性 " Url="html/b52baef0-3011-6db9-f12e-ce720e8b756f.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="846d787b-58b4-4b68-95d8-a3bd5962be42" Title="ISynchronizer 方法" Url="html/8ffc2cfc-caf8-b357-c00a-913483188bdc.htm">
         <HelpTOCNode Title="PullFromServer 方法 " Url="html/5cb4813a-7677-7848-93f1-7d8413ab3d05.htm" />
         <HelpTOCNode Title="PushToServer 方法 " Url="html/9ac1f180-b3ff-90bb-f5b2-031d5e00aa79.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="09b748d2-c516-4c0c-9b50-cbb6ac9d15ae" Title="IView 接口" Url="html/24a64108-fc81-0b6e-8adc-bd9a06820a54.htm">
-      <HelpTOCNode Id="276d6530-718b-419a-9081-5edab3b403f0" Title="IView 属性" Url="html/2544212c-790c-96be-285c-a55ef5c4be6a.htm">
-        <HelpTOCNode Title="MetaData 属性 " Url="html/8bb8221c-9481-677f-d88c-4a519866d26c.htm" />
-        <HelpTOCNode Title="Mode 属性 " Url="html/a5b1bfb0-b2f7-8bfb-1e29-a752c246ab41.htm" />
-        <HelpTOCNode Title="Model 属性 " Url="html/9c2f4f52-8c1c-86ff-dc20-70aa111cb64d.htm" />
-      </HelpTOCNode>
-      <HelpTOCNode Id="36fe4233-c4a6-4df3-9396-00959d3e8a81" Title="IView 方法" Url="html/2590a509-5255-1cf3-8e96-154b5d435f1c.htm">
-        <HelpTOCNode Id="2f1aa993-a0f6-4fac-821b-6350e061890a" Title="SetMetaDataFromJson 方法 " Url="html/8b3971bc-673d-498b-eb15-a272f3ce3e60.htm">
-          <HelpTOCNode Title="SetMetaDataFromJson 方法 (String, IMethodListener)" Url="html/449c5acc-5674-09dc-dca5-f8ed0d4659e3.htm" />
-          <HelpTOCNode Title="SetMetaDataFromJson 方法 (String, Dictionary(String, IMethodListener))" Url="html/4f909976-2134-cdd4-d9b2-9288974c41f3.htm" />
-        </HelpTOCNode>
+    <HelpTOCNode Id="a62ab1ce-dbc8-4cbc-b447-f3ab3fb71bba" Title="IView 接口" Url="html/24a64108-fc81-0b6e-8adc-bd9a06820a54.htm">
+      <HelpTOCNode Id="7b29506c-5a2d-49ca-ae6c-f4bcc5b93798" Title="IView 属性" Url="html/2544212c-790c-96be-285c-a55ef5c4be6a.htm">
+        <HelpTOCNode Title="Configuration 属性 " Url="html/e46b19d7-1c93-ac93-85b7-5c73910feff6.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="3201bae4-384f-4f5e-af89-3eefc84158c7" Title="JsonRESTAPIInfo 类" Url="html/424b60fb-e819-612a-8ecd-29166b3607a7.htm">
+    <HelpTOCNode Id="157c6657-09a3-4331-8231-ed47f7cd106c" Title="JsonRESTAPIInfo 类" Url="html/424b60fb-e819-612a-8ecd-29166b3607a7.htm">
       <HelpTOCNode Title="JsonRESTAPIInfo 构造函数 " Url="html/79e2b2eb-ff05-2c93-c88a-ff68b9732911.htm" />
-      <HelpTOCNode Id="a183e408-eb78-4bb2-ad1f-cc4fdc578f01" Title="JsonRESTAPIInfo 属性" Url="html/89778a18-eb6a-3437-ddcf-569ec6b5741a.htm">
+      <HelpTOCNode Id="b5adb2dd-7e50-4b2a-9d4c-763e2700ecf8" Title="JsonRESTAPIInfo 属性" Url="html/89778a18-eb6a-3437-ddcf-569ec6b5741a.htm">
+        <HelpTOCNode Title="Callback 属性 " Url="html/2a2b1303-c802-6d06-625c-59221770b28a.htm" />
         <HelpTOCNode Title="HTTPMethod 属性 " Url="html/9f73596d-fe6e-526e-ef1c-e07d1a84c9be.htm" />
         <HelpTOCNode Title="RequestBodyTemplate 属性 " Url="html/3ca1d171-45b9-5d01-b4ec-449478be7093.htm" />
         <HelpTOCNode Title="ResponseBodyTemplate 属性 " Url="html/52d0f3d7-e143-7c0a-02e9-31201965933f.htm" />
         <HelpTOCNode Title="URLTemplate 属性 " Url="html/46f60544-7060-2323-2c47-e020c456d0f3.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="817050b2-db4b-4215-9f9e-5437ee0fde07" Title="JsonRESTAPIInfo 方法" Url="html/fe4dbf74-61a4-8457-8bb5-f225d8e12bb0.htm">
+      <HelpTOCNode Id="031196ab-469a-4b31-bcb6-934ef689d34e" Title="JsonRESTAPIInfo 方法" Url="html/fe4dbf74-61a4-8457-8bb5-f225d8e12bb0.htm">
         <HelpTOCNode Title="GetRequestBody 方法 " Url="html/bbdbc993-560e-d377-8ba3-6bb2e4ea5e3b.htm" />
         <HelpTOCNode Title="GetResponseParameters 方法 " Url="html/20be0f95-6d9f-c82f-fb5e-b1a63d75aee8.htm" />
         <HelpTOCNode Title="GetURL 方法 " Url="html/bf0919e5-8ca4-f8a1-7834-8c219cfc1db6.htm" />
@@ -152,44 +265,52 @@
         <HelpTOCNode Title="SetResponseParameter 方法 " Url="html/8b7501e1-fd23-908b-3f7e-46e49120ef53.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="2d602207-58cf-4d71-b54d-e0427276bccd" Title="JsonRESTSynchronizer 类" Url="html/9552c357-6b3b-6bf7-5eb0-9dd458b4cfd7.htm">
+    <HelpTOCNode Id="001e27f4-3732-4827-8bb7-2569f208f768" Title="JsonRESTSynchronizer 类" Url="html/9552c357-6b3b-6bf7-5eb0-9dd458b4cfd7.htm">
       <HelpTOCNode Title="JsonRESTSynchronizer 构造函数 " Url="html/37c08299-0133-9f90-652c-35f109b998ae.htm" />
-      <HelpTOCNode Id="7bb3fdd7-5787-4d19-b3ef-6be7cd6ae3e0" Title="JsonRESTSynchronizer 属性" Url="html/baff6cce-f870-6832-f9cf-81892f9feb6a.htm">
+      <HelpTOCNode Id="97fa24cf-3308-47a2-9a08-2d088f6867e6" Title="JsonRESTSynchronizer 属性" Url="html/baff6cce-f870-6832-f9cf-81892f9feb6a.htm">
         <HelpTOCNode Title="AddAPI 属性 " Url="html/2f32fe38-e80d-7f6f-66d2-36aa71521325.htm" />
+        <HelpTOCNode Title="Configuration 属性 " Url="html/08780839-5443-b444-da6f-cf2b8a441f0f.htm" />
         <HelpTOCNode Title="Model 属性 " Url="html/7abf1e48-c2b2-2b51-b982-32d31f06bf49.htm" />
         <HelpTOCNode Title="PullAPI 属性 " Url="html/e2a00046-d8aa-fc98-8710-61a60bb5ef04.htm" />
-        <HelpTOCNode Title="PullCallback 属性 " Url="html/c84ef88e-d0e7-ca90-57af-793550aa2f8b.htm" />
-        <HelpTOCNode Title="PushFailedCallback 属性 " Url="html/5074f843-7a6f-6a8d-9044-9d81c2607f2b.htm" />
         <HelpTOCNode Title="PushFinishedCallback 属性 " Url="html/c09324d1-529e-f489-1ce4-886c865caf54.htm" />
         <HelpTOCNode Title="RemoveAPI 属性 " Url="html/eb326584-2f57-09ca-9af7-a620feb47c91.htm" />
         <HelpTOCNode Title="UpdateAPI 属性 " Url="html/ab6b493f-8cb7-afd8-9470-1d31049d3a44.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="6507c0a6-4ac9-450b-bb09-c4a27ddc7aad" Title="JsonRESTSynchronizer 方法" Url="html/7eceb110-f1aa-0f4c-0871-88ca1ccd2443.htm">
+      <HelpTOCNode Id="42d7c8f6-3d9e-4685-85a7-1a347b09d2c4" Title="JsonRESTSynchronizer 方法" Url="html/7eceb110-f1aa-0f4c-0871-88ca1ccd2443.htm">
         <HelpTOCNode Title="DataRowToDictionary 方法 " Url="html/50ea2763-a2f3-dd89-bc17-8db9e8dbdb2d.htm" />
         <HelpTOCNode Title="PullFromServer 方法 " Url="html/e2bb582c-b4a2-0eb8-5721-9028583078ce.htm" />
         <HelpTOCNode Title="PushToServer 方法 " Url="html/a00da744-9c15-b8dd-3518-4afe0d343768.htm" />
         <HelpTOCNode Title="SetAddAPI 方法 " Url="html/041c12db-84fb-d2a5-0b1f-f291d6b4742a.htm" />
         <HelpTOCNode Title="SetPullAPI 方法 " Url="html/bbd26b21-5c17-8c23-28af-22934f85cdab.htm" />
-        <HelpTOCNode Title="SetPushFailedCallback 方法 " Url="html/7a98cf5c-41ce-f23e-5ec7-328ffe1c56d8.htm" />
-        <HelpTOCNode Title="SetPushFinishedCallback 方法 " Url="html/d8a51497-c998-6ed4-67f5-78b9d3fbfd4b.htm" />
         <HelpTOCNode Title="SetRemoveAPI 方法 " Url="html/77da3702-37c4-6634-1bfb-752689ff00a8.htm" />
         <HelpTOCNode Title="SetUpdateAPI 方法 " Url="html/191a0972-d50a-ac99-6974-27a35c2b4e73.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="2b6d59e9-a044-44fe-a5f4-35bb7b4f193c" Title="Model 类" Url="html/f7aecd31-5eb3-6960-968f-caf353b8acd8.htm">
-      <HelpTOCNode Title="Model 构造函数 " Url="html/42adc2c6-265d-65ae-907b-72e022048e61.htm" />
-      <HelpTOCNode Id="c79a5337-d131-447d-bda9-6cbfe2317471" Title="Model 属性" Url="html/89246141-4821-0049-5699-d078c3552b8e.htm">
+    <HelpTOCNode Id="838c36a0-f199-4e98-8ecf-d423e58b763a" Title="ModeConfiguration 类" Url="html/1e73cac8-7471-db3f-d223-baa4b9827c18.htm">
+      <HelpTOCNode Title="ModeConfiguration 构造函数 " Url="html/be7175bd-e7d2-a273-fa6a-9094f2639132.htm" />
+      <HelpTOCNode Id="3de6de66-a478-4035-b513-c82436a520ca" Title="ModeConfiguration 属性" Url="html/152beb67-cacd-1906-c377-3bfaa05474ee.htm">
+        <HelpTOCNode Title="Fields 属性 " Url="html/815a4890-9cea-db66-b58f-b0fe1788f300.htm" />
+        <HelpTOCNode Title="HTTPAPIs 属性 " Url="html/3746a20d-ee82-892b-220e-63281b20a6bc.htm" />
+        <HelpTOCNode Title="Mode 属性 " Url="html/58703c6c-d13c-3af4-bffe-42c92de84edf.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="f94e643b-c29b-4b90-8dcf-50c91c870c64" Title="ModeConfiguration 方法" Url="html/38c74e4f-d5a5-6743-3551-94c479f8c19a.htm">
+        <HelpTOCNode Title="FromJsValue 方法 " Url="html/4b29815e-dc80-2e75-585b-01088e134260.htm" />
+        <HelpTOCNode Title="SetMethodListener 方法 " Url="html/efdb023f-c1c0-8b0f-a1e7-08362d3e3ab7.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="7d29b112-fe30-4343-908a-4473dcd9dba2" Title="Model 类" Url="html/f7aecd31-5eb3-6960-968f-caf353b8acd8.htm">
+      <HelpTOCNode Title="Model 构造函数 " Url="html/2976f258-a618-4213-0258-729b50db29e5.htm" />
+      <HelpTOCNode Id="33538dcd-01ca-498a-bd71-5d34418baf06" Title="Model 属性" Url="html/89246141-4821-0049-5699-d078c3552b8e.htm">
         <HelpTOCNode Title="ColumnCount 属性 " Url="html/1d215366-61a5-3b6d-b156-c449af8ed834.htm" />
+        <HelpTOCNode Title="Configuration 属性 " Url="html/a5b4b210-3c0d-86bb-3db1-a9d2a5987247.htm" />
         <HelpTOCNode Title="FirstSelectionRange 属性 " Url="html/c56ef8e8-6414-bf48-590d-a5ce4b6ddfaa.htm" />
-        <HelpTOCNode Title="MetaData 属性 " Url="html/f210ddfe-2fb3-68b6-f1ee-c6ca89581a67.htm" />
-        <HelpTOCNode Title="Mode 属性 " Url="html/1a9a7394-cbcf-61ca-7edd-fb3cea104566.htm" />
         <HelpTOCNode Title="RowCount 属性 " Url="html/7388c5ad-78b3-9920-028a-4aee6def35b2.htm" />
-        <HelpTOCNode Id="6c182ede-5e83-4c0d-86a0-7862d71bf8dd" Title="SelectionRange 属性 " Url="html/a414e896-6308-e7b7-0eab-5ffd53c6071c.htm">
+        <HelpTOCNode Id="42028bda-c8aa-48d8-95c4-a89f9ce09e52" Title="SelectionRange 属性 " Url="html/a414e896-6308-e7b7-0eab-5ffd53c6071c.htm">
           <HelpTOCNode Title="SelectionRange 属性 " Url="html/709df75a-54f3-0b72-3dea-6470e922d82c.htm" />
           <HelpTOCNode Title="SelectionRange 属性 (Object)" Url="html/9934240d-98c3-dbe8-1a16-c32b247f0256.htm" />
         </HelpTOCNode>
       </HelpTOCNode>
-      <HelpTOCNode Id="07b85761-9a3b-4f22-93c4-6e04162f6241" Title="Model 方法" Url="html/83213a2f-4cb5-c89e-16e4-9a67993df9c2.htm">
+      <HelpTOCNode Id="6ae38a5b-8464-474c-99a9-bc83eee7d10d" Title="Model 方法" Url="html/83213a2f-4cb5-c89e-16e4-9a67993df9c2.htm">
         <HelpTOCNode Title="AddRow 方法 " Url="html/08116416-8cd6-b5c5-8b9d-45b57c6c026d.htm" />
         <HelpTOCNode Title="AddRows 方法 " Url="html/b7b4e5b2-8818-5132-4b07-d436e4d37289.htm" />
         <HelpTOCNode Title="DataRowToDictionary 方法 " Url="html/78eb8d69-e6c5-43be-0697-0237c3f85504.htm" />
@@ -198,12 +319,12 @@
         <HelpTOCNode Title="GetRowID 方法 " Url="html/c795adca-a3f7-950b-a8a9-53987dc1c45e.htm" />
         <HelpTOCNode Title="GetRowIDs 方法 " Url="html/218daba1-7d4a-df24-ff96-ea56933a2d7a.htm" />
         <HelpTOCNode Title="GetRowNum 方法 " Url="html/0ecb1151-530d-b021-882f-8056306ac416.htm" />
-        <HelpTOCNode Id="ee45f606-bca8-4794-8c39-32200d11bbaa" Title="GetRows 方法 " Url="html/ef05e89a-09ed-cf72-7feb-86fecd3a0e9b.htm">
+        <HelpTOCNode Id="4a4cef35-ae10-4ca7-b102-c23f11bdd872" Title="GetRows 方法 " Url="html/ef05e89a-09ed-cf72-7feb-86fecd3a0e9b.htm">
           <HelpTOCNode Title="GetRows 方法 (Guid[])" Url="html/2a0ddc06-bdf3-ce06-02a2-5844c74b7830.htm" />
           <HelpTOCNode Title="GetRows 方法 (Int64[])" Url="html/5182c2af-0799-0fee-daab-90ec10d13426.htm" />
         </HelpTOCNode>
         <HelpTOCNode Title="GetRowSynchronizationState 方法 " Url="html/7e138344-63d0-97b4-7841-edfb9db31c4e.htm" />
-        <HelpTOCNode Id="6ab6180b-eb03-49f2-a69c-0065669a6233" Title="GetRowSynchronizationStates 方法 " Url="html/90850524-1922-20b8-2115-89c571ec95a9.htm">
+        <HelpTOCNode Id="28b695e8-32eb-4c11-901b-674c436dbf29" Title="GetRowSynchronizationStates 方法 " Url="html/90850524-1922-20b8-2115-89c571ec95a9.htm">
           <HelpTOCNode Title="GetRowSynchronizationStates 方法 (Guid)" Url="html/5e2bc454-4f56-ab0a-ce98-3df7d16f1578.htm" />
           <HelpTOCNode Title="GetRowSynchronizationStates 方法 (Guid[])" Url="html/ef408577-221c-c6a3-81f6-299bb52166cb.htm" />
           <HelpTOCNode Title="GetRowSynchronizationStates 方法 (Int64[])" Url="html/05cd3d49-c512-8b8f-e085-9f290806ed20.htm" />
@@ -211,41 +332,41 @@
         <HelpTOCNode Title="InsertRow 方法 " Url="html/76ca23da-23cb-49c5-73cc-981b7a98ce21.htm" />
         <HelpTOCNode Title="InsertRows 方法 " Url="html/dc15c01c-3a40-c314-28b7-9ae7b643a2fe.htm" />
         <HelpTOCNode Title="Refresh 方法 " Url="html/40e24cbf-26d6-ebfd-93e6-046d16077bc5.htm" />
-        <HelpTOCNode Id="9c14f4b2-f71f-4d0d-aff7-e1cb73b92caf" Title="RemoveRow 方法 " Url="html/96096943-d09c-ec22-b813-8393d5452c60.htm">
+        <HelpTOCNode Id="6e4d3c7d-b466-494d-8a35-add1cb611268" Title="RemoveRow 方法 " Url="html/96096943-d09c-ec22-b813-8393d5452c60.htm">
           <HelpTOCNode Title="RemoveRow 方法 (Guid)" Url="html/c50afa32-8da7-6a81-f01a-be3a6af0c63e.htm" />
           <HelpTOCNode Title="RemoveRow 方法 (Int64)" Url="html/ba127e9e-ef74-5d2c-9c29-9c6aa081b812.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="376f7752-9aea-41d3-8cd2-30dcf20d7e87" Title="RemoveRows 方法 " Url="html/7afbf861-4749-370b-e19a-9420b8b56fd4.htm">
+        <HelpTOCNode Id="f70bb645-4426-46e9-83e6-dfb90aef37f9" Title="RemoveRows 方法 " Url="html/7afbf861-4749-370b-e19a-9420b8b56fd4.htm">
           <HelpTOCNode Title="RemoveRows 方法 (Guid[])" Url="html/2ca7727a-72a4-d250-ed59-4690c41e07bd.htm" />
           <HelpTOCNode Title="RemoveRows 方法 (Int64[])" Url="html/4fcc227f-7b00-9f96-90b5-80a5b0e857bd.htm" />
           <HelpTOCNode Title="RemoveRows 方法 (Int64, Int64)" Url="html/d0c45544-f7be-f40b-b179-b33ae6bb63e7.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="bb7fa9c1-ea62-4d60-ae7b-d39e3853ef48" Title="UpdateCell 方法 " Url="html/2b532a3b-a49c-3412-cb46-d8b0bb950c9d.htm">
+        <HelpTOCNode Id="c4fc8353-b90e-47fe-a1de-e439444d7139" Title="UpdateCell 方法 " Url="html/2b532a3b-a49c-3412-cb46-d8b0bb950c9d.htm">
           <HelpTOCNode Title="UpdateCell 方法 (Guid, String, Object)" Url="html/c92948e7-c50d-6ede-2cf5-a3c929385527.htm" />
           <HelpTOCNode Title="UpdateCell 方法 (Int64, String, Object)" Url="html/5245efa5-32af-aad3-d18c-d5edae6821ce.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="a10b89be-5c27-49ef-b92b-d208e4a32553" Title="UpdateCells 方法 " Url="html/9970414b-0fd1-0b8c-053b-5218b24ca6a8.htm">
+        <HelpTOCNode Id="d1a1df55-ede0-4116-9ad6-cba37b5a7673" Title="UpdateCells 方法 " Url="html/9970414b-0fd1-0b8c-053b-5218b24ca6a8.htm">
           <HelpTOCNode Title="UpdateCells 方法 (Guid[], String[], Object[])" Url="html/b3726b82-62ee-e7e0-d7dc-66732751f157.htm" />
           <HelpTOCNode Title="UpdateCells 方法 (Int64[], String[], Object[])" Url="html/761cc866-260b-406b-1661-c4d06662f1e0.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="dd1a0e32-e301-48a1-99ae-07f97f29b29d" Title="UpdateRow 方法 " Url="html/3c876d5b-2a4f-3277-97b1-a54897805d34.htm">
+        <HelpTOCNode Id="43d85555-6ff4-4b2a-b2d1-b778654266ad" Title="UpdateRow 方法 " Url="html/3c876d5b-2a4f-3277-97b1-a54897805d34.htm">
           <HelpTOCNode Title="UpdateRow 方法 (Guid, Dictionary(String, Object))" Url="html/6840b3a5-d9e4-1a51-f967-75b88c252182.htm" />
           <HelpTOCNode Title="UpdateRow 方法 (Int64, Dictionary(String, Object))" Url="html/83303c5c-b049-022a-330d-100caf96bfdf.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="815feee6-6686-4985-9ad8-01c993efd77d" Title="UpdateRows 方法 " Url="html/706c3449-bc25-26ba-70d4-3da2a3962a63.htm">
+        <HelpTOCNode Id="34e664c7-7480-4e68-896f-d1020cbdd0f4" Title="UpdateRows 方法 " Url="html/706c3449-bc25-26ba-70d4-3da2a3962a63.htm">
           <HelpTOCNode Title="UpdateRows 方法 (Guid[], Dictionary(String, Object)[])" Url="html/8fe496ca-e8e8-29c2-7d86-cf7521d0944e.htm" />
           <HelpTOCNode Title="UpdateRows 方法 (Int64[], Dictionary(String, Object)[])" Url="html/e495489e-0f7f-1fe1-4c09-76f2c9d7ebdc.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="b4c12541-a4d6-487e-8003-535533deeb4d" Title="UpdateRowSynchronizationState 方法 " Url="html/c49133cc-e52a-570a-beb8-184964597b04.htm">
+        <HelpTOCNode Id="47717f05-a748-403c-99b7-53bda2b4eb95" Title="UpdateRowSynchronizationState 方法 " Url="html/c49133cc-e52a-570a-beb8-184964597b04.htm">
           <HelpTOCNode Title="UpdateRowSynchronizationState 方法 (Guid, SynchronizationState)" Url="html/1941273a-dd3e-4595-592c-e978ec77a9f9.htm" />
           <HelpTOCNode Title="UpdateRowSynchronizationState 方法 (Int64, SynchronizationState)" Url="html/35074e89-5fcc-8cf8-34a2-77a089a37538.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="dcbbcd65-2486-4397-89e0-ac0ad8cc337c" Title="UpdateRowSynchronizationStates 方法 " Url="html/e927fc10-1be6-311b-cfc3-e3f6b556ac55.htm">
+        <HelpTOCNode Id="8da9c48f-ec2f-44dc-942a-b59c1bb6182a" Title="UpdateRowSynchronizationStates 方法 " Url="html/e927fc10-1be6-311b-cfc3-e3f6b556ac55.htm">
           <HelpTOCNode Title="UpdateRowSynchronizationStates 方法 (Guid[], SynchronizationState[])" Url="html/14f4c221-1c89-22e2-ae18-2c5e7929ad58.htm" />
           <HelpTOCNode Title="UpdateRowSynchronizationStates 方法 (Int64[], SynchronizationState[])" Url="html/a4a0410d-ea51-f8d4-63c1-2359fddefedd.htm" />
         </HelpTOCNode>
       </HelpTOCNode>
-      <HelpTOCNode Id="d5860c9d-fd64-4590-b474-a37d993a9150" Title="Model 事件" Url="html/6f0e0a23-9609-096f-d2bd-31acfad2b530.htm">
+      <HelpTOCNode Id="5fdcdaa7-260e-4855-b826-a503c8e02aaf" Title="Model 事件" Url="html/6f0e0a23-9609-096f-d2bd-31acfad2b530.htm">
         <HelpTOCNode Title="CellUpdated 事件" Url="html/defa6bed-0766-d1f6-25a1-7ebc084a9d5f.htm" />
         <HelpTOCNode Title="Refreshed 事件" Url="html/2d6cd76e-4f15-301a-bca2-fe71c0dba9cd.htm" />
         <HelpTOCNode Title="RowAdded 事件" Url="html/0a6f816f-6cd7-93a5-0760-1b735d880340.htm" />
@@ -255,190 +376,169 @@
         <HelpTOCNode Title="SelectionRangeChanged 事件" Url="html/69d97559-4116-847f-1b13-ae57c10fe607.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="2680d813-fc4a-428c-b116-8d3594772204" Title="ModelCellUpdatedEventArgs 类" Url="html/c03f57fa-ae55-c22d-145c-81f400f7fd02.htm">
+    <HelpTOCNode Id="a87f00be-f7ff-47df-8990-3b7f50537ce7" Title="ModelCellUpdatedEventArgs 类" Url="html/c03f57fa-ae55-c22d-145c-81f400f7fd02.htm">
       <HelpTOCNode Title="ModelCellUpdatedEventArgs 构造函数 " Url="html/deb2a142-94e0-79ac-7ca8-0369e422fe6d.htm" />
-      <HelpTOCNode Id="f4f5df46-803a-4469-8e89-e2357d16c9cc" Title="ModelCellUpdatedEventArgs 属性" Url="html/a8f13593-e9af-7dd7-37be-e2684bf63892.htm">
+      <HelpTOCNode Id="9b5954a2-5d3e-4ae0-80dc-8cc759433f07" Title="ModelCellUpdatedEventArgs 属性" Url="html/a8f13593-e9af-7dd7-37be-e2684bf63892.htm">
         <HelpTOCNode Title="UpdatedCells 属性 " Url="html/103f830f-4e0b-55dc-5ee0-63555f0c4b12.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="2373b032-b3ef-4eda-b659-262e3f6a0fac" Title="ModelRefreshedEventArgs 类" Url="html/43efb0c2-cbd0-26cf-539e-08a996f45114.htm">
+    <HelpTOCNode Id="ad2a7a72-8295-4032-a42c-a3476009f3c6" Title="ModelRefreshedEventArgs 类" Url="html/43efb0c2-cbd0-26cf-539e-08a996f45114.htm">
       <HelpTOCNode Title="ModelRefreshedEventArgs 构造函数 " Url="html/9f553b6f-0b73-c8e1-5923-6f206515fd87.htm" />
     </HelpTOCNode>
-    <HelpTOCNode Id="f3096089-a92f-4834-ae00-73d2c730753d" Title="ModelRowAddedEventArgs 类" Url="html/54dbe511-ae05-8a63-bdf8-4f59d41b48ee.htm">
+    <HelpTOCNode Id="65a4d17b-453d-4513-86ad-ece05b720d74" Title="ModelRowAddedEventArgs 类" Url="html/54dbe511-ae05-8a63-bdf8-4f59d41b48ee.htm">
       <HelpTOCNode Title="ModelRowAddedEventArgs 构造函数 " Url="html/fa2434e1-2494-882b-13be-2fa58b6a3668.htm" />
-      <HelpTOCNode Id="15521a33-9438-47e4-8a29-342ad99592a5" Title="ModelRowAddedEventArgs 属性" Url="html/9d278ea3-7225-0440-f308-dfdd7b01f28c.htm">
+      <HelpTOCNode Id="aa496c15-c107-49bb-8107-547b96e4a9e6" Title="ModelRowAddedEventArgs 属性" Url="html/9d278ea3-7225-0440-f308-dfdd7b01f28c.htm">
         <HelpTOCNode Title="AddedRows 属性 " Url="html/b65f7587-2e0d-5df1-f56c-0885032c4b39.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="f4ced46f-0ace-4672-b44f-c7b4c111580e" Title="ModelRowRemovedEventArgs 类" Url="html/2c885707-0595-607e-76d7-96f85c6203be.htm">
+    <HelpTOCNode Id="44ad3176-f81c-45d1-a6cf-d8928d3dc06c" Title="ModelRowRemovedEventArgs 类" Url="html/2c885707-0595-607e-76d7-96f85c6203be.htm">
       <HelpTOCNode Title="ModelRowRemovedEventArgs 构造函数 " Url="html/a744b1a5-b221-9475-e881-24ac5cad8a32.htm" />
-      <HelpTOCNode Id="395e3d80-6b1f-4b54-92fb-ca0d4eba1869" Title="ModelRowRemovedEventArgs 属性" Url="html/9985f3ca-2f12-7886-d9c2-dbb3b582c946.htm">
+      <HelpTOCNode Id="f090ae19-3c43-4d37-a092-6329ab942583" Title="ModelRowRemovedEventArgs 属性" Url="html/9985f3ca-2f12-7886-d9c2-dbb3b582c946.htm">
         <HelpTOCNode Title="RemovedRows 属性 " Url="html/7ec8b7c0-9fe7-7cc6-bfdf-e1ec6350a6aa.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="714bbe7d-35a9-4db9-882e-4f86637d985b" Title="ModelRowSynchronizationStateChangedEventArgs 类" Url="html/2eda9242-7f33-18d0-0ac7-6458731a912e.htm">
+    <HelpTOCNode Id="a30fbea8-210a-4288-bf72-418f24c1d495" Title="ModelRowSynchronizationStateChangedEventArgs 类" Url="html/2eda9242-7f33-18d0-0ac7-6458731a912e.htm">
       <HelpTOCNode Title="ModelRowSynchronizationStateChangedEventArgs 构造函数 " Url="html/739589c0-7d18-30c2-e0ca-e6550690e59e.htm" />
-      <HelpTOCNode Id="350ffd72-f50f-4481-aa59-9533c1707022" Title="ModelRowSynchronizationStateChangedEventArgs 属性" Url="html/e3f408ca-2fff-32b3-8eb9-3bfa6ddf940e.htm">
+      <HelpTOCNode Id="e8ec6fe3-963c-4189-bef2-5cdf3e075e4e" Title="ModelRowSynchronizationStateChangedEventArgs 属性" Url="html/e3f408ca-2fff-32b3-8eb9-3bfa6ddf940e.htm">
         <HelpTOCNode Title="SynchronizationStateUpdatedRows 属性 " Url="html/28ebb8cf-d2a5-6dde-f5a7-633dfb0a1a7e.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="4deb4e8f-d5a5-4a80-9ee2-8b1e9fa753ce" Title="ModelRowUpdatedEventArgs 类" Url="html/f717676a-1418-08e7-bbbc-da7e89fd1c1f.htm">
+    <HelpTOCNode Id="d7c4e2c5-524e-4565-b256-88a5d43f7947" Title="ModelRowUpdatedEventArgs 类" Url="html/f717676a-1418-08e7-bbbc-da7e89fd1c1f.htm">
       <HelpTOCNode Title="ModelRowUpdatedEventArgs 构造函数 " Url="html/d0e75c2d-4591-be33-e1ed-76d6f4321680.htm" />
-      <HelpTOCNode Id="38a7da33-aae2-4420-8254-14bf5b01fea5" Title="ModelRowUpdatedEventArgs 属性" Url="html/ad235136-0e73-8932-be20-d85f301dbcf2.htm">
+      <HelpTOCNode Id="b03f18d2-0398-4b0e-ad79-65094a62465f" Title="ModelRowUpdatedEventArgs 属性" Url="html/ad235136-0e73-8932-be20-d85f301dbcf2.htm">
         <HelpTOCNode Title="UpdatedRows 属性 " Url="html/91005dec-4047-6c4d-74a5-25bd5d503801.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="a4c4b330-a715-426c-a92e-1e120861fd66" Title="ModelSelectionRangeChangedEventArgs 类" Url="html/9222ea95-9f4e-0e1f-783b-7a216bb52d39.htm">
+    <HelpTOCNode Id="bd11c8ea-56b4-413f-8ff2-8be384124d31" Title="ModelSelectionRangeChangedEventArgs 类" Url="html/9222ea95-9f4e-0e1f-783b-7a216bb52d39.htm">
       <HelpTOCNode Title="ModelSelectionRangeChangedEventArgs 构造函数 " Url="html/9d7c0e81-3a2a-83e8-01d4-2c0c55527444.htm" />
-      <HelpTOCNode Id="1e8b0251-6990-4ed9-ae7d-18ad157a1db0" Title="ModelSelectionRangeChangedEventArgs 属性" Url="html/00e53943-548a-8a06-7b2c-364ad26b81a6.htm">
+      <HelpTOCNode Id="7033a400-131a-44d5-bdf8-b962edd28e83" Title="ModelSelectionRangeChangedEventArgs 属性" Url="html/00e53943-548a-8a06-7b2c-364ad26b81a6.htm">
         <HelpTOCNode Title="NewSelectionRange 属性 " Url="html/0feefcda-dc16-bd1f-e8cf-3eb3b782cc6c.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="9954caa3-7f90-4ce8-8c44-d5904eda5d92" Title="PageChangedEventArgs 类" Url="html/55e4c5f0-a863-4a7c-5265-bc1deba4906e.htm">
-      <HelpTOCNode Id="d3871ec6-881a-4583-82f9-cac4fdd8aacd" Title="PageChangedEventArgs 构造函数 " Url="html/ca42d33d-d8a0-b60f-41e6-5f5eaeb202c1.htm">
+    <HelpTOCNode Id="e2341bbc-f777-4cbd-8a24-516dc404313e" Title="OnSearchEventArgs 类" Url="html/4849a05a-56bb-4e78-d507-ed6e9c3dfbe9.htm">
+      <HelpTOCNode Id="282edbe6-e156-4365-9362-690f45d84603" Title="OnSearchEventArgs 构造函数 " Url="html/3eb07cf9-7dfd-363e-e417-e158a15a285a.htm">
+        <HelpTOCNode Title="OnSearchEventArgs 构造函数 " Url="html/e76c042e-57a2-6079-b5f6-d01fff39e0f3.htm" />
+        <HelpTOCNode Title="OnSearchEventArgs 构造函数 (OnSearchEventArgs.SearchConditionItem[], OnSearchEventArgs.OrderConditionItem[])" Url="html/bdede7c1-614e-7af8-46ba-75ad1dbf0ab1.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="60bfa6b8-f769-4cf7-b71d-fa3dc03991bb" Title="OnSearchEventArgs 属性" Url="html/4dedab51-d4bb-954c-926d-e83c88412950.htm">
+        <HelpTOCNode Title="Conditions 属性 " Url="html/ed6c0055-1d09-adea-14b2-4274816d12ae.htm" />
+        <HelpTOCNode Title="Orders 属性 " Url="html/1a7e9b7e-167a-da32-9e98-2e75b7a200a6.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Title="OnSearchEventArgs.Order 枚举" Url="html/fe1be387-b368-7811-95c9-24dc016d254c.htm" />
+    <HelpTOCNode Id="bd4d890b-4aaa-47cc-ace2-9f7106540c8d" Title="OnSearchEventArgs.OrderConditionItem 类" Url="html/99fa9991-f525-ac67-7781-916367ac7057.htm">
+      <HelpTOCNode Title="OnSearchEventArgs.OrderConditionItem 构造函数 " Url="html/a6f95056-07c7-32c1-db99-1f23c6bf8616.htm" />
+      <HelpTOCNode Id="010d4cee-1f01-461a-a26e-4f0b4de107c4" Title="OrderConditionItem 属性" Url="html/edae78d5-401a-de27-2e69-2e8a5b1d4404.htm">
+        <HelpTOCNode Title="Key 属性 " Url="html/1a3f4cdf-3b99-0be4-9ac7-b99387fe62be.htm" />
+        <HelpTOCNode Title="Order 属性 " Url="html/b2817938-a5f4-1e3a-97b9-43bbacc2b58e.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Title="OnSearchEventArgs.Relation 枚举" Url="html/d1a19b95-a76f-5529-5d9f-1ff9d767697c.htm" />
+    <HelpTOCNode Id="38791982-c269-40f1-ab68-d9d3586770b2" Title="OnSearchEventArgs.SearchConditionItem 类" Url="html/24583463-b172-4e94-7e46-bd62fdee130e.htm">
+      <HelpTOCNode Title="OnSearchEventArgs.SearchConditionItem 构造函数 " Url="html/54ac1d5f-b1b3-3d9e-682e-477a999a7e3c.htm" />
+      <HelpTOCNode Id="d1ec7f6d-a55d-40eb-a252-4f32cc2c900d" Title="SearchConditionItem 属性" Url="html/e9fe26b5-dc26-9e2f-c9d3-778efd805d58.htm">
+        <HelpTOCNode Title="Key 属性 " Url="html/13600ba5-5539-8e02-db95-c7e9e29b5a0d.htm" />
+        <HelpTOCNode Title="Relation 属性 " Url="html/2737e21e-82a1-084c-aee7-ac494c48fe9d.htm" />
+        <HelpTOCNode Title="Values 属性 " Url="html/a35b1119-5ff3-872f-60df-07041e8875a4.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="237bee27-6bf2-4c88-b0f9-28473fa460a4" Title="PageChangedEventArgs 类" Url="html/55e4c5f0-a863-4a7c-5265-bc1deba4906e.htm">
+      <HelpTOCNode Id="ee4e4b4c-c0f3-45e6-9b92-ebdbf7fe4bc9" Title="PageChangedEventArgs 构造函数 " Url="html/ca42d33d-d8a0-b60f-41e6-5f5eaeb202c1.htm">
         <HelpTOCNode Title="PageChangedEventArgs 构造函数 " Url="html/4d370f2d-f97d-2a45-06aa-b22329761ac7.htm" />
         <HelpTOCNode Title="PageChangedEventArgs 构造函数 (Int64)" Url="html/1ef521d2-c3ef-dd66-e7bc-6fc88d84a00b.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="785aa26e-fb40-4c45-ae86-f11f22bc8a0e" Title="PageChangedEventArgs 属性" Url="html/92b0a6d7-4fdc-ce0c-e0a4-96be59bbbc0d.htm">
+      <HelpTOCNode Id="8786c8e4-76b4-4a76-8fb8-05084846375e" Title="PageChangedEventArgs 属性" Url="html/92b0a6d7-4fdc-ce0c-e0a4-96be59bbbc0d.htm">
         <HelpTOCNode Title="CurrentPage 属性 " Url="html/4f373e5f-f61c-b8cb-8be3-a5079364c30b.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="6267492f-d9f9-49d1-9fea-7e4f6d724847" Title="PagerWidget 类" Url="html/26039022-5bbe-e6cc-6cf5-75246a5c7b29.htm">
-      <HelpTOCNode Title="PagerWidget 构造函数 " Url="html/c5b3832a-388d-940c-e8d4-08c81d698c16.htm" />
-      <HelpTOCNode Id="d6577f46-7540-46f0-92f9-17b9e2b41510" Title="PagerWidget 属性" Url="html/d0a3f674-9d9f-a045-61ce-b5a4884503a3.htm">
-        <HelpTOCNode Title="CurrentPage 属性 " Url="html/a79e6f15-f0a5-0612-844d-957063f13179.htm" />
-        <HelpTOCNode Title="TotalPage 属性 " Url="html/c4f8d49e-155c-aa18-56f9-9ac255f0740f.htm" />
+    <HelpTOCNode Id="257344e2-49d8-4b03-85ba-2b0c22fd3188" Title="PagerView 类" Url="html/d9a4df80-a667-1970-f2e5-c45f20c391bf.htm">
+      <HelpTOCNode Title="PagerView 构造函数 " Url="html/1584ed49-8875-3ee7-8f1d-fd67424213e6.htm" />
+      <HelpTOCNode Id="3e7a3564-527e-45d3-999e-70e3dd21ff29" Title="PagerView 属性" Url="html/dee85316-ed0f-b5ea-b738-65a42339aa60.htm">
+        <HelpTOCNode Title="Configuration 属性 " Url="html/e4085549-81fc-8b83-d99c-b40d26f0c894.htm" />
+        <HelpTOCNode Title="CurrentPage 属性 " Url="html/d87990ba-1218-281d-a114-a4ed8092318e.htm" />
+        <HelpTOCNode Title="TotalPage 属性 " Url="html/ce9257d5-77b4-0c41-c988-71e479fa2b6d.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="a7b68a55-1016-4676-abdd-e5efa0db5e2b" Title="PagerWidget 方法" Url="html/3f05d00b-0845-8b29-cf9b-64b0f8cab968.htm">
-        <HelpTOCNode Title="Dispose 方法 " Url="html/5456949f-4b16-3650-b061-33ac76a10128.htm" />
+      <HelpTOCNode Id="e81f4011-02b3-4ccb-b79a-bbbf1713ae80" Title="PagerView 方法" Url="html/e1f98560-d9dd-6067-47c6-2c0ef76c97fc.htm">
+        <HelpTOCNode Title="Dispose 方法 " Url="html/99b47af2-f847-f955-034f-a559c03e01b7.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="a2f5ac1c-b85b-41d1-a43a-f6e986b9ebfa" Title="PagerWidget 事件" Url="html/f1377089-3fa3-c73f-ab90-2b1b81c812ed.htm">
-        <HelpTOCNode Title="OnCurrentPageChanged 事件" Url="html/8d9fb40f-86f1-88a0-8848-036e0151d798.htm" />
+      <HelpTOCNode Id="eb4e629d-68ae-4c84-ba4e-3cbb5a9cf839" Title="PagerView 事件" Url="html/eddb61a8-e679-fd33-52c7-eb57c18d94b1.htm">
+        <HelpTOCNode Title="OnCurrentPageChanged 事件" Url="html/035b1c1b-7f47-731c-84f1-8373bfbaf1c0.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Title="PagerWidget.OnCurrentPageChangedEventHandler 委托" Url="html/67546f89-cf52-8307-2ed9-b205bf7b42a2.htm" />
-    <HelpTOCNode Id="0ed5d379-a598-4417-a749-663c14dae061" Title="PositionCellPair 类" Url="html/9eab9511-112f-4681-5ae6-10cdb833e756.htm">
+    <HelpTOCNode Title="PagerView.OnCurrentPageChangedEventHandler 委托" Url="html/3773355a-d895-e192-839b-47928ef30aa8.htm" />
+    <HelpTOCNode Id="d9864b9e-1f39-453f-baad-8f672f61e659" Title="PositionCellPair 类" Url="html/9eab9511-112f-4681-5ae6-10cdb833e756.htm">
       <HelpTOCNode Title="PositionCellPair 构造函数 " Url="html/a25d8be2-0800-31c1-39fd-804635035474.htm" />
-      <HelpTOCNode Id="79d09e9f-4561-493c-a7da-af2dc199ae1a" Title="PositionCellPair 属性" Url="html/c17374ee-a6a5-fb5c-be6d-c9b9c03a8f34.htm">
+      <HelpTOCNode Id="e9955473-ff00-4390-a146-37220dd2d238" Title="PositionCellPair 属性" Url="html/c17374ee-a6a5-fb5c-be6d-c9b9c03a8f34.htm">
         <HelpTOCNode Title="CellData 属性 " Url="html/0dd21cfb-7e55-e8de-ce8f-46e95c927940.htm" />
         <HelpTOCNode Title="ColumnName 属性 " Url="html/eee3fc41-37a4-fb86-85bd-33907c133be1.htm" />
         <HelpTOCNode Title="Row 属性 " Url="html/e3f14326-0ec9-3798-9000-c08e4d383832.htm" />
         <HelpTOCNode Title="RowID 属性 " Url="html/a177f1cf-8c83-f79d-d4f3-f973523d1d29.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="3ed1f62b-3bdd-40f9-968d-1213d2c90447" Title="Range 类" Url="html/1d4fdc39-9447-258c-8fb9-e530af2044c8.htm">
+    <HelpTOCNode Id="1c2500bb-f9d2-4a3f-9692-c93fb9c3dc9b" Title="Range 类" Url="html/1d4fdc39-9447-258c-8fb9-e530af2044c8.htm">
       <HelpTOCNode Title="Range 构造函数 " Url="html/c76b72f8-41fe-e95b-a514-78ec9891b1f7.htm" />
-      <HelpTOCNode Id="1bb02ee4-6a02-4d09-ae29-937f9ec32880" Title="Range 属性" Url="html/09f15a3f-2afd-04e4-375a-f53f02510876.htm">
+      <HelpTOCNode Id="6382465e-925c-4dac-bfb3-5a25e7e4d6a5" Title="Range 属性" Url="html/09f15a3f-2afd-04e4-375a-f53f02510876.htm">
         <HelpTOCNode Title="Column 属性 " Url="html/bdd3ba08-fa27-65c8-0918-eff726068993.htm" />
         <HelpTOCNode Title="Columns 属性 " Url="html/2f245c3a-dcf3-357a-9e4a-4f4242833820.htm" />
         <HelpTOCNode Title="Row 属性 " Url="html/ece46403-30b2-4c97-06ed-66ba40d4c692.htm" />
         <HelpTOCNode Title="Rows 属性 " Url="html/d5e9edde-567a-7915-6043-e89d1f4ccae1.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="abeda48e-81e5-42c3-8b25-f9f23a9a9ac7" Title="Range 事件" Url="html/cd36081b-8ad1-78c1-9340-5066f1e3dccc.htm">
+      <HelpTOCNode Id="be8b32bf-cb7f-43fb-a112-93a3af5b42ab" Title="Range 事件" Url="html/cd36081b-8ad1-78c1-9340-5066f1e3dccc.htm">
         <HelpTOCNode Title="RangeChanged 事件" Url="html/50b34111-d6db-5a25-610d-c4c6f9c789a3.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
     <HelpTOCNode Title="Range.RangeChangedEventHandler 委托" Url="html/ba49031c-153d-4de3-13e4-8ed426aae0bf.htm" />
-    <HelpTOCNode Id="7dec0727-e144-4b02-9303-3a2c05690957" Title="RangeChangedEventArgs 类" Url="html/aa38d6c8-1053-8c2b-7f89-d10e834b6b90.htm">
+    <HelpTOCNode Id="681c65b8-c032-4f15-82b1-b5fd093c0a75" Title="RangeChangedEventArgs 类" Url="html/aa38d6c8-1053-8c2b-7f89-d10e834b6b90.htm">
       <HelpTOCNode Title="RangeChangedEventArgs 构造函数 " Url="html/aa3573d4-bd44-38af-e624-9001227009e2.htm" />
-      <HelpTOCNode Id="acf9b212-b19f-4fd7-a182-db5e99a6eb1e" Title="RangeChangedEventArgs 属性" Url="html/48e51e36-5af4-4e5b-7bcf-a21c229f325d.htm">
+      <HelpTOCNode Id="adc88a53-aa60-4323-a840-92ed7d3e2d62" Title="RangeChangedEventArgs 属性" Url="html/48e51e36-5af4-4e5b-7bcf-a21c229f325d.htm">
         <HelpTOCNode Title="NewRange 属性 " Url="html/49fb8a5d-55f3-ddf0-310c-071409eb3ba5.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="e43afd4b-8a9e-45a1-9c1a-1ee498099bb3" Title="ReoGridWorksheetView 类" Url="html/b66d52c9-1249-1a07-16d4-d8865e70ab61.htm">
-      <HelpTOCNode Title="ReoGridWorksheetView 构造函数 " Url="html/947ab45a-874b-a95f-b56c-ac819ae50a10.htm" />
-      <HelpTOCNode Id="b0b4f538-2361-4c4e-8d94-c267e2ceca64" Title="ReoGridWorksheetView 方法" Url="html/57a1e1a7-be90-81e2-72fa-983f70d3f55f.htm">
-        <HelpTOCNode Title="BindModel 方法 " Url="html/4359a838-c766-8f18-72b2-e3cc8a099f7c.htm" />
-        <HelpTOCNode Title="CellUpdatedEvent 方法 " Url="html/83cbb376-80d0-9cd5-49cb-7f0479070af3.htm" />
-        <HelpTOCNode Title="ClearRows 方法 " Url="html/b0757f55-ef6d-8c70-4db7-11057ddb0474.htm" />
-        <HelpTOCNode Title="ExportCells 方法 " Url="html/b7c25a04-2ae7-e93f-e228-2748a469f509.htm" />
-        <HelpTOCNode Title="ExportRows 方法 " Url="html/af896d74-11b0-5196-c65c-fb508d430d9f.htm" />
-        <HelpTOCNode Title="GetMappedCellData 方法 " Url="html/fcf9af2f-74f4-f6b1-c43f-3efb013c505a.htm" />
-        <HelpTOCNode Title="ImportData 方法 " Url="html/87afdb8a-e9b9-71c0-2ea0-99f966031545.htm" />
-        <HelpTOCNode Title="InitEditPanel 方法 " Url="html/ba1df802-6ed4-735a-06b1-b064d0cb6ea3.htm" />
-        <HelpTOCNode Title="ModelCellUpdatedEvent 方法 " Url="html/0f02bec6-0c88-79b6-cc26-dc2e2edfa89f.htm" />
-        <HelpTOCNode Title="ModelRefreshedEvent 方法 " Url="html/75daf768-0dbd-ad6b-69e7-c609397f90ae.htm" />
-        <HelpTOCNode Title="ModelRowAddedEvent 方法 " Url="html/78442139-786d-7aae-1e85-d1b7328dca0b.htm" />
-        <HelpTOCNode Title="ModelRowRemovedEvent 方法 " Url="html/dad865da-a735-df9a-86c7-f5a0799af51b.htm" />
-        <HelpTOCNode Title="ModelRowSynchronizationStateChangedEvent 方法 " Url="html/9e8f3d2e-5544-1d7b-3e23-3ccf74f856e5.htm" />
-        <HelpTOCNode Title="ModelRowUpdatedEvent 方法 " Url="html/1c46049f-24bb-d879-075f-43e5bd49bc3d.htm" />
-        <HelpTOCNode Title="ModelSelectionRangeChangedEvent 方法 " Url="html/6a95cba5-c954-4d03-8c63-062060684e43.htm" />
-        <HelpTOCNode Id="4de63059-299d-4f22-8598-d9b31b1cc3b4" Title="Range 方法 " Url="html/d21321d9-1bfc-12b0-5fb4-b627bf60a675.htm">
-          <HelpTOCNode Title="Range 方法 (Int32)" Url="html/3ed0f2fc-4e98-e243-744d-4306f9a60fd7.htm" />
-          <HelpTOCNode Title="Range 方法 (Int64, Int64)" Url="html/a309594f-94af-b2f1-2432-5b7820b3190d.htm" />
-        </HelpTOCNode>
-        <HelpTOCNode Title="RefreshRowSynchronizationStates 方法 " Url="html/c6e6dd49-ffc5-dd0b-f05c-f56c989e648a.htm" />
-        <HelpTOCNode Title="RefreshSelectionRange 方法 " Url="html/89907b40-4425-272c-56e7-dc81b918feb6.htm" />
-        <HelpTOCNode Title="RowAddedEvent 方法 " Url="html/b4bed55c-cdfc-d998-7b07-343e53f8ec40.htm" />
-        <HelpTOCNode Title="RowToDictionary 方法 " Url="html/1b563672-930a-1dbf-ae3a-6ad61d169ec5.htm" />
-        <HelpTOCNode Title="RowUpdatedEvent 方法 " Url="html/398320b6-18d5-c098-eb4a-1b5266d42017.htm" />
-        <HelpTOCNode Title="ShowDefaultPage 方法 " Url="html/88f0791a-0ec6-1aeb-9c43-fa6fd61c22a1.htm" />
-        <HelpTOCNode Title="UnbindModel 方法 " Url="html/4052cf7f-23e3-48c4-f10e-9e6f160b34b3.htm" />
+    <HelpTOCNode Id="b6d6bda0-e6db-44dd-afb7-af7f69999791" Title="ReoGridView 类" Url="html/d31e1e98-a5b7-a7a7-f8cf-751c7ef393ab.htm">
+      <HelpTOCNode Title="ReoGridView 构造函数 " Url="html/220268b7-7591-a6bd-dd02-9af32fab7c12.htm" />
+      <HelpTOCNode Id="16e42a4a-5084-47be-bad5-8acfa3dc831a" Title="ReoGridView 属性" Url="html/da423d49-32b7-9cd8-eb25-734172cdc2d7.htm">
+        <HelpTOCNode Title="Configuration 属性 " Url="html/4cc511dd-0532-ad27-1dbe-813a6a46b88a.htm" />
+        <HelpTOCNode Title="CurSyncMode 属性 " Url="html/ad562abc-2a40-27bf-4888-2ce10d642558.htm" />
+        <HelpTOCNode Title="Model 属性 " Url="html/58b5df47-965a-909a-a9ec-b71ce85b0d01.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="9c1190f7-54e8-4d20-b0f1-a892ab7fc026" Title="ReoGridView 方法" Url="html/f897ad45-ab6f-c303-f7f9-4749a94fb73f.htm">
+        <HelpTOCNode Title="BindModel 方法 " Url="html/199e6ae6-8b68-dc29-e489-4b7dfa327b97.htm" />
+        <HelpTOCNode Title="ClearRows 方法 " Url="html/9057d010-f68d-ca6b-f0dd-727abe86a14f.htm" />
+        <HelpTOCNode Title="Dispose 方法 " Url="html/ca4bc84b-7e95-be55-468d-2800d87ef1bb.htm" />
+        <HelpTOCNode Title="ExportCells 方法 " Url="html/94b520de-11eb-b747-ca27-8ffb8e09060f.htm" />
+        <HelpTOCNode Title="ExportRows 方法 " Url="html/90fc3140-80a9-ac0e-eb20-f8302eb92717.htm" />
+        <HelpTOCNode Title="GetMappedCellData 方法 " Url="html/5633e913-274c-54f3-e293-6f650db4cf0c.htm" />
+        <HelpTOCNode Title="ImportData 方法 " Url="html/5bdeff40-feba-7de0-99fd-3dce0c8226c7.htm" />
+        <HelpTOCNode Title="InitEditPanel 方法 " Url="html/47d641d9-6d7f-17ff-357e-ddd220ac3cf2.htm" />
+        <HelpTOCNode Title="RefreshRowSynchronizationStates 方法 " Url="html/11e0d9b9-de64-ae0a-1de4-549248340b02.htm" />
+        <HelpTOCNode Title="RefreshSelectionRange 方法 " Url="html/9f1beffc-4140-fe6b-f6e7-3c9116abc76a.htm" />
+        <HelpTOCNode Title="RowToDictionary 方法 " Url="html/425f17a3-a974-dfe2-17ff-8ea1b90c1ea2.htm" />
+        <HelpTOCNode Title="ShowDefaultPage 方法 " Url="html/0fec4917-4f60-4550-cbe4-4dd092694428.htm" />
+        <HelpTOCNode Title="UnbindModel 方法 " Url="html/904edfd3-2aeb-bec2-d4ef-e94e5d663a6f.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="0ca99d16-387c-4121-bcbf-4222dfdea583" Title="SearchArgs 类" Url="html/0ecf9018-2ccb-32d5-9314-7ada573243c5.htm">
-      <HelpTOCNode Id="abec1a92-c737-4a12-8373-58a8c420b45a" Title="SearchArgs 构造函数 " Url="html/efaee3a0-1d74-7ba2-e87d-b210d3106cc7.htm">
-        <HelpTOCNode Title="SearchArgs 构造函数 " Url="html/796d6c39-fd07-8861-d460-47690a7bbe43.htm" />
-        <HelpTOCNode Title="SearchArgs 构造函数 (SearchArgs.SearchConditionItem[], SearchArgs.OrderConditionItem[])" Url="html/3c1d4c72-459b-e765-5735-aed71bb27d22.htm" />
+    <HelpTOCNode Title="ReoGridView.SyncMode 枚举" Url="html/0a88d707-22b4-7b35-d060-96f6e91c9ba1.htm" />
+    <HelpTOCNode Id="f276d82f-5d91-4642-94f2-0e009510798a" Title="SearchView 类" Url="html/0240a228-0b72-7749-736c-7aeb97513556.htm">
+      <HelpTOCNode Title="SearchView 构造函数 " Url="html/174b9704-5bac-1685-e4e1-76c1d28d4458.htm" />
+      <HelpTOCNode Id="7d070cd7-19b6-4146-a71a-09ac5ae2194a" Title="SearchView 属性" Url="html/e2f2dc89-8813-f44a-9678-95517873c19f.htm">
+        <HelpTOCNode Title="Configuration 属性 " Url="html/a86f0ae5-1d90-18cb-f3c4-71bba00abe7c.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="e9b7c39b-0f8b-4f4a-85c3-03d2528a2d89" Title="SearchArgs 属性" Url="html/39ef1705-343a-a509-cd72-5cb6f536f1aa.htm">
-        <HelpTOCNode Title="Conditions 属性 " Url="html/fe7e7e6d-a646-651a-49ff-7eaaf60068b9.htm" />
-        <HelpTOCNode Title="Orders 属性 " Url="html/f2c1c88a-533e-3882-e9f2-3036cc7f636e.htm" />
+      <HelpTOCNode Id="f08ebd21-ae04-4c48-9f44-edd2defe2619" Title="SearchView 方法" Url="html/98e75905-884a-5fd9-f70f-cc4c344b5202.htm">
+        <HelpTOCNode Title="Dispose 方法 " Url="html/d0e7abb5-3172-0997-70e3-804a06a1393f.htm" />
+        <HelpTOCNode Title="GetSearchEventArgs 方法 " Url="html/53424318-63ce-6d14-25d5-d34d4acb361f.htm" />
+        <HelpTOCNode Title="InitEditPanel 方法 " Url="html/88485870-54ec-d615-9321-79deb259443e.htm" />
       </HelpTOCNode>
-    </HelpTOCNode>
-    <HelpTOCNode Title="SearchArgs.Order 枚举" Url="html/53d6628d-22af-f79d-ad43-05f59922b0a6.htm" />
-    <HelpTOCNode Id="0fb0555e-6273-4faf-817d-ef81cd03104a" Title="SearchArgs.OrderConditionItem 类" Url="html/6d04e900-2f00-b5cc-44c2-ac0f1d8a3167.htm">
-      <HelpTOCNode Title="SearchArgs.OrderConditionItem 构造函数 " Url="html/8753ad5f-ad50-96d1-2c8a-4023d118e003.htm" />
-      <HelpTOCNode Id="db95c37f-f737-485e-a6b6-846e56088a78" Title="OrderConditionItem 属性" Url="html/09507b66-b105-4ad8-b4d4-e7fbe785acd3.htm">
-        <HelpTOCNode Title="Key 属性 " Url="html/a230276c-8fa7-1d5f-4066-f6f91acb4c8b.htm" />
-        <HelpTOCNode Title="Order 属性 " Url="html/48ebc132-9115-f6e2-991d-01a49f5c786e.htm" />
+      <HelpTOCNode Id="ce153a00-35f9-4617-aaf2-180d1237b832" Title="SearchView 事件" Url="html/3d8c787e-5362-ede6-5202-415f621e72d5.htm">
+        <HelpTOCNode Title="OnSearch 事件" Url="html/7619844a-af5f-da6f-d420-b79fe8607e65.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Title="SearchArgs.Relation 枚举" Url="html/ed0dfe6f-1a34-10a2-a822-4aec7d797533.htm" />
-    <HelpTOCNode Id="54e969fe-acc9-407f-acba-48c6aa7840e3" Title="SearchArgs.SearchConditionItem 类" Url="html/789b2c03-cbd7-5a7a-b773-f73ac3c18cf5.htm">
-      <HelpTOCNode Title="SearchArgs.SearchConditionItem 构造函数 " Url="html/b9c46f21-9745-5da5-7bc6-6080b75c24bc.htm" />
-      <HelpTOCNode Id="0f9f027e-df28-40d5-8e90-c83a559feb7e" Title="SearchConditionItem 属性" Url="html/ee8122f2-7da2-4ff0-760d-575cd1d86ac1.htm">
-        <HelpTOCNode Title="Key 属性 " Url="html/47a71da3-77ca-7101-bad8-44ba49aeef96.htm" />
-        <HelpTOCNode Title="Relation 属性 " Url="html/5f01b2bf-ff91-70f8-995a-017d3ca615ab.htm" />
-        <HelpTOCNode Title="Values 属性 " Url="html/781b7b9b-a9e5-7523-4ea4-1af88b08853d.htm" />
+    <HelpTOCNode Id="f0a507cf-f0d8-417b-96cf-6cdb64ce8cac" Title="SearchViewJsonRESTAdapter 类" Url="html/bbaf62aa-dc76-b9e6-c547-3a912f62d051.htm">
+      <HelpTOCNode Title="SearchViewJsonRESTAdapter 构造函数 " Url="html/77a5c6b8-e6e8-f7d7-5515-b6499795dca8.htm" />
+      <HelpTOCNode Id="4f7dfdcf-da47-456f-ad1a-56027c9b9620" Title="SearchViewJsonRESTAdapter 属性" Url="html/8a7d322f-9edf-5f8a-f945-f16c85499c58.htm">
+        <HelpTOCNode Title="SearchView 属性 " Url="html/e5241f8b-f7fd-22f1-0a0c-0e1e283eafe9.htm" />
+        <HelpTOCNode Title="Synchronizer 属性 " Url="html/f110fe46-c78c-73ab-7746-55d220d67990.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="c51a31ba-f451-4fae-952d-bcae97496aa4" Title="SearchWidget 类" Url="html/37fd764b-6f66-bd02-72f4-7c24ef59e37b.htm">
-      <HelpTOCNode Title="SearchWidget 构造函数 " Url="html/26b5c014-bcd7-df33-2c97-dc8cff4585b1.htm" />
-      <HelpTOCNode Id="0ffbdce4-dbf0-4c15-a049-cf7b553d135c" Title="SearchWidget 属性" Url="html/f6246a2c-bdfc-d747-dbd6-63fb233e1c11.htm">
-        <HelpTOCNode Title="MetaData 属性 " Url="html/fb9d8588-ce3c-9493-c80b-784b15c2adc7.htm" />
-        <HelpTOCNode Title="Mode 属性 " Url="html/35139fc1-8d10-5b3d-f2e1-ca4a88c012f4.htm" />
-      </HelpTOCNode>
-      <HelpTOCNode Id="ab90fb4a-930b-4fa5-98fb-f020dd5d9f56" Title="SearchWidget 方法" Url="html/1c97f6ae-f32a-8227-9ba8-56b8c4ccf46d.htm">
-        <HelpTOCNode Title="Dispose 方法 " Url="html/89db0a22-6fc2-4450-5406-57f074fc2413.htm" />
-        <HelpTOCNode Title="GetSearchArgs 方法 " Url="html/ab0e5a61-f66d-00a5-dc8b-21ec2cc4af38.htm" />
-        <HelpTOCNode Title="SetMetaData 方法 " Url="html/13244287-0824-be34-a729-f897487ee5b1.htm" />
-      </HelpTOCNode>
-      <HelpTOCNode Id="d43b8bf6-b711-423a-8db9-0eee56e05cef" Title="SearchWidget 事件" Url="html/c91792a6-359f-4d87-5823-b76b73c47123.htm">
-        <HelpTOCNode Title="OnSearch 事件" Url="html/c4058987-8005-4d62-7d0a-cf051a90007f.htm" />
-      </HelpTOCNode>
-    </HelpTOCNode>
-    <HelpTOCNode Title="SearchWidget.OnSearchEventHandler 委托" Url="html/6086d71b-3461-10ae-509a-490e408e7466.htm" />
-    <HelpTOCNode Id="66553c3a-c326-4287-b39d-e8b4dd6e8d24" Title="SearchWidgetJsonRESTAdapter 类" Url="html/d41c1dc8-679d-64a4-ea3f-c02b5c84c854.htm">
-      <HelpTOCNode Title="SearchWidgetJsonRESTAdapter 构造函数 " Url="html/44458c3d-30ba-83b5-cf62-8e9a2dc372a1.htm" />
-      <HelpTOCNode Id="e7ab857a-e627-457a-a972-e32d39c7c843" Title="SearchWidgetJsonRESTAdapter 属性" Url="html/668d72d2-7d7a-46e6-bd73-182c7248249a.htm">
-        <HelpTOCNode Title="SearchWidget 属性 " Url="html/655bc2c3-5fc8-b314-acd6-fa87c6ac852b.htm" />
-        <HelpTOCNode Title="Synchronizer 属性 " Url="html/2c2bb8f4-814b-6434-a81c-06d0c59c3681.htm" />
-      </HelpTOCNode>
-      <HelpTOCNode Id="6a7d400f-1e6b-4675-84e0-7373c8074a40" Title="SearchWidgetJsonRESTAdapter 方法" Url="html/5229a50e-2802-c7c1-8439-dc68b0fc24c7.htm">
-        <HelpTOCNode Title="Bind 方法 " Url="html/1050774d-e765-d72b-31d7-5cfc7be21d59.htm" />
-      </HelpTOCNode>
-    </HelpTOCNode>
-    <HelpTOCNode Id="1a576c8c-79c2-4702-9a4e-f7bf1a922c65" Title="TableLayoutPanelView 类" Url="html/c3f5eff3-601a-70ac-f9f0-c4dcc3452c34.htm">
-      <HelpTOCNode Title="TableLayoutPanelView 构造函数 " Url="html/714cc1c6-0702-a79e-1d26-0b68229eedbb.htm" />
-      <HelpTOCNode Id="478d782b-5bd6-42d9-8bc6-7e994286c423" Title="TableLayoutPanelView 方法" Url="html/aaf889f4-fd4f-954c-416c-1167ec9e57fb.htm">
-        <HelpTOCNode Title="BindModel 方法 " Url="html/aee10440-9af1-4389-4780-adc4ddf430ce.htm" />
-        <HelpTOCNode Title="ExportData 方法 " Url="html/2f508782-ad3a-498f-c4b1-b27b411a4593.htm" />
-        <HelpTOCNode Title="ExportField 方法 " Url="html/210aaef1-476c-99f3-bf57-b67906856411.htm" />
-        <HelpTOCNode Title="ImportData 方法 " Url="html/095db5c4-cb65-5b31-5db8-811e5bf3fe8d.htm" />
-        <HelpTOCNode Title="InitEditPanel 方法 " Url="html/1748b115-323d-eb40-38f2-0801aff35a9d.htm" />
-        <HelpTOCNode Title="UnbindModel 方法 " Url="html/327ca5f1-9b9c-456b-e7e4-7089e0124433.htm" />
-      </HelpTOCNode>
-    </HelpTOCNode>
+    <HelpTOCNode Title="SynchronizationState 枚举" Url="html/78b1c49c-974b-9f16-a7b4-24f29c5a47ce.htm" />
   </HelpTOCNode>
 </HelpTOC>

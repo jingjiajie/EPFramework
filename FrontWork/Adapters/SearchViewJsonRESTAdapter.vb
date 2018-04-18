@@ -4,6 +4,9 @@ Imports System.Net
 Imports System.Web.Script.Serialization
 Imports Jint.Native
 
+''' <summary>
+''' SearchView和JsonRESTSynchronizer的适配器
+''' </summary>
 Public Class SearchViewJsonRESTAdapter
     Inherits UserControl
 
@@ -14,6 +17,10 @@ Public Class SearchViewJsonRESTAdapter
     Friend WithEvents Label1 As Label
     Private _searchView As SearchView
 
+    ''' <summary>
+    ''' JsonRESTSynchronizer对象
+    ''' </summary>
+    ''' <returns></returns>
     <Description("JsonREST同步器对象"), Category("FrontWork")>
     Public Property Synchronizer As JsonRESTSynchronizer
         Get
@@ -24,6 +31,10 @@ Public Class SearchViewJsonRESTAdapter
         End Set
     End Property
 
+    ''' <summary>
+    ''' 搜索视图对象
+    ''' </summary>
+    ''' <returns></returns>
     <Description("搜索视图（SearchView）对象"), Category("FrontWork")>
     Public Property SearchView As SearchView
         Get

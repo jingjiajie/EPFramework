@@ -1,4 +1,7 @@
-﻿Public Class HTTPMethod
+﻿''' <summary>
+''' HTTP方法
+''' </summary>
+Public Class HTTPMethod
     Public Shared Property [GET] As New HTTPMethod
     Public Shared Property POST As New HTTPMethod
     Public Shared Property PUT As New HTTPMethod

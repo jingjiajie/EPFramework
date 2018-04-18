@@ -18,26 +18,50 @@ Public Class JsonRESTSynchronizer
     Friend WithEvents Label1 As Label
     Friend WithEvents Label2 As Label
 
+    ''' <summary>
+    ''' 增加行的API信息
+    ''' </summary>
+    ''' <returns></returns>
     <Browsable(False)>
     <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Public Property AddAPI As JsonRESTAPIInfo
 
+    ''' <summary>
+    ''' 更新数据的API信息
+    ''' </summary>
+    ''' <returns></returns>
     <Browsable(False)>
     <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Public Property UpdateAPI As JsonRESTAPIInfo
 
+    ''' <summary>
+    ''' 删除行的API信息
+    ''' </summary>
+    ''' <returns></returns>
     <Browsable(False)>
     <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Public Property RemoveAPI As JsonRESTAPIInfo
 
+    ''' <summary>
+    ''' 拉取数据的API信息
+    ''' </summary>
+    ''' <returns></returns>
     <Browsable(False)>
     <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Public Property PullAPI As JsonRESTAPIInfo
 
+    ''' <summary>
+    ''' 推送数据完成回调函数
+    ''' </summary>
+    ''' <returns></returns>
     <Browsable(False)>
     <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Public Property PushFinishedCallback As Action
 
+    ''' <summary>
+    ''' Model对象
+    ''' </summary>
+    ''' <returns></returns>
     <Description("Model对象"), Category("FrontWork")>
     Public Property Model As IModel
         Get
@@ -54,6 +78,10 @@ Public Class JsonRESTSynchronizer
         End Set
     End Property
 
+    ''' <summary>
+    ''' 配置中心对象
+    ''' </summary>
+    ''' <returns></returns>
     <Description("配置中心对象"), Category("FrontWork")>
     Public Property Configuration As Configuration Implements ISynchronizer.Configuration
         Get
@@ -130,7 +158,7 @@ Public Class JsonRESTSynchronizer
         Call Me.InitSynchronizer()
     End Sub
 
-    Private Sub ModelCellUpdatedEvent(e As ModelCellUpdatedEventArgs)
+    Private Sub ModelCellUpdatedEvent(sender As Object, e As ModelCellUpdatedEventArgs)
         If Me.UpdateAPI Is Nothing Then
             Throw New Exception("Update API not set!")
         End If
@@ -149,7 +177,7 @@ Public Class JsonRESTSynchronizer
         Next
     End Sub
 
-    Private Sub ModelRowRemovedEvent(e As ModelRowRemovedEventArgs)
+    Private Sub ModelRowRemovedEvent(sender As Object, e As ModelRowRemovedEventArgs)
         If Me.RemoveAPI Is Nothing Then
             Throw New Exception("Remove API not setted!")
         End If
@@ -159,7 +187,7 @@ Public Class JsonRESTSynchronizer
         modelActions.Add(action)
     End Sub
 
-    Private Sub ModelRowUpdatedEvent(e As ModelRowUpdatedEventArgs)
+    Private Sub ModelRowUpdatedEvent(sender As Object, e As ModelRowUpdatedEventArgs)
         If Me.UpdateAPI Is Nothing Then
             Throw New Exception("Update API not setted!")
         End If
@@ -174,7 +202,7 @@ Public Class JsonRESTSynchronizer
         modelActions.Add(action)
     End Sub
 
-    Private Sub ModelRowAddedEvent(e As ModelRowAddedEventArgs)
+    Private Sub ModelRowAddedEvent(sender As Object, e As ModelRowAddedEventArgs)
         If Me.AddAPI Is Nothing Then
             Throw New Exception("Add API not set!")
         End If
@@ -272,6 +300,10 @@ Public Class JsonRESTSynchronizer
         Return True
     End Function
 
+    ''' <summary>
+    ''' 推送变化数据到服务器
+    ''' </summary>
+    ''' <returns>是否成功</returns>
     Public Function PushToServer() As Boolean Implements ISynchronizer.PushToServer
         Logger.SetMode(LogMode.MODEL_ADAPTER)
         If Me.Model Is Nothing Then
@@ -316,39 +348,39 @@ Public Class JsonRESTSynchronizer
         Return True
     End Function
 
-    Public Sub SetAddAPI(url As String, method As HTTPMethod, bodyJsonTemplate As String)
-        Dim apiInfo = New JsonRESTAPIInfo()
-        apiInfo.URLTemplate = url
-        apiInfo.HTTPMethod = method
-        apiInfo.RequestBodyTemplate = bodyJsonTemplate
-        Me.AddAPI = apiInfo
-    End Sub
+    'Public Sub SetAddAPI(url As String, method As HTTPMethod, bodyJsonTemplate As String)
+    '    Dim apiInfo = New JsonRESTAPIInfo()
+    '    apiInfo.URLTemplate = url
+    '    apiInfo.HTTPMethod = method
+    '    apiInfo.RequestBodyTemplate = bodyJsonTemplate
+    '    Me.AddAPI = apiInfo
+    'End Sub
 
-    Public Sub SetUpdateAPI(url As String, method As HTTPMethod, bodyJsonTemplate As String)
-        Dim apiInfo = New JsonRESTAPIInfo()
-        apiInfo.URLTemplate = url
-        apiInfo.HTTPMethod = method
-        apiInfo.RequestBodyTemplate = bodyJsonTemplate
-        Me.UpdateAPI = apiInfo
-    End Sub
+    'Public Sub SetUpdateAPI(url As String, method As HTTPMethod, bodyJsonTemplate As String)
+    '    Dim apiInfo = New JsonRESTAPIInfo()
+    '    apiInfo.URLTemplate = url
+    '    apiInfo.HTTPMethod = method
+    '    apiInfo.RequestBodyTemplate = bodyJsonTemplate
+    '    Me.UpdateAPI = apiInfo
+    'End Sub
 
-    Public Sub SetRemoveAPI(url As String, method As HTTPMethod, bodyJsonTemplate As String)
-        Dim apiInfo = New JsonRESTAPIInfo()
-        apiInfo.URLTemplate = url
-        apiInfo.HTTPMethod = method
-        apiInfo.RequestBodyTemplate = bodyJsonTemplate
-        Me.RemoveAPI = apiInfo
-    End Sub
+    'Public Sub SetRemoveAPI(url As String, method As HTTPMethod, bodyJsonTemplate As String)
+    '    Dim apiInfo = New JsonRESTAPIInfo()
+    '    apiInfo.URLTemplate = url
+    '    apiInfo.HTTPMethod = method
+    '    apiInfo.RequestBodyTemplate = bodyJsonTemplate
+    '    Me.RemoveAPI = apiInfo
+    'End Sub
 
-    Public Sub SetPullAPI(url As String, method As HTTPMethod, responseJsonTemplate As String)
-        Dim apiInfo = New JsonRESTAPIInfo()
-        apiInfo.URLTemplate = url
-        apiInfo.HTTPMethod = method
-        apiInfo.ResponseBodyTemplate = responseJsonTemplate
-        Me.PullAPI = apiInfo
-    End Sub
+    'Public Sub SetPullAPI(url As String, method As HTTPMethod, responseJsonTemplate As String)
+    '    Dim apiInfo = New JsonRESTAPIInfo()
+    '    apiInfo.URLTemplate = url
+    '    apiInfo.HTTPMethod = method
+    '    apiInfo.ResponseBodyTemplate = responseJsonTemplate
+    '    Me.PullAPI = apiInfo
+    'End Sub
 
-    Protected Function DataRowToDictionary(dataRow As DataRow) As Dictionary(Of String, Object)
+    Private Function DataRowToDictionary(dataRow As DataRow) As Dictionary(Of String, Object)
         Dim result As New Dictionary(Of String, Object)
         Dim columns = dataRow.Table.Columns
         For Each column As DataColumn In columns

@@ -123,7 +123,7 @@ Public Class BasicView
         Return range.Row
     End Function
 
-    Private Sub ModelSelectionRangeChangedEvent(e As ModelSelectionRangeChangedEventArgs)
+    Private Sub ModelSelectionRangeChangedEvent(sender As Object, e As ModelSelectionRangeChangedEventArgs)
         Dim modelSelectedRow = Me.GetModelSelectedRow
         If modelSelectedRow < 0 Then
             Call Me.ClearPanelData()
@@ -133,16 +133,16 @@ Public Class BasicView
         End If
     End Sub
 
-    Private Sub ModelRowAddedEvent(e As ModelRowAddedEventArgs)
+    Private Sub ModelRowAddedEvent(sender As Object, e As ModelRowAddedEventArgs)
         Logger.Debug("TableLayoutView ModelRowAddedEvent: " & Str(Me.GetHashCode))
     End Sub
 
-    Private Sub ModelRowRemovedEvent(e As ModelRowRemovedEventArgs)
+    Private Sub ModelRowRemovedEvent(sender As Object, e As ModelRowRemovedEventArgs)
         Logger.Debug("TableLayoutView ModelRowRemovedEvent: " & Str(Me.GetHashCode))
         Me.ImportData()
     End Sub
 
-    Private Sub ModelCellUpdatedEvent(e As ModelCellUpdatedEventArgs)
+    Private Sub ModelCellUpdatedEvent(sender As Object, e As ModelCellUpdatedEventArgs)
         Logger.Debug("TableLayoutView ModelCellUpdatedEvent: " & Str(Me.GetHashCode))
         Logger.SetMode(LogMode.REFRESH_VIEW)
         Dim modelSelectedRow = Me.GetModelSelectedRow
@@ -158,12 +158,12 @@ Public Class BasicView
         Next
     End Sub
 
-    Private Sub ModelRefreshedEvent(e As ModelRefreshedEventArgs)
+    Private Sub ModelRefreshedEvent(sender As Object, e As ModelRefreshedEventArgs)
         If switcherModelDataUpdatedEvent = False Then Return '开关被关闭则不执行事件
         Call Me.ImportData()
     End Sub
 
-    Private Sub ModelRowUpdatedEvent(e As ModelRowUpdatedEventArgs)
+    Private Sub ModelRowUpdatedEvent(sender As Object, e As ModelRowUpdatedEventArgs)
         If switcherModelDataUpdatedEvent = False Then Return '开关被关闭则不执行事件
         Logger.Debug("TableLayoutView ModelRowUpdatedEvent: " & Str(Me.GetHashCode))
         Dim modelSelectedRow = Me.GetModelSelectedRow

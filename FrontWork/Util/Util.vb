@@ -3,24 +3,18 @@ Imports System.Reflection
 Imports System.Text
 Imports System.Web.Script.Serialization
 
+''' <summary>
+''' 公用工具类
+''' </summary>
 Friend Class Util
     Private Shared jsEngine As New Jint.Engine
 
-    Public Shared Sub PrintDataTable(table As DataTable)
-        '打印表头
-        For Each column As DataColumn In table.Columns
-            Call Console.Write(column.ColumnName + vbTab)
-        Next
-        Call Console.WriteLine()
-        '遍历打印行
-        For Each row As DataRow In table.Rows
-            For Each column As DataColumn In table.Columns
-                Call Console.Write(If(row(column) Is Nothing, "", row(column).ToString + vbTab))
-            Next
-            Call Console.WriteLine()
-        Next
-    End Sub
-
+    ''' <summary>
+    ''' 将Object对象转换成数组
+    ''' </summary>
+    ''' <typeparam name="TElem">数组类型</typeparam>
+    ''' <param name="obj">源对象</param>
+    ''' <returns>转换结果数组</returns>
     Public Shared Function ToArray(Of TElem)(obj As Object) As TElem()
         If obj Is Nothing Then
             Return New TElem() {}
@@ -42,6 +36,12 @@ Friend Class Util
         End If
     End Function
 
+    ''' <summary>
+    ''' 生成从Start到End（不包含End）的连续整数
+    ''' </summary>
+    ''' <param name="start">开始数字</param>
+    ''' <param name="[end]">结束数字（不包含）</param>
+    ''' <returns></returns>
     Public Shared Function Range(start As Long, [end] As Long) As Long()
         Dim length = [end] - start
         Dim result(length - 1) As Long
@@ -51,6 +51,13 @@ Friend Class Util
         Return result
     End Function
 
+    ''' <summary>
+    ''' 将一个值重复若干次
+    ''' </summary>
+    ''' <typeparam name="T">值的类型</typeparam>
+    ''' <param name="data">要重复值</param>
+    ''' <param name="repeatTimes">重复次数</param>
+    ''' <returns>重复若干次的结果，数组</returns>
     Public Shared Function Times(Of T)(data As T, repeatTimes As Long) As T()
         Dim result(repeatTimes - 1) As T
         For i = 0 To repeatTimes - 1

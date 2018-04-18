@@ -1,4 +1,8 @@
 ﻿Imports System.Threading
+
+''' <summary>
+''' 日志模式
+''' </summary>
 Friend Enum LogMode As Integer
     DEFAULT_MODE
     PARSING_Configuration
@@ -9,6 +13,9 @@ Friend Enum LogMode As Integer
     MODEL_ADAPTER
 End Enum
 
+''' <summary>
+''' 日志级别
+''' </summary>
 Friend Enum LogLevel As Integer
     FATAL_ERROR
     WARNING
@@ -16,6 +23,9 @@ Friend Enum LogLevel As Integer
     DEBUG
 End Enum
 
+''' <summary>
+''' 日志管理器，用来输出调试信息
+''' </summary>
 Friend Class Logger
     Private Shared curErrorConfig As LogConfig = Nothing
     Private Shared dicModeErrorConfig As Dictionary(Of LogMode, LogConfig) = Nothing
@@ -32,10 +42,19 @@ Friend Class Logger
         }
     End Sub
 
+    ''' <summary>
+    ''' 设置日志模式
+    ''' </summary>
+    ''' <param name="mode">日志模式</param>
     Public Shared Sub SetMode(mode As LogMode)
         curErrorConfig = dicModeErrorConfig(mode)
     End Sub
 
+    ''' <summary>
+    ''' 输出信息
+    ''' </summary>
+    ''' <param name="message">消息文本</param>
+    ''' <param name="level">日志级别</param>
     Public Shared Sub PutMessage(message As String, Optional level As LogLevel = LogLevel.FATAL_ERROR)
         Dim levelHint As String = ""
         Select Case level
@@ -49,6 +68,10 @@ Friend Class Logger
         Console.WriteLine("[FrontWork][" + levelHint + "] " + curErrorConfig.Prefix + ": " + message)
     End Sub
 
+    ''' <summary>
+    ''' 输出调试信息，仅在Debug模式下输出
+    ''' </summary>
+    ''' <param name="message"></param>
     Public Shared Sub Debug(message As String)
         Console.WriteLine(message)
     End Sub

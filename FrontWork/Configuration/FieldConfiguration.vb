@@ -2,18 +2,69 @@
 Imports System.Reflection
 Imports Jint.Native
 
+''' <summary>
+''' 字段配置信息
+''' </summary>
 Public Class FieldConfiguration
     Private _name As String = Nothing
+    ''' <summary>
+    ''' 显示名称
+    ''' </summary>
+    ''' <returns></returns>
     Public Property DisplayName As String = Nothing
+
+    ''' <summary>
+    ''' 是否可视
+    ''' </summary>
+    ''' <returns></returns>
     Public Property Visible As Boolean = True
+
+    ''' <summary>
+    ''' 是否可编辑
+    ''' </summary>
+    ''' <returns></returns>
     Public Property Editable As Boolean = True
+
+    ''' <summary>
+    ''' 字段可以选择的几种值，函数类型（）: Object数组
+    ''' </summary>
+    ''' <returns></returns>
     Public Property Values As FieldMethod 'No Params Returns (in Object)()
+
+    ''' <summary>
+    ''' 前向映射，从模型显示到视图时的转换。函数类型(Object) : String
+    ''' </summary>
+    ''' <returns></returns>
     Public Property ForwardMapper As FieldMethod 'Params Object Returns String
+
+    ''' <summary>
+    ''' 反向映射，从视图映射到模型时的转换。函数类型(String) : Object
+    ''' </summary>
+    ''' <returns></returns>
     Public Property BackwordMapper As FieldMethod 'Params String Returns Object
+
+    ''' <summary>
+    ''' 联想提示，回调传入用户已经输入的内容，返回联想提示内容。函数类型(String) : AssociationItem()
+    ''' </summary>
+    ''' <returns></returns>
     Public Property Association As FieldMethod 'Params String Returns AssociationItem()
 
+    ''' <summary>
+    ''' 内容改变事件，传入该字段用户已经输入的文本，函数类型(String)
+    ''' </summary>
+    ''' <returns></returns>
     Public Property ContentChanged As FieldMethod 'Params String No Returns
+
+    ''' <summary>
+    ''' 编辑结束事件，传入该字段用户已经输入的文本，函数类型(String)
+    ''' </summary>
+    ''' <returns></returns>
     Public Property EditEnded As FieldMethod 'Params String No Returns
+
+    ''' <summary>
+    ''' 字段名
+    ''' </summary>
+    ''' <returns></returns>
     Public Property Name As String
         Get
             Return Me._name
@@ -24,8 +75,18 @@ Public Class FieldConfiguration
         End Set
     End Property
 
+    ''' <summary>
+    ''' 方法监听器，用来根据字段配置中填写的本地函数名执行相应的函数
+    ''' </summary>
+    ''' <returns></returns>
     Public Property MethodListener As IMethodListener
 
+    ''' <summary>
+    ''' 从Jint.JsValue转换
+    ''' </summary>
+    ''' <param name="jsEngine">Jint.Engine JavaScript引擎</param>
+    ''' <param name="jsValue">要转换的JsValue</param>
+    ''' <returns></returns>
     Public Shared Function FromJsValue(jsEngine As Jint.Engine, jsValue As JsValue) As FieldConfiguration()
         Logger.SetMode(LogMode.PARSING_Configuration)
         If jsValue Is Nothing Then Throw New Exception("JsValue can not be null!")
@@ -48,6 +109,12 @@ Public Class FieldConfiguration
         End If
     End Function
 
+    ''' <summary>
+    ''' 从JsValue转换一项字段配置
+    ''' </summary>
+    ''' <param name="jsEngine">Js引擎</param>
+    ''' <param name="jsValue">JsValue</param>
+    ''' <returns></returns>
     Private Shared Function MakeFieldConfigurationFromJsValue(jsEngine As Jint.Engine, jsValue As JsValue) As FieldConfiguration
         Logger.SetMode(LogMode.PARSING_Configuration)
         If jsValue Is Nothing Then Throw New Exception("JsValue can not be null!")

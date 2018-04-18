@@ -3,9 +3,15 @@ Imports System.Drawing.Design
 Imports System.Linq
 Imports Jint.Native
 
+''' <summary>
+''' 配置中心，集中存储一组组件的配置信息
+''' </summary>
 Public Class Configuration
     Inherits UserControl
 
+    ''' <summary>
+    ''' 配置改变事件
+    ''' </summary>
     Public Event ConfigurationChanged As EventHandler(Of ConfigurationChangedEventArgs)
 
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
@@ -17,6 +23,10 @@ Public Class Configuration
     Private modeConfigurations As New List(Of ModeConfiguration)
     Private jsEngine As New Jint.Engine
 
+    ''' <summary>
+    ''' 当前的模式，默认为default
+    ''' </summary>
+    ''' <returns></returns>
     <Description("当前的模式，默认为default"), Category("FrontWork")>
     Public Property Mode As String
         Get
@@ -28,6 +38,10 @@ Public Class Configuration
         End Set
     End Property
 
+    ''' <summary>
+    ''' 配置字符串，Json格式。读取后自动分析转换为Configuration对象
+    ''' </summary>
+    ''' <returns></returns>
     <Description("配置字符串"), Category("FrontWork")>
     <Editor(GetType(ConfigurationEditor), GetType(UITypeEditor))>
     Public Property ConfigurationString As String
@@ -41,6 +55,11 @@ Public Class Configuration
         End Set
     End Property
 
+    ''' <summary>
+    ''' 当前的配置信息是否包含某种模式
+    ''' </summary>
+    ''' <param name="mode">模式名称</param>
+    ''' <returns>是否包含模式</returns>
     Public Function ContainsMode(mode As String) As Boolean
         Dim foundConfiguration = (From m In Me.modeConfigurations Where m.Mode = mode Select m).FirstOrDefault
         If foundConfiguration IsNot Nothing Then
@@ -51,10 +70,10 @@ Public Class Configuration
     End Function
 
     ''' <summary>
-    ''' Set the method Listener for the field Configuration
+    ''' 设置方法监听器，用来执行配置信息中所指定的字段对应的的本地函数名
     ''' </summary>
-    ''' <param name="methodListener">the method Listener for the mode specified</param>
-    ''' <param name="mode">null for all mode</param>
+    ''' <param name="methodListener">方法监听器对象</param>
+    ''' <param name="mode">设置到的模式</param>
     Public Sub SetMethodListener(methodListener As IMethodListener, Optional mode As String = Nothing)
         Logger.SetMode(LogMode.LOAD_MODE_METHODLISTENER)
         If mode Is Nothing Then
@@ -83,6 +102,10 @@ Public Class Configuration
     '    End If
     'End Sub
 
+    ''' <summary>
+    ''' 获取当前模式的字段配置
+    ''' </summary>
+    ''' <returns>字段的配置信息</returns>
     Public Function GetFieldConfigurations() As FieldConfiguration()
         Dim foundModeConfiguration = (From m In modeConfigurations Where m.Mode = Me.Mode Select m).FirstOrDefault
         If foundModeConfiguration Is Nothing Then
@@ -92,6 +115,10 @@ Public Class Configuration
         End If
     End Function
 
+    ''' <summary>
+    ''' 获取当前模式的HTTPAPIs的配置信息
+    ''' </summary>
+    ''' <returns>HTTPAPIs配置信息</returns>
     Public Function GetHTTPAPIConfigurations() As HTTPAPIConfiguration()
         Dim foundModeConfiguration = (From m In modeConfigurations Where m.Mode = Me.Mode Select m).FirstOrDefault
         If foundModeConfiguration Is Nothing Then
@@ -101,6 +128,11 @@ Public Class Configuration
         End If
     End Function
 
+    ''' <summary>
+    ''' 配置，输入json字符串进行分析并配置为json所描述的配置
+    ''' </summary>
+    ''' <param name="jsonStr">json配置字符串</param>
+    ''' <returns>是否配置成功</returns>
     Public Function Configurate(jsonStr As String) As Boolean
         Logger.SetMode(LogMode.PARSING_Configuration)
         Dim jsValue As JsValue = Nothing

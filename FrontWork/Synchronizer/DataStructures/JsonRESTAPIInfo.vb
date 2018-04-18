@@ -3,11 +3,38 @@ Imports System.Net
 Imports System.Text
 Imports System.Text.RegularExpressions
 
+''' <summary>
+''' RESTful接口，Json数据格式的API信息
+''' </summary>
 Public Class JsonRESTAPIInfo
+    ''' <summary>
+    ''' URL模板，允许使用字符串插值格式来嵌入Request参数
+    ''' </summary>
+    ''' <returns></returns>
     Public Property URLTemplate As String
+
+    ''' <summary>
+    ''' HTTP方法
+    ''' </summary>
+    ''' <returns></returns>
     Public Property HTTPMethod As HTTPMethod
+
+    ''' <summary>
+    ''' 请求体模板
+    ''' </summary>
+    ''' <returns></returns>
     Public Property RequestBodyTemplate As String
+
+    ''' <summary>
+    ''' 相应体模板
+    ''' </summary>
+    ''' <returns></returns>
     Public Property ResponseBodyTemplate As String
+
+    ''' <summary>
+    ''' API调用完成后的回调函数
+    ''' </summary>
+    ''' <returns></returns>
     Public Property Callback As Func(Of HttpWebResponse, WebException, Boolean)
 
     Private requestJSEngine As New Jint.Engine
@@ -33,14 +60,29 @@ Public Class JsonRESTAPIInfo
         responseJSEngine.Execute(strMapProperty)
     End Sub
 
+    ''' <summary>
+    ''' 设置响应体参数
+    ''' </summary>
+    ''' <param name="paramName">参数名</param>
+    ''' <param name="value">参数值，默认为null</param>
     Public Sub SetResponseParameter(paramName As String, Optional value As Object = Nothing)
         Me.responseJSEngine.SetValue(paramName, value)
     End Sub
 
+    ''' <summary>
+    ''' 设置请求参数
+    ''' </summary>
+    ''' <param name="paramName">参数名</param>
+    ''' <param name="value">参数值</param>
     Public Sub SetRequestParameter(paramName As String, value As Object)
         Me.requestJSEngine.SetValue(paramName, value)
     End Sub
 
+    ''' <summary>
+    ''' 设置Json字符串格式的相应体参数，自动转换为Js对象
+    ''' </summary>
+    ''' <param name="paramName">参数名</param>
+    ''' <param name="jsonString">参数值</param>
     Public Sub SetJsonResponseParameter(paramName As String, jsonString As String)
         Try
             Me.responseJSEngine.Execute($"{paramName} = JSON.parse('{jsonString}');")
@@ -49,6 +91,11 @@ Public Class JsonRESTAPIInfo
         End Try
     End Sub
 
+    ''' <summary>
+    ''' 设置Json请求参数
+    ''' </summary>
+    ''' <param name="paramName">参数名</param>
+    ''' <param name="jsonString">参数值</param>
     Public Sub SetJsonRequestParameter(paramName As String, jsonString As String)
         Try
             Me.requestJSEngine.Execute($"{paramName} = JSON.parse('{jsonString}');")
@@ -57,6 +104,10 @@ Public Class JsonRESTAPIInfo
         End Try
     End Sub
 
+    ''' <summary>
+    ''' 获取Url，如果Url模板中包含参数，此处获取的Url为最终结果
+    ''' </summary>
+    ''' <returns>url</returns>
     Public Function GetURL() As String
         Logger.SetMode(LogMode.MODEL_ADAPTER)
         Dim resultURL As New StringBuilder(Me.URLTemplate)
@@ -81,11 +132,21 @@ Public Class JsonRESTAPIInfo
         Return resultURL.ToString
     End Function
 
+    ''' <summary>
+    ''' 获取请求体，如果请求体中包含参数，此处为最终结果
+    ''' </summary>
+    ''' <returns></returns>
     Public Function GetRequestBody() As String
         If String.IsNullOrEmpty(Me.RequestBodyTemplate) Then Return String.Empty
         Return Me.requestJSEngine.Execute($"JSON.stringify({RequestBodyTemplate})").GetCompletionValue.ToString
     End Function
 
+    ''' <summary>
+    ''' 获取响应体参数值
+    ''' </summary>
+    ''' <param name="responsebody">响应体</param>
+    ''' <param name="paramNames">响应体参数</param>
+    ''' <returns>参数值</returns>
     Public Function GetResponseParameters(responsebody As String, paramNames As String()) As Object()
         Logger.SetMode(LogMode.MODEL_ADAPTER)
         Dim paramPaths = Me.GetResponseBodyTemplateParamPaths(responsebody, paramNames)
@@ -110,6 +171,7 @@ Public Class JsonRESTAPIInfo
         Next
         Return result
     End Function
+
 
     Private Function GetResponseBodyTemplateParamPaths(responseBody As String, paramNames As String()) As Dictionary(Of String, String())
         Dim result As New Dictionary(Of String, String())

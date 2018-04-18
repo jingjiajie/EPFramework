@@ -106,10 +106,7 @@
     <HelpKINode Title="PagerView.CurrentPage 属性 " Url="html/d87990ba-1218-281d-a114-a4ed8092318e.htm" />
   </HelpKINode>
   <HelpKINode Title="CurSyncMode 属性" Url="html/ad562abc-2a40-27bf-4888-2ce10d642558.htm" />
-  <HelpKINode Title="DataRowToDictionary 方法">
-    <HelpKINode Title="JsonRESTSynchronizer.DataRowToDictionary 方法 " Url="html/50ea2763-a2f3-dd89-bc17-8db9e8dbdb2d.htm" />
-    <HelpKINode Title="Model.DataRowToDictionary 方法 " Url="html/78eb8d69-e6c5-43be-0697-0237c3f85504.htm" />
-  </HelpKINode>
+  <HelpKINode Title="DataRowToDictionary 方法" Url="html/78eb8d69-e6c5-43be-0697-0237c3f85504.htm" />
   <HelpKINode Title="DELETE 属性" Url="html/358b1c39-74a6-8a56-3d97-d71eb463ee9c.htm" />
   <HelpKINode Title="DESC 枚举成员" Url="html/fe1be387-b368-7811-95c9-24dc016d254c.htm" />
   <HelpKINode Title="DisplayName 属性" Url="html/f2679c8c-0a5e-7a8c-d099-c890fb8bd6d1.htm" />
@@ -201,13 +198,6 @@
   <HelpKINode Title="FrontWork.HTTPMethod 类" Url="html/4d8916ee-3529-8bf1-5871-7550cad77adb.htm" />
   <HelpKINode Title="FrontWork.IMethodListener 接口" Url="html/a70aef6d-f254-8e32-1823-d97b41fec6e4.htm" />
   <HelpKINode Title="FrontWork.IModel 接口" Url="html/02f63f09-2e98-5706-3f34-20b18e2f4a6b.htm" />
-  <HelpKINode Title="FrontWork.IModel.CellUpdatedEventHandler 委托" Url="html/40a5344e-594e-9418-57f0-39ca0c238836.htm" />
-  <HelpKINode Title="FrontWork.IModel.RefreshedEventHandler 委托" Url="html/4d38e56f-5d16-75ba-6e27-32a8beb83cb2.htm" />
-  <HelpKINode Title="FrontWork.IModel.RowAddedEventHandler 委托" Url="html/868b4063-aac5-5bca-ebfb-d7ab43868a25.htm" />
-  <HelpKINode Title="FrontWork.IModel.RowRemovedEventHandler 委托" Url="html/db20183c-a3fc-7d31-9ccd-0b2b5deb7e53.htm" />
-  <HelpKINode Title="FrontWork.IModel.RowSynchronizationStateChangedEventHandler 委托" Url="html/e8711d4c-5fa2-dd17-5a21-f787ba636a3c.htm" />
-  <HelpKINode Title="FrontWork.IModel.RowUpdatedEventHandler 委托" Url="html/9860d606-896d-ae24-11bc-534bc32c1c2e.htm" />
-  <HelpKINode Title="FrontWork.IModel.SelectionRangeChangedEventHandler 委托" Url="html/1c638203-d14a-612f-5fe5-3d7cb1570610.htm" />
   <HelpKINode Title="FrontWork.IndexRowPair 类" Url="html/8a27a70d-1413-d642-8b18-3d4d7fbe91f5.htm" />
   <HelpKINode Title="FrontWork.IndexRowSynchronizationStatePair 类" Url="html/88009482-ab16-cd40-1354-6900d55a9a98.htm" />
   <HelpKINode Title="FrontWork.ISynchronizer 接口" Url="html/f4ee2ae3-7ab0-ec0f-7ad8-c7605c92fe9c.htm" />
@@ -320,7 +310,6 @@
   <HelpKINode Title="IModel.AddRow 方法" Url="html/777342d4-af47-6ed6-5795-2c75e83ccf0c.htm" />
   <HelpKINode Title="IModel.AddRows 方法" Url="html/d479dab4-0cab-a3fd-283e-2527f7dbeaaf.htm" />
   <HelpKINode Title="IModel.CellUpdated 事件" Url="html/c4efb20a-e859-b767-6225-bdda63a27593.htm" />
-  <HelpKINode Title="IModel.CellUpdatedEventHandler 委托" Url="html/40a5344e-594e-9418-57f0-39ca0c238836.htm" />
   <HelpKINode Title="IModel.ColumnCount 属性" Url="html/a3f0b7db-85d4-5532-978d-d303af508333.htm" />
   <HelpKINode Title="IModel.Configuration 属性" Url="html/7789df64-5b3c-8528-caa1-120123a59422.htm" />
   <HelpKINode Title="IModel.FirstSelectionRange 属性" Url="html/5d6b2867-2021-b97e-61b6-5af0a9183c08.htm" />
@@ -334,21 +323,15 @@
   <HelpKINode Title="IModel.InsertRows 方法" Url="html/085accc9-5692-c896-b350-f8ff51235349.htm" />
   <HelpKINode Title="IModel.Refresh 方法" Url="html/f35a7a12-e435-58ea-7b5f-bd0ef7eb1232.htm" />
   <HelpKINode Title="IModel.Refreshed 事件" Url="html/3ffb9944-503d-c462-4ad7-d24849122c27.htm" />
-  <HelpKINode Title="IModel.RefreshedEventHandler 委托" Url="html/4d38e56f-5d16-75ba-6e27-32a8beb83cb2.htm" />
   <HelpKINode Title="IModel.RemoveRow 方法" Url="html/27c243ca-52cc-0a20-342d-8f9ba5daffa1.htm" />
   <HelpKINode Title="IModel.RemoveRows 方法" Url="html/5e5ebfe9-27a8-854c-b5a8-1e4b77943372.htm" />
   <HelpKINode Title="IModel.RowAdded 事件" Url="html/bd57f58f-5338-4d52-a761-406192992d0a.htm" />
-  <HelpKINode Title="IModel.RowAddedEventHandler 委托" Url="html/868b4063-aac5-5bca-ebfb-d7ab43868a25.htm" />
   <HelpKINode Title="IModel.RowCount 属性" Url="html/310eca97-03c4-de92-b1df-6a770956343b.htm" />
   <HelpKINode Title="IModel.RowRemoved 事件" Url="html/225777b5-1bb6-8c32-580b-86fb3feed96a.htm" />
-  <HelpKINode Title="IModel.RowRemovedEventHandler 委托" Url="html/db20183c-a3fc-7d31-9ccd-0b2b5deb7e53.htm" />
   <HelpKINode Title="IModel.RowSynchronizationStateChanged 事件" Url="html/8464c04e-e80a-24f3-601f-c4000037d792.htm" />
-  <HelpKINode Title="IModel.RowSynchronizationStateChangedEventHandler 委托" Url="html/e8711d4c-5fa2-dd17-5a21-f787ba636a3c.htm" />
   <HelpKINode Title="IModel.RowUpdated 事件" Url="html/1f6b510c-39b0-4eb8-b0b7-f2b228b9f03c.htm" />
-  <HelpKINode Title="IModel.RowUpdatedEventHandler 委托" Url="html/9860d606-896d-ae24-11bc-534bc32c1c2e.htm" />
   <HelpKINode Title="IModel.SelectionRange 属性" Url="html/5a96f253-cdb8-7cd1-2736-cd5447d67508.htm" />
   <HelpKINode Title="IModel.SelectionRangeChanged 事件" Url="html/1ef896ad-98fb-0c6b-b97d-b2f07f047562.htm" />
-  <HelpKINode Title="IModel.SelectionRangeChangedEventHandler 委托" Url="html/1c638203-d14a-612f-5fe5-3d7cb1570610.htm" />
   <HelpKINode Title="IModel.UpdateCell 方法" Url="html/382b9ecc-5693-709b-53cf-0a0dcd7753f2.htm" />
   <HelpKINode Title="IModel.UpdateCells 方法" Url="html/58833ad6-0173-d920-896f-2b2832dfbe17.htm" />
   <HelpKINode Title="IModel.UpdateRow 方法" Url="html/4d02b4e7-40f7-eb96-e830-81c9bd903de8.htm" />
@@ -436,7 +419,6 @@
   </HelpKINode>
   <HelpKINode Title="JsonRESTSynchronizer.AddAPI 属性" Url="html/2f32fe38-e80d-7f6f-66d2-36aa71521325.htm" />
   <HelpKINode Title="JsonRESTSynchronizer.Configuration 属性" Url="html/08780839-5443-b444-da6f-cf2b8a441f0f.htm" />
-  <HelpKINode Title="JsonRESTSynchronizer.DataRowToDictionary 方法" Url="html/50ea2763-a2f3-dd89-bc17-8db9e8dbdb2d.htm" />
   <HelpKINode Title="JsonRESTSynchronizer.JsonRESTSynchronizer 构造函数" Url="html/37c08299-0133-9f90-652c-35f109b998ae.htm" />
   <HelpKINode Title="JsonRESTSynchronizer.Model 属性" Url="html/7abf1e48-c2b2-2b51-b982-32d31f06bf49.htm" />
   <HelpKINode Title="JsonRESTSynchronizer.PullAPI 属性" Url="html/e2a00046-d8aa-fc98-8710-61a60bb5ef04.htm" />
@@ -444,10 +426,6 @@
   <HelpKINode Title="JsonRESTSynchronizer.PushFinishedCallback 属性" Url="html/c09324d1-529e-f489-1ce4-886c865caf54.htm" />
   <HelpKINode Title="JsonRESTSynchronizer.PushToServer 方法" Url="html/a00da744-9c15-b8dd-3518-4afe0d343768.htm" />
   <HelpKINode Title="JsonRESTSynchronizer.RemoveAPI 属性" Url="html/eb326584-2f57-09ca-9af7-a620feb47c91.htm" />
-  <HelpKINode Title="JsonRESTSynchronizer.SetAddAPI 方法" Url="html/041c12db-84fb-d2a5-0b1f-f291d6b4742a.htm" />
-  <HelpKINode Title="JsonRESTSynchronizer.SetPullAPI 方法" Url="html/bbd26b21-5c17-8c23-28af-22934f85cdab.htm" />
-  <HelpKINode Title="JsonRESTSynchronizer.SetRemoveAPI 方法" Url="html/77da3702-37c4-6634-1bfb-752689ff00a8.htm" />
-  <HelpKINode Title="JsonRESTSynchronizer.SetUpdateAPI 方法" Url="html/191a0972-d50a-ac99-6974-27a35c2b4e73.htm" />
   <HelpKINode Title="JsonRESTSynchronizer.UpdateAPI 属性" Url="html/ab6b493f-8cb7-afd8-9470-1d31049d3a44.htm" />
   <HelpKINode Title="Key 属性">
     <HelpKINode Title="OnSearchEventArgs.OrderConditionItem.Key 属性 " Url="html/1a3f4cdf-3b99-0be4-9ac7-b99387fe62be.htm" />
@@ -789,7 +767,6 @@
     <HelpKINode Title="IModel.SelectionRangeChanged 事件" Url="html/1ef896ad-98fb-0c6b-b97d-b2f07f047562.htm" />
     <HelpKINode Title="Model.SelectionRangeChanged 事件" Url="html/69d97559-4116-847f-1b13-ae57c10fe607.htm" />
   </HelpKINode>
-  <HelpKINode Title="SetAddAPI 方法" Url="html/041c12db-84fb-d2a5-0b1f-f291d6b4742a.htm" />
   <HelpKINode Title="SetAssociationFunc 方法" Url="html/9f930138-43a6-2f52-c950-3f228865a3c9.htm" />
   <HelpKINode Title="SetJsonRequestParameter 方法" Url="html/ed1c5dbd-8d26-4beb-a945-84fec6cd516f.htm" />
   <HelpKINode Title="SetJsonResponseParameter 方法" Url="html/a58a0c26-fd02-b30e-b061-c31ffb699af9.htm" />
@@ -797,11 +774,8 @@
     <HelpKINode Title="Configuration.SetMethodListener 方法 " Url="html/cd3ad926-eb92-0981-fb3a-8a8c4e94c0c6.htm" />
     <HelpKINode Title="ModeConfiguration.SetMethodListener 方法 " Url="html/efdb023f-c1c0-8b0f-a1e7-08362d3e3ab7.htm" />
   </HelpKINode>
-  <HelpKINode Title="SetPullAPI 方法" Url="html/bbd26b21-5c17-8c23-28af-22934f85cdab.htm" />
-  <HelpKINode Title="SetRemoveAPI 方法" Url="html/77da3702-37c4-6634-1bfb-752689ff00a8.htm" />
   <HelpKINode Title="SetRequestParameter 方法" Url="html/4a93e4cf-d140-fbd1-9e88-0ad94041f8e8.htm" />
   <HelpKINode Title="SetResponseParameter 方法" Url="html/8b7501e1-fd23-908b-3f7e-46e49120ef53.htm" />
-  <HelpKINode Title="SetUpdateAPI 方法" Url="html/191a0972-d50a-ac99-6974-27a35c2b4e73.htm" />
   <HelpKINode Title="Show 方法" Url="html/6c347ade-b1fc-0026-3456-09d12e10ad2e.htm" />
   <HelpKINode Title="ShowDefaultPage 方法" Url="html/0fec4917-4f60-4550-cbe4-4dd092694428.htm" />
   <HelpKINode Title="StayUnvisible 属性" Url="html/a3c74aae-ac03-366c-2b75-bfdb3df708e4.htm" />

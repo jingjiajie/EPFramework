@@ -2,16 +2,59 @@
 Imports System.Reflection
 Imports Jint.Native
 
+''' <summary>
+''' HTTPAPI配置信息
+''' </summary>
 Public Class HTTPAPIConfiguration
+    ''' <summary>
+    ''' API类型，如pull,add,update,remove等
+    ''' </summary>
+    ''' <returns></returns>
     Public Property APIType As String
+
+    ''' <summary>
+    ''' API对应的URL
+    ''' </summary>
+    ''' <returns></returns>
     Public Property URL As String
+
+    ''' <summary>
+    ''' API的HTTP方法,如"GET","POST"等
+    ''' </summary>
+    ''' <returns></returns>
     Public Property Method As String
+
+    ''' <summary>
+    ''' 请求体
+    ''' </summary>
+    ''' <returns></returns>
     Public Property RequestBody As String
+
+    ''' <summary>
+    ''' 响应体
+    ''' </summary>
+    ''' <returns></returns>
     Public Property ResponseBody As String
+
+    ''' <summary>
+    ''' API回调函数。不管调用成功或者失败都会调用
+    ''' 函数类型(HTTPWebResponse,WebException):Boolean 失败后是否继续执行下一个API
+    ''' </summary>
+    ''' <returns></returns>
     Public Property Callback As FieldMethod
 
+    ''' <summary>
+    ''' 方法监听器，用来执行字段中所指定的本地函数方法名称所对应的方法
+    ''' </summary>
+    ''' <returns></returns>
     Public Property MethodListener As IMethodListener
 
+    ''' <summary>
+    ''' 从Jint.JsValue转换
+    ''' </summary>
+    ''' <param name="jsEngine">JavaScript引擎</param>
+    ''' <param name="jsValue">JsValue对象</param>
+    ''' <returns></returns>
     Public Shared Function FromJSValue(jsEngine As Jint.Engine, jsValue As JsValue) As HTTPAPIConfiguration()
         Logger.SetMode(LogMode.PARSING_Configuration)
         If jsValue Is Nothing Then Throw New Exception("JsValue can not be null!")
@@ -34,6 +77,12 @@ Public Class HTTPAPIConfiguration
         End If
     End Function
 
+    ''' <summary>
+    ''' 生成一项HTTPApiConfiguration
+    ''' </summary>
+    ''' <param name="jsEngine">JavaScript引擎</param>
+    ''' <param name="jsValue">JsValue对象</param>
+    ''' <returns></returns>
     Private Shared Function MakeHTTPApiConfiguration(jsEngine As Jint.Engine, jsValue As JsValue) As HTTPAPIConfiguration
         Logger.SetMode(LogMode.PARSING_Configuration)
         If jsValue Is Nothing Then Throw New Exception("JsValue can not be null!")

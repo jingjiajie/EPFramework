@@ -150,12 +150,12 @@ Public Class ReoGridView
         Call Me.InitEditPanel()
     End Sub
 
-    Private Sub ModelRowSynchronizationStateChangedEvent(e As ModelRowSynchronizationStateChangedEventArgs)
+    Private Sub ModelRowSynchronizationStateChangedEvent(sender As Object, e As ModelRowSynchronizationStateChangedEventArgs)
         Dim rows = (From r In e.SynchronizationStateUpdatedRows Select r.Index).ToArray
         Call Me.RefreshRowSynchronizationStates(rows)
     End Sub
 
-    Private Sub ModelSelectionRangeChangedEvent(e As ModelSelectionRangeChangedEventArgs)
+    Private Sub ModelSelectionRangeChangedEvent(sender As Object, e As ModelSelectionRangeChangedEventArgs)
         Logger.Debug("==ReoGrid ModelSelectionRangeChanged " & Str(Me.GetHashCode))
         If Me.Model.RowCount = 0 Then
             Me.CurSyncMode = SyncMode.NOT_SYNC
@@ -170,7 +170,7 @@ Public Class ReoGridView
         Call Me.RefreshSelectionRange()
     End Sub
 
-    Private Sub ModelRefreshedEvent(e As ModelRefreshedEventArgs)
+    Private Sub ModelRefreshedEvent(sender As Object, e As ModelRefreshedEventArgs)
         Logger.Debug("==ReoGrid ModelRefreshedEvent")
         If Me.Model.RowCount = 0 Then
             Me.CurSyncMode = SyncMode.NOT_SYNC
@@ -187,7 +187,7 @@ Public Class ReoGridView
         Call Me.RefreshRowSynchronizationStates()
     End Sub
 
-    Private Sub ModelRowUpdatedEvent(e As ModelRowUpdatedEventArgs)
+    Private Sub ModelRowUpdatedEvent(sender As Object, e As ModelRowUpdatedEventArgs)
         Logger.Debug("==ReoGrid ModelDataUpdatedEvent")
         If Me.CurSyncMode = SyncMode.NOT_SYNC Then
             Call Me.ImportData()
@@ -197,7 +197,7 @@ Public Class ReoGridView
         Me.ImportData(rows)
     End Sub
 
-    Private Sub ModelRowAddedEvent(e As ModelRowAddedEventArgs)
+    Private Sub ModelRowAddedEvent(sender As Object, e As ModelRowAddedEventArgs)
         Dim oriRows As Long() = (From item In e.AddedRows Select item.Index).ToArray
         If Me.CurSyncMode = SyncMode.NOT_SYNC Then
             Call Me.ImportData()
@@ -217,7 +217,7 @@ Public Class ReoGridView
         Call Me.ImportData(realRowsASC)
     End Sub
 
-    Private Sub ModelCellUpdatedEvent(e As ModelCellUpdatedEventArgs)
+    Private Sub ModelCellUpdatedEvent(sender As Object, e As ModelCellUpdatedEventArgs)
         Logger.Debug("==ReoGrid ModelCellUpdatedEvent: " + Str(Me.GetHashCode))
         If Me.CurSyncMode = SyncMode.NOT_SYNC Then
             Call Me.ImportData()
@@ -227,7 +227,7 @@ Public Class ReoGridView
         Me.ImportData(rows)
     End Sub
 
-    Private Sub ModelRowRemovedEvent(e As ModelRowRemovedEventArgs)
+    Private Sub ModelRowRemovedEvent(sender As Object, e As ModelRowRemovedEventArgs)
         If Me.Model.RowCount = 0 Then
             Me.CurSyncMode = SyncMode.NOT_SYNC
             Call Me.ShowDefaultPage()

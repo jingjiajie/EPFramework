@@ -1,4 +1,6 @@
 ﻿Imports System.ComponentModel
+Imports System.Drawing.Design
+Imports System.Globalization
 Imports System.IO
 Imports System.Net
 Imports System.Web.Script.Serialization
@@ -14,6 +16,7 @@ Public Class SearchViewJsonRESTAdapter
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents PictureBox1 As PictureBox
     Friend WithEvents Label3 As Label
+    Friend WithEvents LabelAdapterName As Label
     Friend WithEvents Label1 As Label
     Private _searchView As SearchView
 
@@ -51,6 +54,9 @@ Public Class SearchViewJsonRESTAdapter
         End Set
     End Property
 
+    <Description("生成的API中各个字段的名称"), Category("FrontWork")>
+    Public Property APIFieldNames As APIParamNamesType = New APIParamNamesType
+
     Public Sub New()
         If Not Me.DesignMode Then Me.Visible = False
         Call Me.InitializeComponent()
@@ -68,7 +74,7 @@ Public Class SearchViewJsonRESTAdapter
         Return False
     End Function
 
-    Private Sub SearchViewOnSearch(sender As Object, args As OnSearchEventArgs)
+    Protected Overridable Sub SearchViewOnSearch(sender As Object, args As OnSearchEventArgs)
         Dim jsEngine As New Jint.Engine
         Dim jsSerializer = New JavaScriptSerializer
         '添加搜索条件
@@ -80,7 +86,11 @@ Public Class SearchViewJsonRESTAdapter
                 Dim relation = condition.Relation
                 Dim values = condition.Values
                 Dim jsonValues = jsSerializer.Serialize(values)
-                jsEngine.Execute($"$conditions.push({{""key"":""{key}"",""relation"":""{relation}"",""values"":{jsonValues} }});")
+
+                Dim fieldKey = Me.APIFieldNames.ConditionParamNames.Key
+                Dim fieldRelation = Me.APIFieldNames.ConditionParamNames.Relation
+                Dim fieldValues = Me.APIFieldNames.ConditionParamNames.Values
+                jsEngine.Execute($"$conditions.push({{""{fieldKey}"":""{key}"",""{fieldRelation}"":""{relation}"",""{fieldValues}"":{jsonValues} }});")
             Next
         End If
 
@@ -90,7 +100,10 @@ Public Class SearchViewJsonRESTAdapter
             For Each orderItem In orders
                 Dim key = orderItem.Key
                 Dim order = orderItem.Order
-                jsEngine.Execute($"$orders.push({{""key"":""{key}"",""order"":""{order}"" }});")
+
+                Dim fieldKey = Me.APIFieldNames.OrderParamNames.Key
+                Dim fieldOrder = Me.APIFieldNames.OrderParamNames.Order
+                jsEngine.Execute($"$orders.push({{""key"":""{fieldKey}"",""order"":""{fieldOrder}"" }});")
             Next
         End If
 
@@ -99,11 +112,12 @@ Public Class SearchViewJsonRESTAdapter
         Call Me.Synchronizer.PullFromServer()
     End Sub
 
-    Private Sub InitializeComponent()
+    Protected Overridable Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SearchViewJsonRESTAdapter))
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.LabelAdapterName = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.TableLayoutPanel1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -113,18 +127,19 @@ Public Class SearchViewJsonRESTAdapter
         '
         Me.TableLayoutPanel1.ColumnCount = 1
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel1.Controls.Add(Me.Label3, 0, 2)
+        Me.TableLayoutPanel1.Controls.Add(Me.Label3, 0, 3)
         Me.TableLayoutPanel1.Controls.Add(Me.PictureBox1, 0, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.Label1, 0, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.LabelAdapterName, 0, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.Label1, 0, 2)
         Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanel1.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 3
+        Me.TableLayoutPanel1.RowCount = 4
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(180, 180)
         Me.TableLayoutPanel1.TabIndex = 0
         '
@@ -149,21 +164,34 @@ Public Class SearchViewJsonRESTAdapter
         Me.PictureBox1.Location = New System.Drawing.Point(0, 0)
         Me.PictureBox1.Margin = New System.Windows.Forms.Padding(0)
         Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(180, 120)
+        Me.PictureBox1.Size = New System.Drawing.Size(180, 90)
         Me.PictureBox1.TabIndex = 0
         Me.PictureBox1.TabStop = False
+        '
+        'LabelAdapterName
+        '
+        Me.LabelAdapterName.AutoSize = True
+        Me.LabelAdapterName.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.LabelAdapterName.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(134, Byte))
+        Me.LabelAdapterName.Location = New System.Drawing.Point(0, 90)
+        Me.LabelAdapterName.Margin = New System.Windows.Forms.Padding(0)
+        Me.LabelAdapterName.Name = "LabelAdapterName"
+        Me.LabelAdapterName.Size = New System.Drawing.Size(180, 30)
+        Me.LabelAdapterName.TabIndex = 1
+        Me.LabelAdapterName.Text = "SearchView" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
+        Me.LabelAdapterName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Label1
         '
         Me.Label1.AutoSize = True
         Me.Label1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label1.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(134, Byte))
+        Me.Label1.Font = New System.Drawing.Font("Microsoft YaHei UI", 8.5!)
         Me.Label1.Location = New System.Drawing.Point(0, 120)
         Me.Label1.Margin = New System.Windows.Forms.Padding(0)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(180, 30)
-        Me.Label1.TabIndex = 1
-        Me.Label1.Text = "SearchView" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
+        Me.Label1.TabIndex = 4
+        Me.Label1.Text = "Synchronizer"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'SearchViewJsonRESTAdapter
@@ -185,4 +213,82 @@ Public Class SearchViewJsonRESTAdapter
     Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PictureBox1.Click
 
     End Sub
+
+
+    '===============================================
+    <TypeConverter(GetType(APIParamNamesType.APIFieldNamesTypeConverter))>
+    Public Class APIParamNamesType
+        Public Property ConditionParamNames As New ConditionFieldNamesType
+        Public Property OrderParamNames As New OrderParamNamesType
+
+        Friend Class APIFieldNamesTypeConverter
+            Inherits TypeConverter
+
+            Public Overrides Function ConvertTo(context As ITypeDescriptorContext, culture As CultureInfo, value As Object, destinationType As Type) As Object
+                If destinationType = GetType(String) Then
+                    Return "API parameter names"
+                End If
+                Return MyBase.ConvertTo(context, culture, value, destinationType)
+            End Function
+
+            Public Overrides Function GetPropertiesSupported(context As ITypeDescriptorContext) As Boolean
+                Return True
+            End Function
+
+            Public Overrides Function GetProperties(context As ITypeDescriptorContext, value As Object, attributes() As Attribute) As PropertyDescriptorCollection
+                Return TypeDescriptor.GetProperties(GetType(APIParamNamesType), attributes)
+            End Function
+        End Class
+    End Class
+
+    <TypeConverter(GetType(ConditionFieldNamesType.ConditionParamNamesTypeConverter))>
+    Public Class ConditionFieldNamesType
+        Public Property Key As String = "key"
+        Public Property Relation As String = "relation"
+        Public Property Values As String = "values"
+
+        Friend Class ConditionParamNamesTypeConverter
+            Inherits TypeConverter
+
+            Public Overrides Function ConvertTo(context As ITypeDescriptorContext, culture As CultureInfo, value As Object, destinationType As Type) As Object
+                If destinationType = GetType(String) Then
+                    Return "Condition parameter names"
+                End If
+                Return MyBase.ConvertTo(context, culture, value, destinationType)
+            End Function
+
+            Public Overrides Function GetPropertiesSupported(context As ITypeDescriptorContext) As Boolean
+                Return True
+            End Function
+
+            Public Overrides Function GetProperties(context As ITypeDescriptorContext, value As Object, attributes() As Attribute) As PropertyDescriptorCollection
+                Return TypeDescriptor.GetProperties(GetType(ConditionFieldNamesType), attributes)
+            End Function
+        End Class
+    End Class
+
+    <TypeConverter(GetType(OrderParamNamesType.OrderFieldNamesTypeConverter))>
+    Public Class OrderParamNamesType
+        Public Property Key As String = "key"
+        Public Property Order As String = "order"
+
+        Public Class OrderFieldNamesTypeConverter
+            Inherits TypeConverter
+
+            Public Overrides Function ConvertTo(context As ITypeDescriptorContext, culture As CultureInfo, value As Object, destinationType As Type) As Object
+                If destinationType = GetType(String) Then
+                    Return "Order parameter names"
+                End If
+                Return MyBase.ConvertTo(context, culture, value, destinationType)
+            End Function
+
+            Public Overrides Function GetPropertiesSupported(context As ITypeDescriptorContext) As Boolean
+                Return True
+            End Function
+
+            Public Overrides Function GetProperties(context As ITypeDescriptorContext, value As Object, attributes() As Attribute) As PropertyDescriptorCollection
+                Return TypeDescriptor.GetProperties(GetType(OrderParamNamesType), attributes)
+            End Function
+        End Class
+    End Class
 End Class

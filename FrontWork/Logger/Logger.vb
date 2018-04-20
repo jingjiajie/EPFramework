@@ -5,12 +5,12 @@
 ''' </summary>
 Friend Enum LogMode As Integer
     DEFAULT_MODE
-    PARSING_Configuration
+    PARSING_CONFIGURATION
     INIT_VIEW
     LOAD_MODE_METHODLISTENER
     REFRESH_VIEW
     SYNC_FROM_VIEW
-    MODEL_ADAPTER
+    SYNCHRONIZER
 End Enum
 
 ''' <summary>
@@ -36,9 +36,9 @@ Friend Class Logger
             {LogMode.INIT_VIEW, New LogConfig("Initializing view")},
             {LogMode.REFRESH_VIEW, New LogConfig("Refreshing view")},
             {LogMode.SYNC_FROM_VIEW, New LogConfig("Synchronizing data from view")},
-            {LogMode.PARSING_Configuration, New LogConfig("Parsing Configuration")},
+            {LogMode.PARSING_CONFIGURATION, New LogConfig("Parsing Configuration")},
             {LogMode.LOAD_MODE_METHODLISTENER, New LogConfig("Loading mode MethodListener")},
-            {LogMode.MODEL_ADAPTER, New LogConfig("Model Adapter failure")}
+            {LogMode.SYNCHRONIZER, New LogConfig("Model Adapter failure")}
         }
     End Sub
 

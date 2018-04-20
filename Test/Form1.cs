@@ -135,5 +135,10 @@ namespace Test
         {
             MessageBox.Show(this.Size.Width + " x " + this.Size.Height);
         }
+
+        private void pagerView1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -20,12 +20,25 @@ Public Class ReoGridView
 
     ''' <summary>
     ''' 同步模式
-    ''' SYNC        与Model保持同步
-    ''' NOT_SYNC    与Model脱离同步
     ''' </summary>
     Protected Enum SyncMode
+        ''' <summary>
+        ''' 与Model保持同步
+        ''' </summary>
         SYNC
+        ''' <summary>
+        ''' 与Model脱离同步
+        ''' </summary>
         NOT_SYNC
+    End Enum
+
+    ''' <summary>
+    ''' 单元格状态，绘制单元格颜色用
+    ''' </summary>
+    Protected Enum CellState
+        [Default] = 0
+        UNSYNCHRONIZED = 1
+        INVALID_DATA = 2
     End Enum
 
     Private COLOR_UNSYNCHRONIZED As Color = Color.AliceBlue
@@ -36,6 +49,7 @@ Public Class ReoGridView
     Private dicTextChangedEvent As New Dictionary(Of Integer, FieldMethod) '编辑框文本改变时触发的事件列表
     Private dicBeforeSelectionRangeChangeEvent As New Dictionary(Of Integer, FieldMethod) '选择编辑框改变时触发的事件列表
     Private dicNameColumn As New Dictionary(Of String, Integer)
+    Private dicCellState As New Dictionary(Of Long, Dictionary(Of Long, Long))
     Private textBox As TextBox = Nothing
     Private formAssociation As FormAssociation
     Private Workbook As ReoGridControl = Nothing
@@ -248,6 +262,41 @@ Public Class ReoGridView
     End Sub
 
     ''' <summary>
+    ''' 根据各个单元格的状态，按行绘制单元格的颜色
+    ''' </summary>
+    Private Sub PaintRows(Optional rows As Long() = Nothing)
+        If rows Is Nothing Then
+            rows = Util.Range(0, Me.Panel.Rows)
+        End If
+        For Each row In rows
+            For Each col In Util.Range(0, Me.Panel.Columns)
+                Dim cellState = Me.GetCellState(row, col)
+                If (cellState And CellState.INVALID_DATA) > 0 Then
+                    Me.Panel.SetRangeStyles(row, col, 1, 1, New WorksheetRangeStyle() With {
+                        .Flag = PlainStyleFlag.BackColor,
+                        .BackColor = Color.IndianRed
+                    })
+                    Me.Panel.SetRangeBorders(row, col, 1, 1, BorderPositions.All, RangeBorderStyle.SilverSolid)
+                ElseIf (cellState And CellState.UNSYNCHRONIZED) Then
+                    Me.Panel.SetRangeBorders(row, col, 1, 1, BorderPositions.All, RangeBorderStyle.SilverSolid)
+                    Me.Panel.SetRangeStyles(row, col, 1, 1, New WorksheetRangeStyle() With {
+                        .Flag = PlainStyleFlag.BackColor,
+                        .BackColor = Me.COLOR_UNSYNCHRONIZED
+                    })
+                    Me.Panel.SetRangeBorders(row, col, 1, 1, BorderPositions.All, RangeBorderStyle.SilverSolid)
+                Else
+                    Me.Panel.SetRangeBorders(row, col, 1, 1, BorderPositions.All, RangeBorderStyle.SilverSolid)
+                    Me.Panel.SetRangeStyles(row, col, 1, 1, New WorksheetRangeStyle() With {
+                        .Flag = PlainStyleFlag.BackColor,
+                        .BackColor = Color.Transparent
+                    })
+                    Me.Panel.SetRangeBorders(row, col, 1, 1, BorderPositions.All, RangeBorderStyle.Empty)
+                End If
+            Next
+        Next
+    End Sub
+
+    ''' <summary>
     ''' 从Model同步选区
     ''' </summary>
     Protected Sub RefreshSelectionRange()
@@ -282,20 +331,13 @@ Public Class ReoGridView
                 Logger.PutMessage($"Row number {row} exceeded max row in the ReoGridView")
                 Return
             End If
-            If state = SynchronizationState.SYNCHRONIZED Then
-                Me.Panel.SetRangeBorders(row, 0, 1, Me.Panel.ColumnCount, BorderPositions.All, RangeBorderStyle.Empty)
-                Me.Panel.SetRangeStyles(row, 0, 1, Me.Panel.ColumnCount, New WorksheetRangeStyle() With {
-                    .Flag = PlainStyleFlag.BackColor,
-                    .BackColor = Me.COLOR_SYNCHRONIZED
-                   })
-            ElseIf state = SynchronizationState.UNSYNCHRONIZED Then
-                Me.Panel.SetRangeBorders(row, 0, 1, Me.Panel.ColumnCount, BorderPositions.All, RangeBorderStyle.SilverSolid)
-                Me.Panel.SetRangeStyles(row, 0, 1, Me.Panel.ColumnCount, New WorksheetRangeStyle() With {
-                    .Flag = PlainStyleFlag.BackColor,
-                    .BackColor = Me.COLOR_UNSYNCHRONIZED
-                                    })
+            If state = SynchronizationState.UNSYNCHRONIZED Then
+                Call Me.AddCellState(row, CellState.UNSYNCHRONIZED)
+            ElseIf state = SynchronizationState.SYNCHRONIZED Then
+                Call Me.RemoveCellState(row, CellState.UNSYNCHRONIZED)
             End If
         Next
+        Call Me.PaintRows(rows)
     End Sub
 
     ''' <summary>
@@ -408,6 +450,7 @@ Public Class ReoGridView
         End If
 
         Dim worksheet = Me.Panel
+        RemoveHandler worksheet.CellDataChanged, AddressOf Me.CellDataChanged
         '遍历FieldConfiguration()
         For i = 0 To fieldConfiguration.Length - 1
             Dim curField = fieldConfiguration(i)
@@ -430,6 +473,7 @@ Public Class ReoGridView
                 curCell.IsReadOnly = True
             End If
         Next
+        RemoveHandler worksheet.CellDataChanged, AddressOf Me.CellDataChanged
         RowInited.Add(row)
     End Sub
 
@@ -571,15 +615,33 @@ Public Class ReoGridView
     Private Sub CellDataChanged(sender As Object, e As CellEventArgs)
         Logger.Debug("ReoGrid View CellDataChanged: " & Str(Me.GetHashCode))
         If Me.CurSyncMode = SyncMode.NOT_SYNC Then Return
-        If Not Me.dicCellEdited.ContainsKey(e.Cell.Position) Then
-            Me.dicCellEdited.Add(e.Cell.Position, True)
-        End If
         Dim worksheet = Me.Panel
         Dim row = e.Cell.Row
         Dim col = e.Cell.Column
+        Dim fieldName = (From nameCol In Me.dicNameColumn Where nameCol.Value = col Select nameCol.Key).First
+        Dim fieldConfig = (From config In Me.Configuration.GetFieldConfigurations Where config.Name = fieldName Select config).First
+
         If Not Me.RowInited.Contains(row) Then '如果本行未被初始化，不要触发事件
             Return
         End If
+        '===========系统事件写这里
+        If Not Me.dicCellEdited.ContainsKey(e.Cell.Position) Then
+            Me.dicCellEdited.Add(e.Cell.Position, True)
+            '只要数据有修改，直接将Model对应行的同步状态改为未同步
+            Me.Model.UpdateRowSynchronizationState(e.Cell.Row, SynchronizationState.UNSYNCHRONIZED)
+        End If
+        '如果当前格是下拉框，验证数据是否在下拉框可选项范围中，如果不在，则标红
+        If fieldConfig.Values IsNot Nothing Then
+            Dim values As Object() = Util.ToArray(Of String)(fieldConfig.Values.Invoke)
+            If Not values.Contains(worksheet(row, col)) Then
+                Call Me.AddCellState(row, col, CellState.INVALID_DATA)
+            Else
+                Call Me.RemoveCellState(row, col, CellState.INVALID_DATA)
+            End If
+        End If
+        Call Me.PaintRows({row})
+
+        '===========用户事件写这里
         '要是这个列没设置ContentChanged事件，就不用刷了
         If Not Me.dicCellDataChangedEvent.ContainsKey(col) Then Exit Sub
         '否则执行设置的事件
@@ -732,10 +794,9 @@ Public Class ReoGridView
                     curReoGridCell.Data = text
                     AddHandler Me.Panel.CellDataChanged, AddressOf CellDataChanged
                 Else '有Values，是ComboBox框
-                    Dim values = Util.ToArray(Of String)(curField.Values.Invoke())
+                    Dim values = Util.ToArray(Of String)(curField.Values.Invoke)
                     If values.Contains(text) = False Then
                         Logger.PutMessage("Value """ + text + """" + " not found in comboBox """ + curField.Name + """")
-                        Continue For
                     End If
                     RemoveHandler Me.Panel.CellDataChanged, AddressOf CellDataChanged
                     curReoGridCell.Data = text
@@ -928,4 +989,92 @@ Public Class ReoGridView
     Private Function DropdownListCellItemsToArray(items As DropdownListCell.DropdownItemsCollection) As Object()
         Return items.ToArray
     End Function
+
+    ''' <summary>
+    ''' 获取单元格的状态
+    ''' </summary>
+    ''' <param name="row">行号</param>
+    ''' <param name="col">列号</param>
+    ''' <returns>单元格状态</returns>
+    Protected Function GetCellState(row As Long, col As Long) As CellState
+        If Me.dicCellState.ContainsKey(row) And Me.dicCellState(row).ContainsKey(col) Then
+            Return Me.dicCellState(row)(col)
+        Else
+            Return CellState.Default
+        End If
+    End Function
+
+    ''' <summary>
+    ''' 增加单元格状态
+    ''' </summary>
+    ''' <param name="row">行号</param>
+    ''' <param name="col">列号</param>
+    ''' <param name="cellState">单元格状态</param>
+    Protected Sub AddCellState(row As Long, col As Long, cellState As CellState)
+        Dim oriCellState = Me.GetCellState(row, col)
+        cellState = oriCellState Or cellState
+        If Not Me.dicCellState.ContainsKey(row) Then Me.dicCellState.Add(row, New Dictionary(Of Long, Long))
+        If Not Me.dicCellState(row).ContainsKey(col) Then
+            Me.dicCellState(row).Add(col, cellState)
+        Else
+            Me.dicCellState(row)(col) = cellState
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' 增加整行的单元格状态
+    ''' </summary>
+    ''' <param name="row">行号</param>
+    ''' <param name="cellState">单元格状态</param>
+    Protected Sub AddCellState(row As Long, cellState As CellState)
+        If Not Me.dicCellState.ContainsKey(row) Then Me.dicCellState.Add(row, New Dictionary(Of Long, Long))
+        Dim cols = Util.Range(0, Me.Panel.Columns)
+        For Each col In cols
+            Dim oriCellState = Me.GetCellState(row, col)
+            Dim newCellState = oriCellState Or cellState
+            Me.dicCellState(row)(col) = newCellState
+        Next
+    End Sub
+
+    ''' <summary>
+    ''' 去除单元格状态
+    ''' </summary>
+    ''' <param name="row">行号</param>
+    ''' <param name="col">列号</param>
+    ''' <param name="cellState">要去除的状态</param>
+    Protected Sub RemoveCellState(row As Long, col As Long, cellState As CellState)
+        Dim oriCellState = Me.GetCellState(row, col)
+        Dim newCellState = oriCellState And Not cellState
+        If Not Me.dicCellState.ContainsKey(row) Then Me.dicCellState.Add(row, New Dictionary(Of Long, Long))
+        If Not Me.dicCellState(row).ContainsKey(col) Then
+            Me.dicCellState(row).Add(col, newCellState)
+        Else
+            Me.dicCellState(row)(col) = newCellState
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' 去除单元格状态
+    ''' </summary>
+    ''' <param name="row">行号</param>
+    ''' <param name="cellState">要去除的状态</param>
+    Protected Sub RemoveCellState(row As Long, cellState As CellState)
+        If Not Me.dicCellState.ContainsKey(row) Then Me.dicCellState.Add(row, New Dictionary(Of Long, Long))
+        Dim cols = Util.Range(0, Me.Panel.Columns)
+        For Each col In cols
+            Dim oriCellState = Me.GetCellState(row, col)
+            Dim newCellState = oriCellState And Not cellState
+            Me.dicCellState(row)(col) = newCellState
+        Next
+    End Sub
+
+    ''' <summary>
+    ''' 清除整行的单元格状态
+    ''' </summary>
+    ''' <param name="row">行号</param>
+    Protected Sub ClearCellState(row As Long)
+        If Me.dicCellState.ContainsKey(row) Then
+            Call Me.dicCellState.Remove(row)
+        End If
+    End Sub
 End Class

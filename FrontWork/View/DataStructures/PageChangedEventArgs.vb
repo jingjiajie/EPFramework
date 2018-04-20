@@ -2,6 +2,7 @@
 ''' 页码变化事件参数
 ''' </summary>
 Public Class PageChangedEventArgs
+    Inherits EventArgs
     ''' <summary>
     ''' 当前页（从1开始）
     ''' </summary>

@@ -10,6 +10,15 @@
     <HelpKINode Title="IModel.AddRows 方法 " Url="html/d479dab4-0cab-a3fd-283e-2527f7dbeaaf.htm" />
     <HelpKINode Title="Model.AddRows 方法 " Url="html/b7b4e5b2-8818-5132-4b07-d436e4d37289.htm" />
   </HelpKINode>
+  <HelpKINode Title="APIFieldNames 属性" Url="html/05df3d9c-fafa-a97c-08c3-40aa795d8704.htm" />
+  <HelpKINode Title="APIFieldNamesType 类">
+    <HelpKINode Title="APIFieldNamesType 类" Url="html/5651a9e2-ac0a-e369-24b4-7299ed66fdad.htm" />
+    <HelpKINode Title="属性" Url="html/4301ff05-9b45-77b5-7234-d8ee028d2c9e.htm" />
+    <HelpKINode Title="构造函数" Url="html/764ae236-49c9-44ed-e788-c0742972edbf.htm" />
+  </HelpKINode>
+  <HelpKINode Title="APIFieldNamesType.APIFieldNamesType 构造函数" Url="html/764ae236-49c9-44ed-e788-c0742972edbf.htm" />
+  <HelpKINode Title="APIFieldNamesType.ConditionFieldNames 属性" Url="html/75aeafcc-4ef5-e469-6e5e-f04aeda4eef8.htm" />
+  <HelpKINode Title="APIFieldNamesType.OrderFieldNames 属性" Url="html/1b905c16-6400-bc4a-ea62-9e704ec6807f.htm" />
   <HelpKINode Title="APIType 属性" Url="html/bdd37b1f-2178-16ef-4c87-f59e66b4b055.htm" />
   <HelpKINode Title="ASC 枚举成员" Url="html/fe1be387-b368-7811-95c9-24dc016d254c.htm" />
   <HelpKINode Title="Association 属性" Url="html/69fe634d-c2da-4c41-ca51-c69e9521d411.htm" />
@@ -62,6 +71,16 @@
   </HelpKINode>
   <HelpKINode Title="ColumnName 属性" Url="html/eee3fc41-37a4-fb86-85bd-33907c133be1.htm" />
   <HelpKINode Title="Columns 属性" Url="html/2f245c3a-dcf3-357a-9e4a-4f4242833820.htm" />
+  <HelpKINode Title="ConditionFieldNames 属性" Url="html/75aeafcc-4ef5-e469-6e5e-f04aeda4eef8.htm" />
+  <HelpKINode Title="ConditionFieldNamesType 类">
+    <HelpKINode Title="ConditionFieldNamesType 类" Url="html/2a3109ec-edd6-45a3-5a7e-2a86ee195413.htm" />
+    <HelpKINode Title="属性" Url="html/abf4c401-d1a5-4566-8a34-00eabb35be53.htm" />
+    <HelpKINode Title="构造函数" Url="html/8aea8ab4-65ba-18df-0527-c73f28364554.htm" />
+  </HelpKINode>
+  <HelpKINode Title="ConditionFieldNamesType.ConditionFieldNamesType 构造函数" Url="html/8aea8ab4-65ba-18df-0527-c73f28364554.htm" />
+  <HelpKINode Title="ConditionFieldNamesType.Key 属性" Url="html/4e002593-2a30-f816-df3a-f5ddf60b8bb8.htm" />
+  <HelpKINode Title="ConditionFieldNamesType.Relation 属性" Url="html/1de2b637-2eea-6b57-4269-93336982381b.htm" />
+  <HelpKINode Title="ConditionFieldNamesType.Values 属性" Url="html/56184acb-e033-fda7-9991-85254ca719cc.htm" />
   <HelpKINode Title="Conditions 属性" Url="html/ed6c0055-1d09-adea-14b2-4274816d12ae.htm" />
   <HelpKINode Title="Configurate 方法" Url="html/df5f7436-193f-0d92-6de9-4348f3518f34.htm" />
   <HelpKINode Title="Configuration 属性">
@@ -186,8 +205,10 @@
     <HelpKINode Title="ModeConfiguration.FromJsValue 方法 " Url="html/4b29815e-dc80-2e75-585b-01088e134260.htm" />
   </HelpKINode>
   <HelpKINode Title="FrontWork 命名空间" Url="html/6736a72e-129c-29bb-9465-12afd32ab221.htm" />
+  <HelpKINode Title="FrontWork.APIFieldNamesType 类" Url="html/5651a9e2-ac0a-e369-24b4-7299ed66fdad.htm" />
   <HelpKINode Title="FrontWork.AssociationItem 类" Url="html/978593d3-b3ff-c8e4-b71f-6ae607ff371e.htm" />
   <HelpKINode Title="FrontWork.BasicView 类" Url="html/b082f167-b01f-afa8-fa8b-98bb9bb6d41f.htm" />
+  <HelpKINode Title="FrontWork.ConditionFieldNamesType 类" Url="html/2a3109ec-edd6-45a3-5a7e-2a86ee195413.htm" />
   <HelpKINode Title="FrontWork.Configuration 类" Url="html/39a3ca8e-1cb5-6e8b-0937-cfb4196027f7.htm" />
   <HelpKINode Title="FrontWork.ConfigurationChangedEventArgs 类" Url="html/f37f42d1-f93d-9baf-2710-7732dd0a269f.htm" />
   <HelpKINode Title="FrontWork.FieldConfiguration 类" Url="html/9d033edb-bf0f-89fe-854c-05f2933b46af.htm" />
@@ -218,9 +239,11 @@
   <HelpKINode Title="FrontWork.OnSearchEventArgs.OrderConditionItem 类" Url="html/99fa9991-f525-ac67-7781-916367ac7057.htm" />
   <HelpKINode Title="FrontWork.OnSearchEventArgs.Relation 枚举" Url="html/d1a19b95-a76f-5529-5d9f-1ff9d767697c.htm" />
   <HelpKINode Title="FrontWork.OnSearchEventArgs.SearchConditionItem 类" Url="html/24583463-b172-4e94-7e46-bd62fdee130e.htm" />
+  <HelpKINode Title="FrontWork.OrderFieldNamesType 类" Url="html/51bbe761-183c-f4b3-2e29-02fdaa15e0d2.htm" />
+  <HelpKINode Title="FrontWork.OrderFieldNamesType.OrderFieldNamesTypeConverter 类" Url="html/e4272ff0-7f16-917e-a781-da2d080d7cc7.htm" />
   <HelpKINode Title="FrontWork.PageChangedEventArgs 类" Url="html/55e4c5f0-a863-4a7c-5265-bc1deba4906e.htm" />
+  <HelpKINode Title="FrontWork.PagerSearchJsonRESTAdapter 类" Url="html/574e5160-5ce8-4dbb-06e8-87e7b462e243.htm" />
   <HelpKINode Title="FrontWork.PagerView 类" Url="html/d9a4df80-a667-1970-f2e5-c45f20c391bf.htm" />
-  <HelpKINode Title="FrontWork.PagerView.OnCurrentPageChangedEventHandler 委托" Url="html/3773355a-d895-e192-839b-47928ef30aa8.htm" />
   <HelpKINode Title="FrontWork.PositionCellPair 类" Url="html/9eab9511-112f-4681-5ae6-10cdb833e756.htm" />
   <HelpKINode Title="FrontWork.Range 类" Url="html/1d4fdc39-9447-258c-8fb9-e530af2044c8.htm" />
   <HelpKINode Title="FrontWork.Range.RangeChangedEventHandler 委托" Url="html/ba49031c-153d-4de3-13e4-8ed426aae0bf.htm" />
@@ -241,6 +264,8 @@
   <HelpKINode Title="GetHTTPAPIConfigurations 方法" Url="html/13dd8083-b541-2c63-c6a1-39c6f3db374b.htm" />
   <HelpKINode Title="GetMappedCellData 方法" Url="html/5633e913-274c-54f3-e293-6f650db4cf0c.htm" />
   <HelpKINode Title="GetMappedValue 方法" Url="html/3f3b8a30-ee49-3a9c-dd4d-d7e9797db1c1.htm" />
+  <HelpKINode Title="GetProperties 方法" Url="html/1dbe3b1e-6de1-7be2-9a40-a01d1cb3cc2b.htm" />
+  <HelpKINode Title="GetPropertiesSupported 方法" Url="html/fdfc661f-604c-29bd-73b4-d560430f5fd7.htm" />
   <HelpKINode Title="GetRequestBody 方法" Url="html/bbdbc993-560e-d377-8ba3-6bb2e4ea5e3b.htm" />
   <HelpKINode Title="GetResponseParameters 方法" Url="html/20be0f95-6d9f-c82f-fb5e-b1a63d75aee8.htm" />
   <HelpKINode Title="GetRowID 方法">
@@ -370,6 +395,7 @@
     <HelpKINode Title="ReoGridView.InitEditPanel 方法 " Url="html/47d641d9-6d7f-17ff-357e-ddd220ac3cf2.htm" />
     <HelpKINode Title="SearchView.InitEditPanel 方法 " Url="html/88485870-54ec-d615-9321-79deb259443e.htm" />
   </HelpKINode>
+  <HelpKINode Title="InitializeComponent 方法" Url="html/a2dad297-db33-2a84-d507-9fcdde833707.htm" />
   <HelpKINode Title="InsertRow 方法">
     <HelpKINode Title="IModel.InsertRow 方法 " Url="html/17368306-9f1b-2a5e-d490-85473d64a14f.htm" />
     <HelpKINode Title="Model.InsertRow 方法 " Url="html/76ca23da-23cb-49c5-73cc-981b7a98ce21.htm" />
@@ -428,8 +454,10 @@
   <HelpKINode Title="JsonRESTSynchronizer.RemoveAPI 属性" Url="html/eb326584-2f57-09ca-9af7-a620feb47c91.htm" />
   <HelpKINode Title="JsonRESTSynchronizer.UpdateAPI 属性" Url="html/ab6b493f-8cb7-afd8-9470-1d31049d3a44.htm" />
   <HelpKINode Title="Key 属性">
+    <HelpKINode Title="ConditionFieldNamesType.Key 属性 " Url="html/4e002593-2a30-f816-df3a-f5ddf60b8bb8.htm" />
     <HelpKINode Title="OnSearchEventArgs.OrderConditionItem.Key 属性 " Url="html/1a3f4cdf-3b99-0be4-9ac7-b99387fe62be.htm" />
     <HelpKINode Title="OnSearchEventArgs.SearchConditionItem.Key 属性 " Url="html/13600ba5-5539-8e02-db95-c7e9e29b5a0d.htm" />
+    <HelpKINode Title="OrderFieldNamesType.Key 属性 " Url="html/140afa61-0c7d-7456-7923-5793e5a3faca.htm" />
   </HelpKINode>
   <HelpKINode Title="LESS_THAN 枚举成员" Url="html/d1a19b95-a76f-5529-5d9f-1ff9d767697c.htm" />
   <HelpKINode Title="Method 属性" Url="html/154b8ab2-4a18-cca0-81c1-2ee218ca29f0.htm" />
@@ -579,9 +607,31 @@
   <HelpKINode Title="OnSearchEventArgs.SearchConditionItem.Relation 属性" Url="html/2737e21e-82a1-084c-aee7-ac494c48fe9d.htm" />
   <HelpKINode Title="OnSearchEventArgs.SearchConditionItem.SearchConditionItem 构造函数" Url="html/54ac1d5f-b1b3-3d9e-682e-477a999a7e3c.htm" />
   <HelpKINode Title="OnSearchEventArgs.SearchConditionItem.Values 属性" Url="html/a35b1119-5ff3-872f-60df-07041e8875a4.htm" />
-  <HelpKINode Title="Order 属性" Url="html/b2817938-a5f4-1e3a-97b9-43bbacc2b58e.htm" />
+  <HelpKINode Title="Order 属性">
+    <HelpKINode Title="OnSearchEventArgs.OrderConditionItem.Order 属性 " Url="html/b2817938-a5f4-1e3a-97b9-43bbacc2b58e.htm" />
+    <HelpKINode Title="OrderFieldNamesType.Order 属性 " Url="html/bf14a62d-fbb3-ff14-618d-54689acd5b20.htm" />
+  </HelpKINode>
   <HelpKINode Title="OrderConditionItem 类">
     <HelpKINode Title="属性" Url="html/edae78d5-401a-de27-2e69-2e8a5b1d4404.htm" />
+  </HelpKINode>
+  <HelpKINode Title="OrderFieldNames 属性" Url="html/1b905c16-6400-bc4a-ea62-9e704ec6807f.htm" />
+  <HelpKINode Title="OrderFieldNamesType 类">
+    <HelpKINode Title="OrderFieldNamesType 类" Url="html/51bbe761-183c-f4b3-2e29-02fdaa15e0d2.htm" />
+    <HelpKINode Title="属性" Url="html/6dda0aab-9e91-18ec-ad76-975287b9abe4.htm" />
+    <HelpKINode Title="构造函数" Url="html/49185c12-f4ee-5349-4598-028089da59e7.htm" />
+  </HelpKINode>
+  <HelpKINode Title="OrderFieldNamesType.Key 属性" Url="html/140afa61-0c7d-7456-7923-5793e5a3faca.htm" />
+  <HelpKINode Title="OrderFieldNamesType.Order 属性" Url="html/bf14a62d-fbb3-ff14-618d-54689acd5b20.htm" />
+  <HelpKINode Title="OrderFieldNamesType.OrderFieldNamesType 构造函数" Url="html/49185c12-f4ee-5349-4598-028089da59e7.htm" />
+  <HelpKINode Title="OrderFieldNamesType.OrderFieldNamesTypeConverter 类">
+    <HelpKINode Title="OrderFieldNamesType.OrderFieldNamesTypeConverter 类" Url="html/e4272ff0-7f16-917e-a781-da2d080d7cc7.htm" />
+    <HelpKINode Title="构造函数" Url="html/b65c0bec-acc8-6576-b93b-22ae5e5ee110.htm" />
+  </HelpKINode>
+  <HelpKINode Title="OrderFieldNamesType.OrderFieldNamesTypeConverter.GetProperties 方法" Url="html/1dbe3b1e-6de1-7be2-9a40-a01d1cb3cc2b.htm" />
+  <HelpKINode Title="OrderFieldNamesType.OrderFieldNamesTypeConverter.GetPropertiesSupported 方法" Url="html/fdfc661f-604c-29bd-73b4-d560430f5fd7.htm" />
+  <HelpKINode Title="OrderFieldNamesType.OrderFieldNamesTypeConverter.OrderFieldNamesTypeConverter 构造函数" Url="html/b65c0bec-acc8-6576-b93b-22ae5e5ee110.htm" />
+  <HelpKINode Title="OrderFieldNamesTypeConverter 类">
+    <HelpKINode Title="方法" Url="html/7d4fbc68-c2c0-3f1c-fe42-c1cb7c68894d.htm" />
   </HelpKINode>
   <HelpKINode Title="Orders 属性" Url="html/1a7e9b7e-167a-da32-9e98-2e75b7a200a6.htm" />
   <HelpKINode Title="PageChangedEventArgs 类">
@@ -591,6 +641,17 @@
   </HelpKINode>
   <HelpKINode Title="PageChangedEventArgs.CurrentPage 属性" Url="html/4f373e5f-f61c-b8cb-8be3-a5079364c30b.htm" />
   <HelpKINode Title="PageChangedEventArgs.PageChangedEventArgs 构造函数" Url="html/ca42d33d-d8a0-b60f-41e6-5f5eaeb202c1.htm" />
+  <HelpKINode Title="PagerSearchJsonRESTAdapter 类">
+    <HelpKINode Title="PagerSearchJsonRESTAdapter 类" Url="html/574e5160-5ce8-4dbb-06e8-87e7b462e243.htm" />
+    <HelpKINode Title="属性" Url="html/e587b399-c51b-155a-a693-951980768c55.htm" />
+    <HelpKINode Title="方法" Url="html/5afaa4a5-3b09-f572-3d82-58a23b3e08ce.htm" />
+    <HelpKINode Title="构造函数" Url="html/939e8d91-ded5-3acd-8ead-90fa6bc24ff3.htm" />
+  </HelpKINode>
+  <HelpKINode Title="PagerSearchJsonRESTAdapter.PagerSearchJsonRESTAdapter 构造函数" Url="html/939e8d91-ded5-3acd-8ead-90fa6bc24ff3.htm" />
+  <HelpKINode Title="PagerSearchJsonRESTAdapter.PagerView 属性" Url="html/2d2a9011-e2de-4a33-96ff-eea066886bf6.htm" />
+  <HelpKINode Title="PagerSearchJsonRESTAdapter.PagerViewPageChanged 方法" Url="html/6b5acbb4-d44b-2dbb-7807-85e68c69e469.htm" />
+  <HelpKINode Title="PagerSearchJsonRESTAdapter.SearchViewOnSearch 方法" Url="html/4112b54f-8638-1403-69fb-bfdbf9fe0185.htm" />
+  <HelpKINode Title="PagerView 属性" Url="html/2d2a9011-e2de-4a33-96ff-eea066886bf6.htm" />
   <HelpKINode Title="PagerView 类">
     <HelpKINode Title="PagerView 类" Url="html/d9a4df80-a667-1970-f2e5-c45f20c391bf.htm" />
     <HelpKINode Title="事件" Url="html/eddb61a8-e679-fd33-52c7-eb57c18d94b1.htm" />
@@ -602,9 +663,9 @@
   <HelpKINode Title="PagerView.CurrentPage 属性" Url="html/d87990ba-1218-281d-a114-a4ed8092318e.htm" />
   <HelpKINode Title="PagerView.Dispose 方法" Url="html/99b47af2-f847-f955-034f-a559c03e01b7.htm" />
   <HelpKINode Title="PagerView.OnCurrentPageChanged 事件" Url="html/035b1c1b-7f47-731c-84f1-8373bfbaf1c0.htm" />
-  <HelpKINode Title="PagerView.OnCurrentPageChangedEventHandler 委托" Url="html/3773355a-d895-e192-839b-47928ef30aa8.htm" />
   <HelpKINode Title="PagerView.PagerView 构造函数" Url="html/1584ed49-8875-3ee7-8f1d-fd67424213e6.htm" />
   <HelpKINode Title="PagerView.TotalPage 属性" Url="html/ce9257d5-77b4-0c41-c988-71e479fa2b6d.htm" />
+  <HelpKINode Title="PagerViewPageChanged 方法" Url="html/6b5acbb4-d44b-2dbb-7807-85e68c69e469.htm" />
   <HelpKINode Title="Parameters 属性" Url="html/af1f2a64-2105-2d1e-a55b-ea4d15fe3595.htm" />
   <HelpKINode Title="Parse 方法" Url="html/d1a8fbad-bfd2-0a87-1a9f-5a85dc0641c2.htm" />
   <HelpKINode Title="PositionCellPair 类">
@@ -661,7 +722,10 @@
   </HelpKINode>
   <HelpKINode Title="RefreshRowSynchronizationStates 方法" Url="html/11e0d9b9-de64-ae0a-1de4-549248340b02.htm" />
   <HelpKINode Title="RefreshSelectionRange 方法" Url="html/9f1beffc-4140-fe6b-f6e7-3c9116abc76a.htm" />
-  <HelpKINode Title="Relation 属性" Url="html/2737e21e-82a1-084c-aee7-ac494c48fe9d.htm" />
+  <HelpKINode Title="Relation 属性">
+    <HelpKINode Title="ConditionFieldNamesType.Relation 属性 " Url="html/1de2b637-2eea-6b57-4269-93336982381b.htm" />
+    <HelpKINode Title="OnSearchEventArgs.SearchConditionItem.Relation 属性 " Url="html/2737e21e-82a1-084c-aee7-ac494c48fe9d.htm" />
+  </HelpKINode>
   <HelpKINode Title="RemoveAPI 属性" Url="html/eb326584-2f57-09ca-9af7-a620feb47c91.htm" />
   <HelpKINode Title="RemovedRows 属性" Url="html/7ec8b7c0-9fe7-7cc6-bfdf-e1ec6350a6aa.htm" />
   <HelpKINode Title="RemoveRow 方法">
@@ -753,11 +817,19 @@
   <HelpKINode Title="SearchViewJsonRESTAdapter 类">
     <HelpKINode Title="SearchViewJsonRESTAdapter 类" Url="html/bbaf62aa-dc76-b9e6-c547-3a912f62d051.htm" />
     <HelpKINode Title="属性" Url="html/8a7d322f-9edf-5f8a-f945-f16c85499c58.htm" />
+    <HelpKINode Title="方法" Url="html/76231a3b-7012-0804-42bd-a08fadc17b47.htm" />
     <HelpKINode Title="构造函数" Url="html/77a5c6b8-e6e8-f7d7-5515-b6499795dca8.htm" />
   </HelpKINode>
+  <HelpKINode Title="SearchViewJsonRESTAdapter.APIFieldNames 属性" Url="html/05df3d9c-fafa-a97c-08c3-40aa795d8704.htm" />
+  <HelpKINode Title="SearchViewJsonRESTAdapter.InitializeComponent 方法" Url="html/a2dad297-db33-2a84-d507-9fcdde833707.htm" />
   <HelpKINode Title="SearchViewJsonRESTAdapter.SearchView 属性" Url="html/e5241f8b-f7fd-22f1-0a0c-0e1e283eafe9.htm" />
   <HelpKINode Title="SearchViewJsonRESTAdapter.SearchViewJsonRESTAdapter 构造函数" Url="html/77a5c6b8-e6e8-f7d7-5515-b6499795dca8.htm" />
+  <HelpKINode Title="SearchViewJsonRESTAdapter.SearchViewOnSearch 方法" Url="html/5b53f68d-5ed2-1f7b-f045-e1d45ac495ee.htm" />
   <HelpKINode Title="SearchViewJsonRESTAdapter.Synchronizer 属性" Url="html/f110fe46-c78c-73ab-7746-55d220d67990.htm" />
+  <HelpKINode Title="SearchViewOnSearch 方法">
+    <HelpKINode Title="PagerSearchJsonRESTAdapter.SearchViewOnSearch 方法 " Url="html/4112b54f-8638-1403-69fb-bfdbf9fe0185.htm" />
+    <HelpKINode Title="SearchViewJsonRESTAdapter.SearchViewOnSearch 方法 " Url="html/5b53f68d-5ed2-1f7b-f045-e1d45ac495ee.htm" />
+  </HelpKINode>
   <HelpKINode Title="Selected 属性" Url="html/320155f1-fb16-0e41-1c34-779e7b23b6ab.htm" />
   <HelpKINode Title="SelectionRange 属性">
     <HelpKINode Title="IModel.SelectionRange 属性 " Url="html/5a96f253-cdb8-7cd1-2736-cd5447d67508.htm" />
@@ -827,6 +899,7 @@
   <HelpKINode Title="URL 属性" Url="html/7dcf7aa9-778e-2b4e-415b-b219cf59d601.htm" />
   <HelpKINode Title="URLTemplate 属性" Url="html/46f60544-7060-2323-2c47-e020c456d0f3.htm" />
   <HelpKINode Title="Values 属性">
+    <HelpKINode Title="ConditionFieldNamesType.Values 属性 " Url="html/56184acb-e033-fda7-9991-85254ca719cc.htm" />
     <HelpKINode Title="FieldConfiguration.Values 属性 " Url="html/7fac20db-aca2-5781-fac6-425cb57a9a32.htm" />
     <HelpKINode Title="OnSearchEventArgs.SearchConditionItem.Values 属性 " Url="html/a35b1119-5ff3-872f-60df-07041e8875a4.htm" />
   </HelpKINode>

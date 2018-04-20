@@ -88,7 +88,7 @@ Public Class FieldConfiguration
     ''' <param name="jsValue">要转换的JsValue</param>
     ''' <returns></returns>
     Public Shared Function FromJsValue(jsEngine As Jint.Engine, jsValue As JsValue) As FieldConfiguration()
-        Logger.SetMode(LogMode.PARSING_Configuration)
+        Logger.SetMode(LogMode.PARSING_CONFIGURATION)
         If jsValue Is Nothing Then Throw New Exception("JsValue can not be null!")
         '如果是数组，则遍历解析
         If jsValue.IsArray Then
@@ -116,7 +116,7 @@ Public Class FieldConfiguration
     ''' <param name="jsValue">JsValue</param>
     ''' <returns></returns>
     Private Shared Function MakeFieldConfigurationFromJsValue(jsEngine As Jint.Engine, jsValue As JsValue) As FieldConfiguration
-        Logger.SetMode(LogMode.PARSING_Configuration)
+        Logger.SetMode(LogMode.PARSING_CONFIGURATION)
         If jsValue Is Nothing Then Throw New Exception("JsValue can not be null!")
         If Not jsValue.IsObject Then
             Logger.PutMessage("Not a valid JsObject!")

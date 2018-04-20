@@ -134,7 +134,7 @@ Public Class Configuration
     ''' <param name="jsonStr">json配置字符串</param>
     ''' <returns>是否配置成功</returns>
     Public Function Configurate(jsonStr As String) As Boolean
-        Logger.SetMode(LogMode.PARSING_Configuration)
+        Logger.SetMode(LogMode.PARSING_CONFIGURATION)
         Dim jsValue As JsValue = Nothing
         Try
             jsValue = jsEngine.Execute("$_FWJsonResult = " + jsonStr).GetValue("$_FWJsonResult")

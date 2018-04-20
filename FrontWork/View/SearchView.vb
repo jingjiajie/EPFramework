@@ -41,7 +41,7 @@ Public Class SearchView
     ''' </summary>
     Protected Sub InitEditPanel()
         Call Me.ComboBoxSearchKey.Items.Clear()
-        Call Me.ComboBoxOrderKey.Items.Add("无")
+        Call Me.ComboBoxSearchKey.Items.Add("无")
         Call Me.ComboBoxOrderKey.Items.Clear()
         Call Me.ComboBoxOrderKey.Items.Add("无")
 

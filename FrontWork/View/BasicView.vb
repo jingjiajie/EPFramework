@@ -3,6 +3,9 @@ Imports Jint.Native
 Imports System.ComponentModel
 Imports System.Linq
 
+''' <summary>
+''' 基本视图，以文本框，下拉框等形式提供数据的交互
+''' </summary>
 Public Class BasicView
     Inherits UserControl
     Implements IView
@@ -114,11 +117,11 @@ Public Class BasicView
             Return -1
         End If
         If Me.Model.SelectionRange.Length > 1 Then
-            Logger.PutMessage("Multiple range selected, TableLayoutPanelView will only show data of the first range", LogLevel.WARNING)
+            'Logger.PutMessage("Multiple range selected, TableLayoutPanelView will only show data of the first range", LogLevel.WARNING)
         End If
         Dim range = Me.Model.SelectionRange(0)
         If range.Rows > 1 Then
-            Logger.PutMessage("Multiple rows selected, TableLayoutPanelView will only show data of the first row", LogLevel.WARNING)
+            'Logger.PutMessage("Multiple rows selected, TableLayoutPanelView will only show data of the first row", LogLevel.WARNING)
         End If
         Return range.Row
     End Function
@@ -292,6 +295,7 @@ Public Class BasicView
                 If Not values Is Nothing Then
                     comboBox.Items.AddRange(values)
                 End If
+                Me.Panel.Controls.Add(comboBox)
                 '如果是设计器调试，就不用绑定事件了
                 If Me.DesignMode Then Continue For
                 '绑定用户事件
@@ -317,7 +321,6 @@ Public Class BasicView
                                            End Sub
                 '绑定内容改变记录更新事件
                 AddHandler comboBox.SelectedIndexChanged, AddressOf Me.ContentChangedEvent
-                Me.Panel.Controls.Add(comboBox)
             End If
         Next
 

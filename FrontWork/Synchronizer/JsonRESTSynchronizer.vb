@@ -213,7 +213,7 @@ Public Class JsonRESTSynchronizer
     End Sub
 
     Public Function PullFromServer() As Boolean Implements ISynchronizer.PullFromServer
-        Logger.SetMode(LogMode.MODEL_ADAPTER)
+        Logger.SetMode(LogMode.SYNCHRONIZER)
         If Me.PullAPI Is Nothing Then
             Throw New Exception("Pull API Not set!")
         End If
@@ -305,7 +305,7 @@ Public Class JsonRESTSynchronizer
     ''' </summary>
     ''' <returns>是否成功</returns>
     Public Function PushToServer() As Boolean Implements ISynchronizer.PushToServer
-        Logger.SetMode(LogMode.MODEL_ADAPTER)
+        Logger.SetMode(LogMode.SYNCHRONIZER)
         If Me.Model Is Nothing Then
             Throw New Exception("Model not set!")
         End If

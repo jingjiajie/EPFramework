@@ -37,7 +37,7 @@ Public Class ModeConfiguration
     ''' <param name="jsValue">JsValue对象</param>
     ''' <returns></returns>
     Public Shared Function FromJsValue(jsEngine As Jint.Engine, jsValue As Jint.Native.JsValue) As ModeConfiguration()
-        Logger.SetMode(LogMode.PARSING_Configuration)
+        Logger.SetMode(LogMode.PARSING_CONFIGURATION)
         If jsValue Is Nothing Then Throw New Exception("JsValue can not be null!")
         '如果是数组，则遍历解析
         If jsValue.IsArray Then
@@ -65,7 +65,7 @@ Public Class ModeConfiguration
     ''' <param name="jsValue">JsValue对象</param>
     ''' <returns></returns>
     Private Shared Function MakeModeConfigurationFromJsValue(jsEngine As Jint.Engine, jsValue As Jint.Native.JsValue) As ModeConfiguration
-        Logger.SetMode(LogMode.PARSING_Configuration)
+        Logger.SetMode(LogMode.PARSING_CONFIGURATION)
         If jsValue Is Nothing Then Throw New Exception("JsValue can not be null!")
         If Not jsValue.IsObject Then
             Logger.PutMessage("Not a valid JsObject!")

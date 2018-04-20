@@ -3,7 +3,7 @@
 Public Class PagerView
     Implements IView
     Private _currentPage As Long = 1
-    Private _totalPage As Long
+    Private _totalPage As Long = 1
 
     ''' <summary>
     ''' 配置中心对象，用来获取配置
@@ -13,35 +13,16 @@ Public Class PagerView
     Public Property Configuration As Configuration Implements IView.Configuration
 
     ''' <summary>
-    ''' 当前页码，从1开始
-    ''' </summary>
-    ''' <returns>当前页码</returns>
-    <Description("当前页（从1开始）"), Category("FrontWork")>
-    Public Property CurrentPage As Long
-        Get
-            Return Me._currentPage
-        End Get
-        Set(value As Long)
-            If value > Me.TotalPage Then
-                Throw New Exception($"CurrentPage:{value} exceeded TotalPage:{Me.TotalPage}")
-            End If
-            Me._currentPage = value
-            Me.TextBoxCurrentPage.Text = CStr(value)
-            Dim eventArgs As New PageChangedEventArgs(value)
-            RaiseEvent OnCurrentPageChanged(eventArgs)
-        End Set
-    End Property
-
-    ''' <summary>
     ''' 总页码，从1开始
     ''' </summary>
     ''' <returns>总页码</returns>
-    <Description("总页码（从1开始）"), Category("FrontWork")>
+    <Description("总页码（从1开始）"), Category("FrontWork"), Browsable(False), DesignerSerializationVisibility(False)>
     Public Property TotalPage As Long
         Get
             Return Me._totalPage
         End Get
         Set(value As Long)
+            If value < 1 Then Throw New Exception("Page must be greater than 1")
             If value < Me.CurrentPage Then
                 Throw New Exception($"TotalPage:{value} cannot be less than CurrentPage:{Me.CurrentPage}")
             End If
@@ -51,10 +32,36 @@ Public Class PagerView
     End Property
 
     ''' <summary>
+    ''' 当前页码，从1开始
+    ''' </summary>
+    ''' <returns>当前页码</returns>
+    <Description("当前页（从1开始）"), Category("FrontWork"), Browsable(False), DesignerSerializationVisibility(False)>
+    Public Property CurrentPage As Long
+        Get
+            Return Me._currentPage
+        End Get
+        Set(value As Long)
+            If value < 1 Then Throw New Exception("Page must be greater than 1")
+            If value > Me.TotalPage Then
+                Throw New Exception($"CurrentPage:{value} exceeded TotalPage:{Me.TotalPage}")
+            End If
+            Me._currentPage = value
+            Me.TextBoxCurrentPage.Text = CStr(value)
+            Dim eventArgs As New PageChangedEventArgs(value)
+            RaiseEvent OnCurrentPageChanged(Me, eventArgs)
+        End Set
+    End Property
+
+    ''' <summary>
+    ''' 每页大小，默认50行
+    ''' </summary>
+    ''' <returns></returns>
+    Public Property PageSize As Long = 50
+
+    ''' <summary>
     ''' 当前页码改变事件（可能由于用户点击下一页，或者程序改变CurrentPage触发）
     ''' </summary>
-    ''' <param name="args">页码改变事件参数</param>
-    Public Event OnCurrentPageChanged(args As PageChangedEventArgs)
+    Public Event OnCurrentPageChanged As EventHandler(Of PageChangedEventArgs)
 
     Private Sub TableLayoutPanel1_Paint(sender As Object, e As PaintEventArgs) Handles TableLayoutPanel1.Paint
 
@@ -71,7 +78,7 @@ Public Class PagerView
         If Not (Me.CurrentPage >= 1 And Me.CurrentPage <= Me.TotalPage) Then
             MessageBox.Show($"请输入{1}到{Me.TotalPage}之间的页码", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         End If
-        RaiseEvent OnCurrentPageChanged(New PageChangedEventArgs(Me.CurrentPage))
+        RaiseEvent OnCurrentPageChanged(Me, New PageChangedEventArgs(Me.CurrentPage))
     End Sub
 
     Private Sub TextBoxCurrentPage_TextChanged(sender As Object, e As EventArgs) Handles TextBoxCurrentPage.TextChanged
@@ -92,6 +99,7 @@ Public Class PagerView
     End Sub
 
     Private Sub ButtonEndPage_Click(sender As Object, e As EventArgs) Handles ButtonEndPage.Click
+        If Me.CurrentPage = Me.TotalPage Then Return
         Me.CurrentPage = Me.TotalPage
     End Sub
 
@@ -105,6 +113,7 @@ Public Class PagerView
     End Sub
 
     Private Sub ButtonStartPage_Click(sender As Object, e As EventArgs) Handles ButtonStartPage.Click
+        If Me.CurrentPage = 1 Then Return
         Me.CurrentPage = 1
     End Sub
 End Class

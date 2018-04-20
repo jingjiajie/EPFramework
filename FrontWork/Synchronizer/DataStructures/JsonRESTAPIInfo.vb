@@ -109,7 +109,7 @@ Public Class JsonRESTAPIInfo
     ''' </summary>
     ''' <returns>url</returns>
     Public Function GetURL() As String
-        Logger.SetMode(LogMode.MODEL_ADAPTER)
+        Logger.SetMode(LogMode.SYNCHRONIZER)
         Dim resultURL As New StringBuilder(Me.URLTemplate)
         Dim curMatch = Regex.Match(Me.URLTemplate, "\{(((?<clojure>\{)|(?<-clojure>\})|[^{}])+(?(clojure)(?!)))\}")
         Do While curMatch.Success '遍历匹配到的各个"{表达式}"
@@ -148,7 +148,7 @@ Public Class JsonRESTAPIInfo
     ''' <param name="paramNames">响应体参数</param>
     ''' <returns>参数值</returns>
     Public Function GetResponseParameters(responsebody As String, paramNames As String()) As Object()
-        Logger.SetMode(LogMode.MODEL_ADAPTER)
+        Logger.SetMode(LogMode.SYNCHRONIZER)
         Dim paramPaths = Me.GetResponseBodyTemplateParamPaths(responsebody, paramNames)
         Dim result(paramNames.Length - 1) As Object
 

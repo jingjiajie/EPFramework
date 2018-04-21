@@ -5,7 +5,6 @@
 ''' </summary>
 Friend Enum LogMode As Integer
     DEFAULT_MODE
-    PARSING_CONFIGURATION
     INIT_VIEW
     LOAD_MODE_METHODLISTENER
     REFRESH_VIEW
@@ -36,7 +35,6 @@ Friend Class Logger
             {LogMode.INIT_VIEW, New LogConfig("Initializing view")},
             {LogMode.REFRESH_VIEW, New LogConfig("Refreshing view")},
             {LogMode.SYNC_FROM_VIEW, New LogConfig("Synchronizing data from view")},
-            {LogMode.PARSING_CONFIGURATION, New LogConfig("Parsing Configuration")},
             {LogMode.LOAD_MODE_METHODLISTENER, New LogConfig("Loading mode MethodListener")},
             {LogMode.SYNCHRONIZER, New LogConfig("Model Adapter failure")}
         }

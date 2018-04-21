@@ -221,28 +221,13 @@
     <value>[{
     mode:"default",
     fields:[{name:"id",displayName:"ID",visible:false}, 
-            {name:"name",displayName:"姓名",association:"nameAssociation"},
-            {name:"password",displayName:"密码",association:"nameAssociation"},
+            {name:"name",displayName:"姓名",placeHolder:"点击填写姓名"},
+            {name:"password",displayName:"密码"},
             {name:"age",displayName:"年龄"},
-            {name:"role",displayName:"角色",values:function(){return["管理员","普通用户"]}},
-            {name:"authorityString",displayName:"权限"}],
-    httpAPIs:[ {apiType:"pull",
-                url:"http://localhost:9001/WMS_Template/person/{{conditions:$conditions,orders:$orders}}",
-                method:"GET",
-                responseBody:"$data"},
-               {apiType:"update",
-                url:"http://localhost:9001/WMS_Template/person/",
-                method:"PUT",
-                requestBody:"$data"},
-               {apiType:"add",
-                url:"http://localhost:9001/WMS_Template/person/",
-                method:"POST",
-                requestBody:"$data"},
-               {apiType:"remove",
-                url:"http://localhost:9001/WMS_Template/person/{mapProperty($data,'id')}",
-                method:"DELETE"}
-            ]
-}]</value>
+            {name:"role",displayName:"角色",values:function(){ return ["管理员","普通用户","VIP"]} },
+            {name:"authorityString",displayName:"权限"}]
+}]
+</value>
   </data>
   <data name="model1.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

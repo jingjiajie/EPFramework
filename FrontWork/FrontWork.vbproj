@@ -86,6 +86,8 @@
     </Compile>
     <Compile Include="Configuration\EventArgs\ConfigurationChangedEventArgs.vb" />
     <Compile Include="Configuration\HTTPAPIConfiguration.vb" />
+    <Compile Include="Configuration\MethodListener\MethodListenerBase.vb" />
+    <Compile Include="Configuration\MethodListener\MethodListenerContainer.vb" />
     <Compile Include="Logger\Logger.vb" />
     <Compile Include="Configuration\ModeConfiguration.vb" />
     <Compile Include="Configuration\FieldConfiguration.vb" />
@@ -141,7 +143,6 @@
     <Compile Include="View\FormAssociation.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Configuration\IMethodListener.vb" />
     <Compile Include="View\IView.vb" />
     <Compile Include="View\ReoGridView.Designer.vb">
       <DependentUpon>ReoGridView.vb</DependentUpon>

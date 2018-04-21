@@ -2,6 +2,7 @@
 Imports Jint.Native
 Imports System.ComponentModel
 Imports System.Linq
+Imports System.Reflection
 
 ''' <summary>
 ''' 基本视图，以文本框，下拉框等形式提供数据的交互
@@ -242,7 +243,8 @@ Public Class BasicView
             If curField.Visible = False Then Continue For
             '创建标签
             Dim label As New Label With {
-                .Text = curField.DisplayName
+                .Text = curField.DisplayName,
+                .Font = Me.Font
             }
             Me.Panel.Controls.Add(label)
             '如果没有设定Values字段，认为可以用编辑框体现
@@ -250,8 +252,51 @@ Public Class BasicView
                 '创建编辑框
                 Dim textBox As New TextBox With {
                     .Name = curField.Name,
-                    .ReadOnly = Not curField.Editable
+                    .ReadOnly = Not curField.Editable,
+                    .Font = Me.Font
                 }
+                '如果设置了占位符，则想办法给它模拟出一个占位符来。windows居然不支持，呵呵
+                If (curField.PlaceHolder IsNot Nothing) Then
+                    '加一个label覆盖在上面，看着跟真的placeholder似的
+                    Dim labelLayer As Label = New Label()
+                    textBox.Controls.Add(labelLayer)
+                    labelLayer.Text = curField.PlaceHolder
+                    labelLayer.TextAlign = ContentAlignment.MiddleLeft
+                    labelLayer.ForeColor = Color.Gray
+                    labelLayer.Font = textBox.Font
+                    labelLayer.Dock = DockStyle.Fill
+                    labelLayer.AutoSize = True
+                    AddHandler labelLayer.Click,
+                        Sub(obj, e)
+                            Call textBox.Focus()
+                            '调用编辑框的点击事件
+                            Dim onClickMethod = GetType(TextBox).GetMethod("OnClick", BindingFlags.NonPublic Or BindingFlags.Instance)
+                            onClickMethod.Invoke(textBox, {EventArgs.Empty})
+                        End Sub
+
+                    '防止第一次显示的时候有字也显示占位符的囧境
+                    AddHandler textBox.TextChanged,
+                        Sub(obj, e)
+                            If textBox.Text.Length <> 0 Then
+                                Call labelLayer.Hide()
+                            Else
+                                textBox.Text = ""
+                                Call labelLayer.Show()
+                            End If
+                        End Sub
+
+                    AddHandler textBox.Click,
+                        Sub(obj, e)
+                            Call labelLayer.Hide()
+                        End Sub
+                    AddHandler textBox.Leave,
+                        Sub(obj, e)
+                            If (String.IsNullOrWhiteSpace(textBox.Text)) Then
+                                textBox.Text = ""
+                                Call labelLayer.Show()
+                            End If
+                        End Sub
+                End If
                 Me.Panel.Controls.Add(textBox)
                 '如果是设计器调试，就不用绑定事件了
                 If Me.DesignMode Then Continue For
@@ -287,17 +332,19 @@ Public Class BasicView
                 AddHandler textBox.TextChanged, AddressOf Me.ContentChangedEvent
             Else '否则可以用ComboBox体现
                 Dim comboBox As New ComboBox With {
-                    .Name = curField.Name,
-                    .Enabled = curField.Editable,
-                    .DropDownStyle = ComboBoxStyle.DropDownList
-                }
+                                                          .Name = curField.Name,
+                                                          .Font = Me.Font,
+                                                          .Enabled = curField.Editable,
+                                                          .DropDownStyle = ComboBoxStyle.DropDownList
+                                                      }
+                Me.Panel.Controls.Add(comboBox)
+                '如果是设计器调试，就不用触发和绑定事件了
+                If Me.DesignMode Then Continue For
+
                 Dim values As Object() = Util.ToArray(Of Object)(curField.Values.Invoke())
-                If Not values Is Nothing Then
+                If values IsNot Nothing Then
                     comboBox.Items.AddRange(values)
                 End If
-                Me.Panel.Controls.Add(comboBox)
-                '如果是设计器调试，就不用绑定事件了
-                If Me.DesignMode Then Continue For
                 '绑定用户事件
                 If curField.ContentChanged IsNot Nothing Then
                     AddHandler comboBox.SelectedIndexChanged, Sub()

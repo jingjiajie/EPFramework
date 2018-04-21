@@ -13,7 +13,7 @@ using FrontWork;
 
 namespace Test
 {
-    public partial class Form1 : Form,IMethodListener
+    public partial class Form1 : Form
     {
         public Form1()
         {
@@ -22,47 +22,7 @@ namespace Test
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            string strMetadata = @"[{
-                                      mode:'default',
-                                      fields:[{name:'id',displayName:'ID',visible:false},
-                                              {name:'name',displayName:'姓名',association:'nameAssociation'},
-                                              {name:'password',displayName:'密码',association:'nameAssociation'},
-                                              {name:'role',displayName:'角色'},
-                                              {name:'authorityString',displayName:'权限字符串'}]
-                                  }]";
-            //this.jsonRESTSynchronizer1.Configuration = this.configuration;
-            //this.synchronizer = new JsonRESTSynchronizer();
-            //this.synchronizer.Model = this.model;
-            //this.synchronizer.SetPullAPI(@"http://localhost.fiddler:9000/ledger/WMS_Template/person/{{""conditions"":$conditions,""orders"":$orders}}",HTTPMethod.GET,"$data");
-            //this.synchronizer.SetUpdateAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/",HTTPMethod.PUT,"$data");
-            //this.synchronizer.SetAddAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/", HTTPMethod.POST, "$data");
-            //this.synchronizer.SetRemoveAPI("http://localhost.fiddler:9000/ledger/WMS_Template/person/{mapProperty($data,'id')}", HTTPMethod.DELETE, null);
-            //this.synchronizer.SetPushFinishedCallback(()=>
-            //{
-            //    MessageBox.Show("保存成功！","提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //});
 
-            //this.synchronizer.SetPushFailedCallback((res, err) =>
-            //{
-            //    string message;
-            //    if (res != null)
-            //    {
-            //        message = new StreamReader(res.GetResponseStream()).ReadToEnd();
-            //    }
-            //    else
-            //    {
-            //        message = err.Message;
-            //    }
-            //    MessageBox.Show("保存失败：" + message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //    return false;
-            //});
-            //this.searchWidget1.SetConfigurationFromJson(strMetadata,this);
-            //this.searchWidgetJsonRESTAdapter = new SearchViewJsonRESTAdapter();
-            //this.searchWidgetJsonRESTAdapter.Bind(this.searchWidget1, this.synchronizer);
-            
-
-            //this.pagerWidget1.TotalPage = 10;
-            //this.pagerWidget1.CurrentPage = 5;
         }
 
         private void SearchWidget1_OnSearch(OnSearchEventArgs args)
@@ -139,6 +99,11 @@ namespace Test
         private void pagerView1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        public string[] RoleValues()
+        {
+            return new string[] { "管理员","普通用户"};
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Test
+﻿using FrontWork;
+
+namespace Test
 {
     partial class Form1
     {
@@ -28,25 +30,26 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             FrontWork.SearchViewJsonRESTAdapter.APIParamNamesType apiParamNamesType1 = new FrontWork.SearchViewJsonRESTAdapter.APIParamNamesType();
             FrontWork.SearchViewJsonRESTAdapter.ConditionFieldNamesType conditionFieldNamesType1 = new FrontWork.SearchViewJsonRESTAdapter.ConditionFieldNamesType();
             FrontWork.SearchViewJsonRESTAdapter.OrderParamNamesType orderParamNamesType1 = new FrontWork.SearchViewJsonRESTAdapter.OrderParamNamesType();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            FrontWork.ModeMethodListenerNamePair modeMethodListenerNamePair1 = new FrontWork.ModeMethodListenerNamePair();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.basicView1 = new FrontWork.BasicView();
-            this.configuration = new FrontWork.Configuration();
-            this.model1 = new FrontWork.Model();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pagerSearchJsonRESTAdapter1 = new FrontWork.PagerSearchJsonRESTAdapter();
             this.searchWidget1 = new FrontWork.SearchView();
+            this.configuration = new FrontWork.Configuration();
             this.jsonRESTSynchronizer1 = new FrontWork.JsonRESTSynchronizer();
+            this.model1 = new FrontWork.Model();
             this.reoGridView1 = new FrontWork.ReoGridView();
             this.panel2 = new System.Windows.Forms.Panel();
             this.pagerView1 = new FrontWork.PagerView();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.basicView1 = new FrontWork.BasicView();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -97,6 +100,7 @@
             this.tableLayoutPanel1.Controls.Add(this.pagerView1, 0, 3);
             this.tableLayoutPanel1.Controls.Add(this.panel3, 0, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Font = new System.Drawing.Font("黑体", 10F);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 4;
@@ -106,43 +110,6 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1509, 812);
             this.tableLayoutPanel1.TabIndex = 16;
-            // 
-            // basicView1
-            // 
-            this.basicView1.Configuration = this.configuration;
-            this.basicView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.basicView1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.basicView1.Location = new System.Drawing.Point(0, 0);
-            this.basicView1.Margin = new System.Windows.Forms.Padding(0);
-            this.basicView1.Model = this.model1;
-            this.basicView1.Name = "basicView1";
-            this.basicView1.Padding = new System.Windows.Forms.Padding(5, 15, 0, 0);
-            this.basicView1.Size = new System.Drawing.Size(1309, 201);
-            this.basicView1.TabIndex = 13;
-            // 
-            // configuration
-            // 
-            this.configuration.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("configuration.BackgroundImage")));
-            this.configuration.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.configuration.ConfigurationString = resources.GetString("configuration.ConfigurationString");
-            this.configuration.Location = new System.Drawing.Point(1243, 202);
-            this.configuration.Mode = "default";
-            this.configuration.Name = "configuration";
-            this.configuration.Size = new System.Drawing.Size(180, 180);
-            this.configuration.TabIndex = 10;
-            // 
-            // model1
-            // 
-            this.model1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("model1.BackgroundImage")));
-            this.model1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.model1.Configuration = this.configuration;
-            this.model1.FirstSelectionRange = null;
-            this.model1.Location = new System.Drawing.Point(901, 29);
-            this.model1.Name = "model1";
-            this.model1.SelectionRange = new FrontWork.Range[0];
-            this.model1.Size = new System.Drawing.Size(180, 180);
-            this.model1.TabIndex = 11;
-            this.model1.Load += new System.EventHandler(this.model1_Load);
             // 
             // panel1
             // 
@@ -182,10 +149,27 @@
             // 
             this.searchWidget1.Configuration = this.configuration;
             this.searchWidget1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.searchWidget1.Font = new System.Drawing.Font("黑体", 9F);
             this.searchWidget1.Location = new System.Drawing.Point(3, 3);
             this.searchWidget1.Name = "searchWidget1";
             this.searchWidget1.Size = new System.Drawing.Size(1303, 74);
             this.searchWidget1.TabIndex = 6;
+            // 
+            // configuration
+            // 
+            this.configuration.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("configuration.BackgroundImage")));
+            this.configuration.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.configuration.ConfigurationString = resources.GetString("configuration.ConfigurationString");
+            this.configuration.Location = new System.Drawing.Point(1250, 44);
+            modeMethodListenerNamePair1.MethodListenerName = "Form1MethodListener";
+            modeMethodListenerNamePair1.Mode = "DEFAULT";
+            this.configuration.MethodListeners = new FrontWork.ModeMethodListenerNamePair[] {
+        modeMethodListenerNamePair1};
+            this.configuration.Mode = "default";
+            this.configuration.Name = "configuration";
+            this.configuration.Size = new System.Drawing.Size(180, 180);
+            this.configuration.TabIndex = 10;
+            this.configuration.Load += new System.EventHandler(this.Form1_Load);
             // 
             // jsonRESTSynchronizer1
             // 
@@ -196,6 +180,19 @@
             this.jsonRESTSynchronizer1.Name = "jsonRESTSynchronizer1";
             this.jsonRESTSynchronizer1.Size = new System.Drawing.Size(180, 180);
             this.jsonRESTSynchronizer1.TabIndex = 14;
+            // 
+            // model1
+            // 
+            this.model1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("model1.BackgroundImage")));
+            this.model1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.model1.Configuration = this.configuration;
+            this.model1.FirstSelectionRange = null;
+            this.model1.Location = new System.Drawing.Point(901, 29);
+            this.model1.Name = "model1";
+            this.model1.SelectionRange = new FrontWork.Range[0];
+            this.model1.Size = new System.Drawing.Size(180, 180);
+            this.model1.TabIndex = 11;
+            this.model1.Load += new System.EventHandler(this.model1_Load);
             // 
             // reoGridView1
             // 
@@ -224,6 +221,7 @@
             // pagerView1
             // 
             this.pagerView1.Configuration = null;
+            this.pagerView1.Font = new System.Drawing.Font("黑体", 9F);
             this.pagerView1.Location = new System.Drawing.Point(3, 754);
             this.pagerView1.Name = "pagerView1";
             this.pagerView1.PageSize = ((long)(50));
@@ -240,6 +238,19 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(1309, 201);
             this.panel3.TabIndex = 20;
+            // 
+            // basicView1
+            // 
+            this.basicView1.Configuration = this.configuration;
+            this.basicView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.basicView1.Font = new System.Drawing.Font("黑体", 10F);
+            this.basicView1.Location = new System.Drawing.Point(0, 0);
+            this.basicView1.Margin = new System.Windows.Forms.Padding(0);
+            this.basicView1.Model = this.model1;
+            this.basicView1.Name = "basicView1";
+            this.basicView1.Padding = new System.Windows.Forms.Padding(5, 15, 0, 0);
+            this.basicView1.Size = new System.Drawing.Size(1309, 201);
+            this.basicView1.TabIndex = 13;
             // 
             // Form1
             // 

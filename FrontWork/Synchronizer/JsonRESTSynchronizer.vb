@@ -123,7 +123,7 @@ Public Class JsonRESTSynchronizer
         If Me._configuration Is Nothing Then Return
         Dim httpAPIConfigs = Me._configuration.GetHTTPAPIConfigurations
         For Each apiConfig In httpAPIConfigs
-            If apiConfig.APIType.Equals("pushFinishedCallback", StringComparison.OrdinalIgnoreCase) Then
+            If apiConfig.Type.Equals("pushFinishedCallback", StringComparison.OrdinalIgnoreCase) Then
                 Me.PushFinishedCallback =
                     Sub()
                         Call apiConfig.Callback?.Invoke()
@@ -142,13 +142,13 @@ Public Class JsonRESTSynchronizer
                 Function(res, ex) As Boolean
                     Return apiConfig.Callback?.Invoke(res, ex)
                 End Function
-            If apiConfig.APIType.Equals("pull", StringComparison.OrdinalIgnoreCase) Then
+            If apiConfig.Type.Equals("pull", StringComparison.OrdinalIgnoreCase) Then
                 Me.PullAPI = newAPIInfo
-            ElseIf apiConfig.APIType.Equals("add", StringComparison.OrdinalIgnoreCase) Then
+            ElseIf apiConfig.Type.Equals("add", StringComparison.OrdinalIgnoreCase) Then
                 Me.AddAPI = newAPIInfo
-            ElseIf apiConfig.APIType.Equals("update", StringComparison.OrdinalIgnoreCase) Then
+            ElseIf apiConfig.Type.Equals("update", StringComparison.OrdinalIgnoreCase) Then
                 Me.UpdateAPI = newAPIInfo
-            ElseIf apiConfig.APIType.Equals("remove", StringComparison.OrdinalIgnoreCase) Then
+            ElseIf apiConfig.Type.Equals("remove", StringComparison.OrdinalIgnoreCase) Then
                 Me.RemoveAPI = newAPIInfo
             End If
         Next

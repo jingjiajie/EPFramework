@@ -118,7 +118,7 @@ Public Class ReoGridView
                 RemoveHandler Me._configuration.ConfigurationChanged, AddressOf Me.ConfigurationChanged
             End If
             Me._configuration = value
-            If value IsNot Nothing Then
+            If Me._configuration IsNot Nothing Then
                 AddHandler Me._configuration.ConfigurationChanged, AddressOf Me.ConfigurationChanged
             End If
             Call Me.ConfigurationChanged(Me, New ConfigurationChangedEventArgs)

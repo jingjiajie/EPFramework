@@ -19,7 +19,7 @@ namespace FrontWork
         public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
         {
             FormConfigurationEditor form = new FormConfigurationEditor();
-            form.SetText(value.ToString());
+            form.SetText(value?.ToString());
             form.ShowDialog();
             return form.GetText();
         }

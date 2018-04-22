@@ -27,9 +27,14 @@ Public Class Model
             Return Me._configuration
         End Get
         Set(value As Configuration)
+            If Me._configuration IsNot Nothing Then
+                RemoveHandler Me._configuration.ConfigurationChanged, AddressOf Me.ConfigurationChanged
+            End If
             Me._configuration = value
-            Call Me.InitDataTable()
-            AddHandler Me._configuration.ConfigurationChanged, AddressOf Me.ConfigurationChanged
+            If Me._configuration IsNot Nothing Then
+                Call Me.InitDataTable()
+                AddHandler Me._configuration.ConfigurationChanged, AddressOf Me.ConfigurationChanged
+            End If
         End Set
     End Property
 

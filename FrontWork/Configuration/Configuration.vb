@@ -21,7 +21,7 @@ Public Class Configuration
     Friend WithEvents Label1 As Label
 
     Private _configurationString As String
-    Private _methodListeners As ModeMethodListenerNamePair() = Nothing
+    Private _methodListeners As ModeMethodListenerNamePair() = {}
     Private _mode As String = "default"
     Private modeConfigurations As New List(Of ModeConfiguration)
     Private jsEngine As New Jint.Engine
@@ -71,6 +71,7 @@ Public Class Configuration
         End Get
         Set(value As ModeMethodListenerNamePair())
             Me._methodListeners = value
+            If value Is Nothing Then Return
             If Not String.IsNullOrWhiteSpace(Me.ConfigurationString) Then
                 For Each modeMethodListener In Me.MethodListeners
                     Call Me.SetMethodListener(modeMethodListener.MethodListenerName, modeMethodListener.Mode)

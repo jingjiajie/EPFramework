@@ -76,7 +76,7 @@ Public Class ModeConfiguration
     ''' <summary>
     ''' 生成一个ModeConfiguration
     ''' </summary>
-    ''' <param name="jsEngine">JavaScript引擎</param>
+    ''' <param name="configuration">所属配置中心</param>
     ''' <param name="jsValue">JsValue对象</param>
     ''' <returns></returns>
     Private Shared Function MakeModeConfigurationFromJsValue(configuration As Configuration, jsValue As Jint.Native.JsValue) As ModeConfiguration

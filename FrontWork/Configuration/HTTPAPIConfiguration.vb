@@ -10,7 +10,7 @@ Public Class HTTPAPIConfiguration
     ''' API类型，如pull,add,update,remove等
     ''' </summary>
     ''' <returns></returns>
-    Public Property APIType As String
+    Public Property Type As String
 
     ''' <summary>
     ''' API对应的URL

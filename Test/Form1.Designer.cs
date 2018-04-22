@@ -34,7 +34,7 @@ namespace Test
             FrontWork.SearchViewJsonRESTAdapter.ConditionFieldNamesType conditionFieldNamesType1 = new FrontWork.SearchViewJsonRESTAdapter.ConditionFieldNamesType();
             FrontWork.SearchViewJsonRESTAdapter.OrderParamNamesType orderParamNamesType1 = new FrontWork.SearchViewJsonRESTAdapter.OrderParamNamesType();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            FrontWork.ModeMethodListenerNamePair modeMethodListenerNamePair1 = new FrontWork.ModeMethodListenerNamePair();
+            FrontWork.ModeMethodListenerNamePair modeMethodListenerNamePair3 = new FrontWork.ModeMethodListenerNamePair();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
@@ -161,10 +161,10 @@ namespace Test
             this.configuration.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.configuration.ConfigurationString = resources.GetString("configuration.ConfigurationString");
             this.configuration.Location = new System.Drawing.Point(1250, 44);
-            modeMethodListenerNamePair1.MethodListenerName = "Form1MethodListener";
-            modeMethodListenerNamePair1.Mode = "DEFAULT";
+            modeMethodListenerNamePair3.MethodListenerName = "Form1MethodListener";
+            modeMethodListenerNamePair3.Mode = "DEFAULT";
             this.configuration.MethodListeners = new FrontWork.ModeMethodListenerNamePair[] {
-        modeMethodListenerNamePair1};
+        modeMethodListenerNamePair3};
             this.configuration.Mode = "default";
             this.configuration.Name = "configuration";
             this.configuration.Size = new System.Drawing.Size(180, 180);
@@ -176,7 +176,7 @@ namespace Test
             this.jsonRESTSynchronizer1.Configuration = this.configuration;
             this.jsonRESTSynchronizer1.Location = new System.Drawing.Point(597, 187);
             this.jsonRESTSynchronizer1.Margin = new System.Windows.Forms.Padding(0);
-            this.jsonRESTSynchronizer1.Model = this.model1;
+            this.jsonRESTSynchronizer1.Model = null;
             this.jsonRESTSynchronizer1.Name = "jsonRESTSynchronizer1";
             this.jsonRESTSynchronizer1.Size = new System.Drawing.Size(180, 180);
             this.jsonRESTSynchronizer1.TabIndex = 14;

@@ -6,13 +6,6 @@ Public Class PagerView
     Private _totalPage As Long = 1
 
     ''' <summary>
-    ''' 配置中心对象，用来获取配置
-    ''' </summary>
-    ''' <returns>配置中心对象</returns>
-    <Description("配置中心对象"), Category("FrontWork")>
-    Public Property Configuration As Configuration Implements IView.Configuration
-
-    ''' <summary>
     ''' 总页码，从1开始
     ''' </summary>
     ''' <returns>总页码</returns>
@@ -56,6 +49,7 @@ Public Class PagerView
     ''' 每页大小，默认50行
     ''' </summary>
     ''' <returns></returns>
+    <Description("每页大小"), Category("FrontWork")>
     Public Property PageSize As Long = 50
 
     ''' <summary>

@@ -220,7 +220,6 @@ namespace Test
             // 
             // pagerView1
             // 
-            this.pagerView1.Configuration = null;
             this.pagerView1.Font = new System.Drawing.Font("黑体", 9F);
             this.pagerView1.Location = new System.Drawing.Point(3, 754);
             this.pagerView1.Name = "pagerView1";

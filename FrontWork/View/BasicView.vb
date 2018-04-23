@@ -41,7 +41,7 @@ Public Class BasicView
     ''' </summary>
     ''' <returns>配置中心对象</returns>
     <Description("配置中心对象"), Category("FrontWork")>
-    Public Property Configuration As Configuration Implements IView.Configuration
+    Public Property Configuration As Configuration
         Get
             Return Me._configuration
         End Get

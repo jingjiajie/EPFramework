@@ -645,4 +645,17 @@ Public Class BasicView
     Private Sub TableLayoutPanel_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles TableLayoutPanel.MouseDoubleClick
         MessageBox.Show(Me.Size.Width & " x " & Me.Size.Height)
     End Sub
+
+    ''' <summary>
+    ''' 获取视图中的单元格
+    ''' </summary>
+    ''' <param name="fieldName">字段名</param>
+    ''' <returns>单元格对象</returns>
+    Public Function GetComponent(fieldName As String) As IViewComponent
+        Dim foundControls = Me.Panel.Controls.Find(fieldName, False)
+        If foundControls.Length = 0 Then
+            Throw New Exception($"ViewComponent ""{fieldName}"" not found!")
+        End If
+        Return New BasicViewComponent(foundControls(0))
+    End Function
 End Class

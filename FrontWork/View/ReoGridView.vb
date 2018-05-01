@@ -1077,4 +1077,17 @@ Public Class ReoGridView
             Call Me.dicCellState.Remove(row)
         End If
     End Sub
+
+    ''' <summary>
+    ''' 获取视图中的单元格
+    ''' </summary>
+    ''' <param name="row">行号</param>
+    ''' <param name="fieldName">字段名</param>
+    ''' <returns>单元格对象</returns>
+    Public Function GetComponent(row As Long, fieldName As String) As IViewComponent
+        If Me.Panel.RowCount <= row Then
+            Throw New Exception($"Row {row} exceeded the last row of ReoGridView")
+        End If
+        Return Me.Panel.CreateAndGetCell(row, Me.dicNameColumn(Name))
+    End Function
 End Class

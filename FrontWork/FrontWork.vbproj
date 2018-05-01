@@ -137,6 +137,8 @@
     <Compile Include="View\BasicView.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="View\DataStructures\BasicViewComponent.vb" />
+    <Compile Include="View\DataStructures\ReoGridViewComponent.vb" />
     <Compile Include="View\FormAssociation.Designer.vb">
       <DependentUpon>FormAssociation.vb</DependentUpon>
     </Compile>
@@ -144,6 +146,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\IView.vb" />
+    <Compile Include="View\IViewComponent.vb" />
     <Compile Include="View\ReoGridView.Designer.vb">
       <DependentUpon>ReoGridView.vb</DependentUpon>
     </Compile>

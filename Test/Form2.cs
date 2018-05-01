@@ -25,7 +25,7 @@ namespace Test
 
         private void Form2_Load(object sender, EventArgs e)
         {
-
+            this.basicView1.GetComponent("name").Color = Color.Red;
         }
     }
 }

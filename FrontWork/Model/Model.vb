@@ -135,15 +135,17 @@ Public Class Model
 
     Private Sub ConfigurationChanged(sender As Object, e As ConfigurationChangedEventArgs)
         Call Me.InitDataTable()
+        RaiseEvent Refreshed(Me, New ModelRefreshedEventArgs)
     End Sub
 
     Private Sub InitDataTable()
         If Me.Configuration Is Nothing Then Return
 
-        Call Me.Data.Columns.Clear()
         Dim fieldConfiguration = Me.Configuration.GetFieldConfigurations
         For Each curField In fieldConfiguration
-            Me.Data.Columns.Add(curField.Name)
+            If Not Me.Data.Columns.Contains(curField.Name) Then
+                Me.Data.Columns.Add(curField.Name)
+            End If
         Next
     End Sub
 

@@ -75,6 +75,9 @@ Public Class SearchViewJsonRESTAdapter
     End Function
 
     Protected Overridable Sub SearchViewOnSearch(sender As Object, args As OnSearchEventArgs)
+        If Me.Synchronizer.PullAPI Is Nothing Then
+            Throw New Exception("PullAPI not set!")
+        End If
         Dim jsEngine As New Jint.Engine
         Dim jsSerializer = New JavaScriptSerializer
         '添加搜索条件

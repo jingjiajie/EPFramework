@@ -14,9 +14,21 @@ Partial Public Class FormAssociation
         DOWN
     End Enum
 
-    Private textBox As TextBox = Nothing
+    Private _textBox As TextBox = Nothing
+    Private _parentForm As Form = Nothing
 
-    Private Property AssociationFunc As Func(Of String, AssociationItem())
+    Public Property AssociationFunc As Func(Of String, AssociationItem())
+
+    Public Property TextBox As TextBox
+        Get
+            Return Me._textBox
+        End Get
+        Set(value As TextBox)
+            If Me._textBox IsNot Nothing Then Call Me.UnBindTextBox(Me._textBox)
+            Me._textBox = value
+            If Me._textBox IsNot Nothing Then Call Me.BindTextBox(Me._textBox)
+        End Set
+    End Property
 
     ''' <summary>
     ''' 是否处于已选中联想项目状态。从用户回车选中，到下次联想开始之前，此项为True
@@ -49,16 +61,38 @@ Partial Public Class FormAssociation
     ''' </summary>
     ''' <param name="textBox">要绑定的编辑框</param>
     Public Sub New(ByVal textBox As TextBox)
+        Call Me.New
+        Me.TextBox = textBox
+    End Sub
+
+    Public Sub New()
         InitializeComponent()
-        Call MyBase.Show()
-        Call MyBase.Hide()
-        Me.textBox = textBox
+        AddHandler Me.GotFocus, AddressOf formAssociate_GotFocus
+    End Sub
+
+    Private Sub BindTextBox(textBox As TextBox)
         AddHandler textBox.PreviewKeyDown, AddressOf textBox_PreviewKeyDown
         AddHandler textBox.TextChanged, AddressOf textBox_TextChanged
         AddHandler textBox.Leave, AddressOf textBox_Leave
         AddHandler textBox.VisibleChanged, AddressOf textBox_VisibleChanged
-        AddHandler Me.FindTopParentControl(textBox).LocationChanged, AddressOf textBoxBaseForm_LocationChanged
-        AddHandler Me.GotFocus, AddressOf formAssociate_GotFocus
+        Me._parentForm = Me.FindTopParentForm(textBox)
+        AddHandler Me._parentForm.LocationChanged, AddressOf textBoxBaseForm_LocationChanged
+        AddHandler Me._parentForm.Deactivate, AddressOf parentForm_Deactivate
+    End Sub
+
+    Private Sub UnBindTextBox(textBox As TextBox)
+        RemoveHandler textBox.PreviewKeyDown, AddressOf textBox_PreviewKeyDown
+        RemoveHandler textBox.TextChanged, AddressOf textBox_TextChanged
+        RemoveHandler textBox.Leave, AddressOf textBox_Leave
+        RemoveHandler textBox.VisibleChanged, AddressOf textBox_VisibleChanged
+        RemoveHandler Me._parentForm.LocationChanged, AddressOf textBoxBaseForm_LocationChanged
+        RemoveHandler Me._parentForm.Deactivate, AddressOf parentForm_Deactivate
+    End Sub
+
+    Private Sub parentForm_Deactivate(sender, e)
+        If Me._parentForm.WindowState = FormWindowState.Minimized Then
+            Call MyBase.Hide()
+        End If
     End Sub
 
     Private Sub textBoxBaseForm_LocationChanged(ByVal sender As Object, ByVal e As EventArgs)
@@ -67,7 +101,7 @@ Partial Public Class FormAssociation
     End Sub
 
     Private Sub textBox_VisibleChanged(ByVal sender As Object, ByVal e As EventArgs)
-        If Not Me.textBox.Visible Then
+        If Not Me._textBox.Visible Then
             Call Me.Hide()
         End If
     End Sub
@@ -78,16 +112,19 @@ Partial Public Class FormAssociation
         End If
     End Sub
 
-    Private Function FindTopParentControl(ByVal c As Control) As Control
+    Private Function FindTopParentForm(ByVal c As Control) As Form
         If c.Parent Is Nothing Then
+            If TypeOf (c) IsNot Form Then
+                Throw New Exception("textbox must be added in a Form before binded to FormAssociation!")
+            End If
             Return c
         Else
-            Return FindTopParentControl(c.Parent)
+            Return FindTopParentForm(c.Parent)
         End If
     End Function
 
     Private Sub textBox_TextChanged(ByVal sender As Object, ByVal e As EventArgs)
-        If Me.textBox.Focused And Me.AssociationFunc IsNot Nothing Then
+        If Me._textBox.Focused And Me.AssociationFunc IsNot Nothing Then
             Call Me.Show()
             Call Me.RefreshAssociation()
         End If
@@ -100,7 +137,7 @@ Partial Public Class FormAssociation
     Protected Sub RefreshAssociation()
         Static newestListBoxDataTime = DateTime.Now
         If Me.StayUnvisible Then Return
-        If String.IsNullOrEmpty(textBox.Text) OrElse Me.AssociationFunc Is Nothing Then
+        If String.IsNullOrEmpty(_textBox.Text) OrElse Me.AssociationFunc Is Nothing Then
             Me.Hide()
             Return
         End If
@@ -111,7 +148,7 @@ Partial Public Class FormAssociation
                 Dim threadStartTime As DateTime = DateTime.Now
                 newestListBoxDataTime = threadStartTime
                 Try
-                    Dim data = Me.AssociationFunc.Invoke(textBox.Text)
+                    Dim data = Me.AssociationFunc.Invoke(_textBox.Text)
                     If newestListBoxDataTime > threadStartTime Then '如果已经有更新的联想返回了，本次联想就废弃
                         Return
                     End If
@@ -121,7 +158,7 @@ Partial Public Class FormAssociation
                                              Me.listBox.Items.AddRange(data)
                                              If data.Length = 0 Then
                                                  Me.Hide()
-                                             ElseIf Me.Visible = False AndAlso textBox.Visible = True Then
+                                             ElseIf Me.Visible = False AndAlso _textBox.Visible = True Then
                                                  Me.Show()
                                              End If
                                          End Sub))
@@ -149,9 +186,9 @@ Partial Public Class FormAssociation
 
         If Me.listBox.SelectedItem IsNot Nothing Then
             Me.StayVisible = True
-            RemoveHandler textBox.TextChanged, AddressOf Me.textBox_TextChanged
-            textBox.Text = (TryCast(Me.listBox.SelectedItem, AssociationItem)).Word
-            AddHandler textBox.TextChanged, AddressOf Me.textBox_TextChanged
+            RemoveHandler _textBox.TextChanged, AddressOf Me.textBox_TextChanged
+            _textBox.Text = (TryCast(Me.listBox.SelectedItem, AssociationItem)).Word
+            AddHandler _textBox.TextChanged, AddressOf Me.textBox_TextChanged
             Me.Selected = True
             Me.StayVisible = False
             Me.Hide()
@@ -179,19 +216,19 @@ Partial Public Class FormAssociation
     End Sub
 
     Private Sub AdjustPosition()
-        Dim textBoxScreenPosition As Point = textBox.PointToScreen(New Point(0, 0))
-        Dim x = textBoxScreenPosition.X - Me.Padding.Left + textBox.Padding.Left - 2
-        Dim y = textBoxScreenPosition.Y + textBox.Height - Me.Padding.Top - 3
+        Dim textBoxScreenPosition As Point = _textBox.PointToScreen(New Point(0, 0))
+        Dim x = textBoxScreenPosition.X - Me.Padding.Left + _textBox.Padding.Left - 2
+        Dim y = textBoxScreenPosition.Y + _textBox.Height - Me.Padding.Top - 3
         Me.SetPosition(x, y)
         Me.GiveBackFocus()
     End Sub
 
     Private Sub GiveBackFocus()
-        If Me.textBox IsNot Nothing Then
-            Me.textBox.Focus()
-            If textBox.SelectionLength > 0 Then
-                textBox.SelectionLength = 0
-                textBox.SelectionStart = textBox.Text.Length
+        If Me._textBox IsNot Nothing Then
+            Me._textBox.Focus()
+            If _textBox.SelectionLength > 0 Then
+                _textBox.SelectionLength = 0
+                _textBox.SelectionStart = _textBox.Text.Length
             End If
         End If
     End Sub

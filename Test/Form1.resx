@@ -221,9 +221,9 @@
     <value>[{
     mode:"default",
     fields:[{name:"id",displayName:"ID",visible:false}, 
-            {name:"name",displayName:"姓名",placeHolder:"点击填写姓名"},
+            {name:"name",displayName:"姓名",association:function(){return ['小明','小红']},placeHolder:"点击填写姓名"},
             {name:"password",displayName:"密码"},
-            {name:"age",displayName:"年龄"},
+            {name:"age",displayName:"年龄",association:function(){return [18,19,20,21,22]}},
             {name:"role",displayName:"角色",values:function(){ return ["管理员","普通用户","VIP"]} },
             {name:"authorityString",displayName:"权限"}]
 }]

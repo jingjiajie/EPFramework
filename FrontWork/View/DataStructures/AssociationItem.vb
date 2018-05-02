@@ -20,4 +20,17 @@ Public Class AssociationItem
 
         Return str
     End Function
+
+    Public Sub New()
+
+    End Sub
+
+    Public Sub New(word As Object)
+        Me.Word = word
+    End Sub
+
+    Public Sub New(word As Object, hint As Object)
+        Me.Word = word
+        Me.Hint = hint
+    End Sub
 End Class

@@ -12,7 +12,7 @@ Imports unvell.ReoGrid.Events
 ''' 表格控件使用ReoGrid开源控件，感谢ReoGrid作者提供的优秀控件。
 ''' </summary>
 Public Class ReoGridView
-    Implements IView
+    Implements IDataView
 
     Private Sub ReoGridControl_Click(sender As Object, e As EventArgs) Handles ReoGridControl.Click
 
@@ -378,8 +378,8 @@ Public Class ReoGridView
                     Exit For
                 End If
             Next
-            Me.formAssociation = New FormAssociation(Me.textBox)
-            formAssociation.StayUnvisible = True
+            Me.formAssociation = New FormAssociation
+            Me.formAssociation.StayUnvisible = True
             If Me.textBox Is Nothing Then
                 Logger.SetMode(LogMode.INIT_VIEW)
                 Logger.PutMessage("Table textbox not found")
@@ -473,7 +473,7 @@ Public Class ReoGridView
                 curCell.IsReadOnly = True
             End If
         Next
-        RemoveHandler worksheet.CellDataChanged, AddressOf Me.CellDataChanged
+        AddHandler worksheet.CellDataChanged, AddressOf Me.CellDataChanged
         RowInited.Add(row)
     End Sub
 
@@ -498,6 +498,9 @@ Public Class ReoGridView
     End Sub
 
     Private Sub TextboxPreviewKeyDown(sender As Object, e As PreviewKeyDownEventArgs)
+        If Me.formAssociation.TextBox Is Nothing Then
+            Me.formAssociation.TextBox = Me.textBox
+        End If
         If (e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.Down) AndAlso Me.formAssociation IsNot Nothing AndAlso Me.formAssociation.Visible = True Then
             Me.canChangeSelectionRange = False
             Me.formAssociation.StayVisible = True
@@ -631,13 +634,14 @@ Public Class ReoGridView
             Me.Model.UpdateRowSynchronizationState(e.Cell.Row, SynchronizationState.UNSYNCHRONIZED)
         End If
         '如果当前格是下拉框，验证数据是否在下拉框可选项范围中，如果不在，则标红
+        '同时，下拉框数据改变，直接同步到Model
         If fieldConfig.Values IsNot Nothing Then
-            Dim values As Object() = Util.ToArray(Of String)(fieldConfig.Values.Invoke)
-            If Not values.Contains(worksheet(row, col)) Then
-                Call Me.AddCellState(row, col, CellState.INVALID_DATA)
-            Else
-                Call Me.RemoveCellState(row, col, CellState.INVALID_DATA)
-            End If
+            '同步数据
+            RemoveHandler Me.Model.CellUpdated, AddressOf Me.ModelCellUpdatedEvent
+            Call Me.CellUpdatedEvent()
+            AddHandler Me.Model.CellUpdated, AddressOf Me.ModelCellUpdatedEvent
+            '验证数据
+            Call Me.ValidateComboBoxData(row, col)
         End If
         Call Me.PaintRows({row})
 
@@ -653,6 +657,24 @@ Public Class ReoGridView
         Dim fieldMethod = Me.dicCellDataChangedEvent(col)
         fieldMethod.Invoke()
     End Sub
+
+    ''' <summary>
+    ''' 验证下拉框数据，不正确时将单元格状态增加CellState.INVALID_DATA，正确时去除CellState.INVALID_DATA
+    ''' </summary>
+    ''' <param name="row">行</param>
+    ''' <param name="col">列</param>
+    Private Sub ValidateComboBoxData(row As Long, col As Long)
+        Dim fieldName = (From nameCol In Me.dicNameColumn Where nameCol.Value = col Select nameCol.Key).First
+        Dim fieldConfig = (From config In Me.Configuration.GetFieldConfigurations Where config.Name = fieldName Select config).First
+        '验证数据
+        Dim values As Object() = Util.ToArray(Of String)(fieldConfig.Values.Invoke)
+        If Not values.Contains(Me.Panel(row, col)) Then
+            Call Me.AddCellState(row, col, CellState.INVALID_DATA)
+        Else
+            Call Me.RemoveCellState(row, col, CellState.INVALID_DATA)
+        End If
+    End Sub
+
 
     Private Sub BindRowToJsEngine(row As Integer)
         Dim jsEngine = Me.JsEngine
@@ -801,8 +823,10 @@ Public Class ReoGridView
                     RemoveHandler Me.Panel.CellDataChanged, AddressOf CellDataChanged
                     curReoGridCell.Data = text
                     AddHandler Me.Panel.CellDataChanged, AddressOf CellDataChanged
+                    Call Me.ValidateComboBoxData(curReoGridCell.Row, curReoGridCell.Column)
                 End If
             Next
+            Call Me.PaintRows({curReoGridRowNum})
         Next
         Return True
     End Function
@@ -997,7 +1021,7 @@ Public Class ReoGridView
     ''' <param name="col">列号</param>
     ''' <returns>单元格状态</returns>
     Protected Function GetCellState(row As Long, col As Long) As CellState
-        If Me.dicCellState.ContainsKey(row) And Me.dicCellState(row).ContainsKey(col) Then
+        If Me.dicCellState.ContainsKey(row) AndAlso Me.dicCellState(row).ContainsKey(col) Then
             Return Me.dicCellState(row)(col)
         Else
             Return CellState.Default
@@ -1084,7 +1108,7 @@ Public Class ReoGridView
     ''' <param name="row">行号</param>
     ''' <param name="fieldName">字段名</param>
     ''' <returns>单元格对象</returns>
-    Public Function GetComponent(row As Long, fieldName As String) As IViewComponent
+    Public Function GetViewComponent(row As Long, fieldName As String) As IViewComponent Implements IDataView.GetViewComponent
         If Me.Panel.RowCount <= row Then
             Throw New Exception($"Row {row} exceeded the last row of ReoGridView")
         End If

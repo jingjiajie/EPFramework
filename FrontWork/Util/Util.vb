@@ -30,7 +30,12 @@ Friend Class Util
             Dim result(objLength - 1) As TElem
             For i As Integer = 0 To objLength - 1
                 Dim srcValue = objMethodGetValue.Invoke(obj, New Object() {i})
-                result(i) = System.Convert.ChangeType(srcValue, GetType(TElem))
+                Dim constructor = GetType(TElem).GetConstructor({srcValue.GetType})
+                If constructor IsNot Nothing Then
+                    result(i) = constructor.Invoke({srcValue})
+                Else
+                    result(i) = System.Convert.ChangeType(srcValue, GetType(TElem))
+                End If
             Next
             Return result
         End If

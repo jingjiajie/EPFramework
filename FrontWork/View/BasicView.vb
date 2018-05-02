@@ -9,12 +9,13 @@ Imports System.Reflection
 ''' </summary>
 Public Class BasicView
     Inherits UserControl
-    Implements IView
+    Implements IDataView
 
     Private _configuration As Configuration
     Private _model As IModel
 
     Private Property JsEngine As New Jint.Engine
+    Private Property FormAssociation As New FormAssociation
 
     ''' <summary>
     ''' Model对象，用来存取数据
@@ -187,6 +188,7 @@ Public Class BasicView
     End Sub
 
     Private Sub ClearPanelData()
+        Me.switcherLocalEvents = False
         For Each control As Control In Me.Panel.Controls
             Select Case control.GetType
                 Case GetType(TextBox)
@@ -196,6 +198,7 @@ Public Class BasicView
                     comboBox.SelectedIndex = -1
             End Select
         Next
+        Me.switcherLocalEvents = True
     End Sub
 
     ''' <summary>
@@ -301,13 +304,17 @@ Public Class BasicView
                 '如果是设计器调试，就不用绑定事件了
                 If Me.DesignMode Then Continue For
                 '绑定用户事件
+                '输入联想
                 If curField.Association IsNot Nothing Then
-                    Dim formAssociation = New FormAssociation(textBox)
-                    formAssociation.SetAssociationFunc(Function(str As String)
-                                                           Dim ret = curField.Association.Invoke({str})
-                                                           Return Util.ToArray(Of AssociationItem)(ret)
-                                                       End Function)
+                    AddHandler textBox.Enter, Sub()
+                                                  Me.FormAssociation.TextBox = textBox
+                                                  FormAssociation.SetAssociationFunc(Function(str As String)
+                                                                                         Dim ret = curField.Association.Invoke({str})
+                                                                                         Return Util.ToArray(Of AssociationItem)(ret)
+                                                                                     End Function)
+                                              End Sub
                 End If
+                '内容改变事件
                 If curField.ContentChanged IsNot Nothing Then
                     AddHandler textBox.TextChanged, Sub()
                                                         If Me.switcherLocalEvents = False Then Return
@@ -315,6 +322,7 @@ Public Class BasicView
                                                         curField.ContentChanged.Invoke()
                                                     End Sub
                 End If
+                '编辑结束事件
                 If curField.EditEnded IsNot Nothing Then
                     AddHandler textBox.Leave, Sub()
                                                   If Me.switcherLocalEvents = False Then Return
@@ -329,7 +337,7 @@ Public Class BasicView
                                               Call Me.CellUpdateEvent(textBox.Name)
                                           End Sub
                 '绑定内容改变记录更新事件
-                AddHandler textBox.TextChanged, AddressOf Me.ContentChangedEvent
+                AddHandler textBox.TextChanged, AddressOf Me.TextBoxTextChangedEvent
             Else '否则可以用ComboBox体现
                 Dim comboBox As New ComboBox With {
                                                           .Name = curField.Name,
@@ -367,7 +375,7 @@ Public Class BasicView
                                                Call Me.CellUpdateEvent(comboBox.Name)
                                            End Sub
                 '绑定内容改变记录更新事件
-                AddHandler comboBox.SelectedIndexChanged, AddressOf Me.ContentChangedEvent
+                AddHandler comboBox.SelectedIndexChanged, AddressOf Me.ComboBoxSelectedIndexChangedEvent
             End If
         Next
 
@@ -385,12 +393,22 @@ Public Class BasicView
     End Sub
 
     '这里不包含用户事件，用户事件在创建时用Lambda表达式置入了已经
-    Private Sub ContentChangedEvent(sender As Object, e As EventArgs)
+    Private Sub TextBoxTextChangedEvent(sender As Object, e As EventArgs)
         If Me.switcherLocalEvents = False Then Return
         Dim controlName = CType(sender, Control).Name
         If Not Me.dicFieldEdited.ContainsKey(controlName) Then
             Me.dicFieldEdited.Add(controlName, True)
         End If
+    End Sub
+
+    '这里不包含用户事件，用户事件在创建时用Lambda表达式置入了已经
+    Private Sub ComboBoxSelectedIndexChangedEvent(sender As Object, e As EventArgs)
+        If Me.switcherLocalEvents = False Then Return
+        Dim controlName = CType(sender, Control).Name
+        If Not Me.dicFieldEdited.ContainsKey(controlName) Then
+            Me.dicFieldEdited.Add(controlName, True)
+        End If
+        Call Me.ExportField(controlName)
     End Sub
 
     ''' <summary>
@@ -464,7 +482,9 @@ Public Class BasicView
                     For i As Integer = 0 To comboBox.Items.Count - 1
                         If comboBox.Items(i).ToString = text Then
                             found = True
+                            RemoveHandler comboBox.SelectedIndexChanged, AddressOf Me.ComboBoxSelectedIndexChangedEvent
                             comboBox.SelectedIndex = i
+                            AddHandler comboBox.SelectedIndexChanged, AddressOf Me.ComboBoxSelectedIndexChangedEvent
                         End If
                     Next
                     If found = False Then
@@ -649,13 +669,23 @@ Public Class BasicView
     ''' <summary>
     ''' 获取视图中的单元格
     ''' </summary>
+    ''' <param name="row">行号，在BasicView中此参数被忽略</param>
     ''' <param name="fieldName">字段名</param>
     ''' <returns>单元格对象</returns>
-    Public Function GetComponent(fieldName As String) As IViewComponent
+    Public Function GetViewComponent(row As Long, fieldName As String) As IViewComponent Implements IDataView.GetViewComponent
         Dim foundControls = Me.Panel.Controls.Find(fieldName, False)
         If foundControls.Length = 0 Then
             Throw New Exception($"ViewComponent ""{fieldName}"" not found!")
         End If
         Return New BasicViewComponent(foundControls(0))
+    End Function
+
+    ''' <summary>
+    ''' 获取视图中的单元格
+    ''' </summary>
+    ''' <param name="fieldName">字段名</param>
+    ''' <returns>单元格对象</returns>
+    Public Function GetViewComponent(fieldName As String) As IViewComponent
+        Return Me.GetViewComponent(0, fieldName)
     End Function
 End Class

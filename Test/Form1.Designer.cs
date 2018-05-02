@@ -34,7 +34,7 @@ namespace Test
             FrontWork.SearchViewJsonRESTAdapter.ConditionFieldNamesType conditionFieldNamesType1 = new FrontWork.SearchViewJsonRESTAdapter.ConditionFieldNamesType();
             FrontWork.SearchViewJsonRESTAdapter.OrderParamNamesType orderParamNamesType1 = new FrontWork.SearchViewJsonRESTAdapter.OrderParamNamesType();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            FrontWork.ModeMethodListenerNamePair modeMethodListenerNamePair3 = new FrontWork.ModeMethodListenerNamePair();
+            FrontWork.ModeMethodListenerNamePair modeMethodListenerNamePair1 = new FrontWork.ModeMethodListenerNamePair();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
@@ -161,10 +161,10 @@ namespace Test
             this.configuration.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.configuration.ConfigurationString = resources.GetString("configuration.ConfigurationString");
             this.configuration.Location = new System.Drawing.Point(1250, 44);
-            modeMethodListenerNamePair3.MethodListenerName = "Form1MethodListener";
-            modeMethodListenerNamePair3.Mode = "DEFAULT";
+            modeMethodListenerNamePair1.MethodListenerName = "Form1MethodListener";
+            modeMethodListenerNamePair1.Mode = "DEFAULT";
             this.configuration.MethodListeners = new FrontWork.ModeMethodListenerNamePair[] {
-        modeMethodListenerNamePair3};
+        modeMethodListenerNamePair1};
             this.configuration.Mode = "default";
             this.configuration.Name = "configuration";
             this.configuration.Size = new System.Drawing.Size(180, 180);

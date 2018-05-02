@@ -88,6 +88,7 @@
     <Compile Include="Configuration\HTTPAPIConfiguration.vb" />
     <Compile Include="Configuration\MethodListener\MethodListenerBase.vb" />
     <Compile Include="Configuration\MethodListener\MethodListenerContainer.vb" />
+    <Compile Include="IDataView.vb" />
     <Compile Include="Logger\Logger.vb" />
     <Compile Include="Configuration\ModeConfiguration.vb" />
     <Compile Include="Configuration\FieldConfiguration.vb" />

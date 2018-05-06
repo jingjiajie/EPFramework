@@ -48,7 +48,7 @@ Public Class FieldConfiguration
     ''' 反向映射，从视图映射到模型时的转换。函数类型(String) : Object
     ''' </summary>
     ''' <returns></returns>
-    Public Property BackwordMapper As FieldMethod 'Params String Returns Object
+    Public Property BackwardMapper As FieldMethod 'Params String Returns Object
 
     ''' <summary>
     ''' 联想提示，回调传入用户已经输入的内容，返回联想提示内容。函数类型(String) : AssociationItem()
@@ -153,6 +153,7 @@ Public Class FieldConfiguration
                     Dim methodName = value.ToString
                     '实例化一个绑定MethodListener方法的方法。运行时该方法动态执行MethodListener中的相应方法
                     Dim fieldMethod As New FieldMethod
+                    fieldMethod.DeclareString = "" & methodName & ""
                     fieldMethod.Func =
                         Sub()
                             If String.IsNullOrWhiteSpace(modeConfiguration.MethodListenerName) Then
@@ -183,6 +184,7 @@ Public Class FieldConfiguration
                     '否则，认为是js的方法
                     Dim jsMethod = jsProp
                     Dim fieldMethod As New FieldMethod
+                    fieldMethod.DeclareString = jsMethod.ToString
                     fieldMethod.Func =
                         Sub()
                             Try

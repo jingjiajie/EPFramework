@@ -144,7 +144,10 @@ Public Class Model
         Dim fieldConfiguration = Me.Configuration.GetFieldConfigurations
         For Each curField In fieldConfiguration
             If Not Me.Data.Columns.Contains(curField.Name) Then
-                Me.Data.Columns.Add(curField.Name)
+                Dim newColumn As New DataColumn
+                newColumn.ColumnName = curField.Name
+                newColumn.DataType = GetType(Object)
+                Me.Data.Columns.Add(newColumn)
             End If
         Next
     End Sub
@@ -354,6 +357,17 @@ Public Class Model
         End Try
     End Sub
 
+    Public Sub RemoveSelectedRows() Implements IModel.RemoveSelectedRows
+        If Me.SelectionRange Is Nothing Then Return
+        Dim removeRowIDs As New List(Of Guid)
+        For Each range In Me.SelectionRange
+            For i = 0 To range.Rows - 1
+                removeRowIDs.Add(Me.GetRowID(range.Row + i))
+            Next
+        Next
+        Call Me.RemoveRows(removeRowIDs.Distinct.ToArray)
+    End Sub
+
     ''' <summary>
     ''' 更新行
     ''' </summary>
@@ -501,8 +515,7 @@ Public Class Model
     ''' <param name="syncStates">各行同步状态</param>
     Public Overloads Sub Refresh(dataTable As DataTable, ranges As Range(), syncStates As SynchronizationState()) Implements IModel.Refresh
         '刷新选区
-        If ranges Is Nothing Then ranges = {}
-        Me._selectionRange = ranges
+        Me._selectionRange = If(ranges, {})
         For Each range In Me._selectionRange
             Me.BindRangeChangedEventToSelectionRangeChangedEvent(range)
         Next
@@ -510,14 +523,16 @@ Public Class Model
         Me._Data = dataTable
         '刷新同步状态字典
         Call Me._dicRowSyncState.Clear()
-        For i = 0 To syncStates.Length - 1
-            If dataTable.Rows.Count <= i Then
-                Throw New Exception("Length of syncStates exceeded the max row of dataTable")
-            End If
-            Dim row = dataTable.Rows(i)
-            Dim syncState = syncStates(i)
-            Me._dicRowSyncState.Add(row, syncState)
-        Next
+        If syncStates IsNot Nothing Then
+            For i = 0 To syncStates.Length - 1
+                If dataTable.Rows.Count <= i Then
+                    Throw New Exception("Length of syncStates exceeded the max row of dataTable")
+                End If
+                Dim row = dataTable.Rows(i)
+                Dim syncState = syncStates(i)
+                Me._dicRowSyncState.Add(row, syncState)
+            Next
+        End If
         '触发刷新事件
         RaiseEvent Refreshed(Me, New ModelRefreshedEventArgs)
     End Sub

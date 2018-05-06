@@ -11,6 +11,7 @@ Public Class BasicView
     Inherits UserControl
     Implements IDataView
 
+    Private _itemsPerRow As Integer = 3
     Private _configuration As Configuration
     Private _model As IModel
 
@@ -55,6 +56,22 @@ Public Class BasicView
                 AddHandler Me._configuration.ConfigurationChanged, AddressOf Me.ConfigurationChanged
             End If
             Call Me.ConfigurationChanged(Me, New ConfigurationChangedEventArgs)
+        End Set
+    End Property
+
+    ''' <summary>
+    ''' 每行显示几个字段
+    ''' </summary>
+    ''' <returns></returns>
+    <Description("每行显示几个字段"), Category("FrontWork")>
+    Public Property ItemsPerRow As Integer
+        Get
+            Return Me._itemsPerRow
+        End Get
+        Set(value As Integer)
+            If Me._itemsPerRow = value Then Return
+            Me._itemsPerRow = value
+            Call Me.InitEditPanel()
         End Set
     End Property
 
@@ -220,19 +237,22 @@ Public Class BasicView
             Return
         End If
 
+        '初始化行列数量和大小
         Me.Panel.RowStyles.Clear()
         Me.Panel.ColumnStyles.Clear()
-        '默认一行排3个
-        Dim labelWidth = (Me.Size.Width * 0.4) / 3
-        Dim textBoxWidth = (Me.Size.Width * 0.6) / 3
-        Dim fieldsPerRow As Integer = 3
+        Dim labelWidth = (Me.Size.Width * 0.4) / Me.ItemsPerRow
+        Dim textBoxWidth = (Me.Size.Width * 0.6) / Me.ItemsPerRow
+        Dim fieldsPerRow As Integer = Me.ItemsPerRow
         If fieldsPerRow = 0 Then Return
+        Me.Panel.ColumnCount = fieldsPerRow * 2 '计算列数
         For j = 0 To fieldsPerRow - 1
             Me.Panel.ColumnStyles.Add(New ColumnStyle(SizeType.Absolute, labelWidth))
             Me.Panel.ColumnStyles.Add(New ColumnStyle(SizeType.Absolute, textBoxWidth))
         Next
-        Me.Panel.RowCount = System.Math.Floor(fieldConfiguration.Length / fieldsPerRow) + If(fieldConfiguration.Length Mod fieldsPerRow = 0, 0, 1)
-        Me.Panel.ColumnCount = fieldsPerRow * 2
+        Me.Panel.RowCount = System.Math.Floor(fieldConfiguration.Length / fieldsPerRow) + If(fieldConfiguration.Length Mod fieldsPerRow = 0, 0, 1) '计算行数
+        For j = 0 To Me.Panel.RowCount
+            Me.Panel.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F / Me.Panel.RowCount))
+        Next
 
         '遍历FieldConfiguration()
         Call Me.dicFieldNameColumn.Clear()
@@ -247,7 +267,8 @@ Public Class BasicView
             '创建标签
             Dim label As New Label With {
                 .Text = curField.DisplayName,
-                .Font = Me.Font
+                .Font = Me.Font,
+                .Dock = DockStyle.Fill
             }
             Me.Panel.Controls.Add(label)
             '如果没有设定Values字段，认为可以用编辑框体现
@@ -256,7 +277,8 @@ Public Class BasicView
                 Dim textBox As New TextBox With {
                     .Name = curField.Name,
                     .ReadOnly = Not curField.Editable,
-                    .Font = Me.Font
+                    .Font = Me.Font,
+                    .Dock = DockStyle.Fill
                 }
                 '如果设置了占位符，则想办法给它模拟出一个占位符来。windows居然不支持，呵呵
                 If (curField.PlaceHolder IsNot Nothing) Then
@@ -343,7 +365,8 @@ Public Class BasicView
                                                           .Name = curField.Name,
                                                           .Font = Me.Font,
                                                           .Enabled = curField.Editable,
-                                                          .DropDownStyle = ComboBoxStyle.DropDownList
+                                                          .DropDownStyle = ComboBoxStyle.DropDownList,
+                                                          .Dock = DockStyle.Fill
                                                       }
                 Me.Panel.Controls.Add(comboBox)
                 '如果是设计器调试，就不用触发和绑定事件了
@@ -456,10 +479,12 @@ Public Class BasicView
             '否则开始Push值
             '先计算值，过一遍Mapper
             Dim value = data.Rows(0)(curColumn)
-            Dim text = If(value Is Nothing, "", value.ToString)
+            Dim text As String
 
             If Not curField.ForwardMapper Is Nothing Then
-                text = curField.ForwardMapper.Invoke(text)
+                text = curField.ForwardMapper.Invoke(value)
+            Else
+                text = If(value?.ToString, "")
             End If
             Logger.SetMode(LogMode.REFRESH_VIEW)
             '然后获取Control
@@ -593,8 +618,8 @@ Public Class BasicView
         End Select
         '将文字经过ReverseMapper映射成转换后的value
         Dim value As Object
-        If Not fieldConfiguration.BackwordMapper Is Nothing Then
-            value = fieldConfiguration.BackwordMapper.Invoke(text)
+        If Not fieldConfiguration.BackwardMapper Is Nothing Then
+            value = fieldConfiguration.BackwardMapper.Invoke(text)
         Else
             value = text
         End If

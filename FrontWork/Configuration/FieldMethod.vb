@@ -3,6 +3,12 @@
 ''' </summary>
 Public Class FieldMethod
     ''' <summary>
+    ''' 配置中声明该方法的字符串
+    ''' </summary>
+    ''' <returns></returns>
+    Public Property DeclareString As String
+
+    ''' <summary>
     ''' 参数列表
     ''' </summary>
     ''' <returns></returns>

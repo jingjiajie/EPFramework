@@ -26,6 +26,10 @@ Public Class Configuration
     Private modeConfigurations As New List(Of ModeConfiguration)
     Private jsEngine As New Jint.Engine
 
+    Public Sub New()
+        jsEngine.SetValue("log", New Action(Of Object)(AddressOf Console.WriteLine))
+    End Sub
+
     ''' <summary>
     ''' 当前的模式，默认为default
     ''' </summary>

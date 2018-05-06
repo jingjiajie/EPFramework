@@ -37,6 +37,7 @@
             // 
             this.basicView1.Configuration = this.configuration1;
             this.basicView1.Font = new System.Drawing.Font("黑体", 10F);
+            this.basicView1.ItemsPerRow = 3;
             this.basicView1.Location = new System.Drawing.Point(66, 35);
             this.basicView1.Margin = new System.Windows.Forms.Padding(0);
             this.basicView1.Model = null;
@@ -47,8 +48,8 @@
             // configuration1
             // 
             this.configuration1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.configuration1.ConfigurationString = "[\r\n{mode:\'default\',\r\n fields:[{name:\"name\",displayName:\"姓名\",placeHolder:\"点击填写姓名\"}" +
-    ",\r\n         {name:\"age\",displayName:\"年龄\"}\r\n        ]}\r\n]";
+            this.configuration1.ConfigurationString = "[\r\n{\"mode\":\"default\",\r\n\t\"fields\":[\r\n\t\t{\"name\":\"123\",\"displayName\":\"ABC\",\"visible\"" +
+    ":true,\"editable\":true}\r\n\t]\r\n}\r\n]";
             this.configuration1.Location = new System.Drawing.Point(585, 344);
             this.configuration1.MethodListeners = new FrontWork.ModeMethodListenerNamePair[0];
             this.configuration1.Mode = "default";

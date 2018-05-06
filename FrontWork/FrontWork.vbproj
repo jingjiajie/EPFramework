@@ -84,6 +84,12 @@
     <Compile Include="Configuration\Configuration.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Configuration\Configurator\Configurator.Designer.vb">
+      <DependentUpon>Configurator.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\Configurator\Configurator.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Configuration\EventArgs\ConfigurationChangedEventArgs.vb" />
     <Compile Include="Configuration\HTTPAPIConfiguration.vb" />
     <Compile Include="Configuration\MethodListener\MethodListenerBase.vb" />
@@ -178,6 +184,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\Configuration.resx">
       <DependentUpon>Configuration.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\Configurator\Configurator.resx">
+      <DependentUpon>Configurator.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Model\Model.resx">
       <DependentUpon>Model.vb</DependentUpon>

@@ -63,6 +63,11 @@ Public Interface IModel
     Sub RemoveRows(startRow As Long, rowCount As Long)
 
     ''' <summary>
+    ''' 删除选中的行
+    ''' </summary>
+    Sub RemoveSelectedRows()
+
+    ''' <summary>
     ''' 更新一行
     ''' </summary>
     ''' <param name="row">更新的行号</param>

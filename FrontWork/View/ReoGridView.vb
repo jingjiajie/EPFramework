@@ -796,9 +796,11 @@ Public Class ReoGridView
                 '否则开始Push值
                 '先计算值，过一遍Mapper
                 Dim value = curDataRow(curDataColumn)
-                Dim text = If(value Is Nothing, "", value.ToString)
+                Dim text As String
                 If Not curField.ForwardMapper Is Nothing Then
-                    text = curField.ForwardMapper.Invoke(text)
+                    text = curField.ForwardMapper.Invoke(value)
+                Else
+                    text = If(value?.ToString, "")
                 End If
 
                 If String.IsNullOrEmpty(text) Then Continue For '如果推的内容是空白，就不显示在格里了，节约创建单元格的内存空间
@@ -966,8 +968,8 @@ Public Class ReoGridView
 
         '将文字经过ReverseMapper映射成转换后的value
         Dim value As Object
-        If Not fieldConfiguration.BackwordMapper Is Nothing Then
-            value = fieldConfiguration.BackwordMapper.Invoke(text)
+        If Not fieldConfiguration.BackwardMapper Is Nothing Then
+            value = fieldConfiguration.BackwardMapper.Invoke(text)
         Else
             value = text
         End If
@@ -1114,4 +1116,8 @@ Public Class ReoGridView
         End If
         Return Me.Panel.CreateAndGetCell(row, Me.dicNameColumn(Name))
     End Function
+
+    Private Sub ReoGridView_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    End Sub
 End Class

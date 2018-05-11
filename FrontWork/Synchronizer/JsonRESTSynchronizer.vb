@@ -4,6 +4,7 @@ Imports System.Linq
 Imports System.Net
 Imports System.Text
 Imports System.Web.Script.Serialization
+Imports FrontWork
 Imports Jint.Native
 
 Public Class JsonRESTSynchronizer
@@ -11,6 +12,7 @@ Public Class JsonRESTSynchronizer
     Implements ISynchronizer
     Private _model As IModel
     Private _configuration As Configuration
+    Private _mode As String = "default"
 
     Private jsEngine As New Jint.Engine
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
@@ -99,6 +101,21 @@ Public Class JsonRESTSynchronizer
         End Set
     End Property
 
+    ''' <summary>
+    ''' 当前配置模式
+    ''' </summary>
+    ''' <returns></returns>
+    <Description("当前配置模式"), Category("FrontWork")>
+    Public Property Mode As String Implements ISynchronizer.Mode
+        Get
+            Return Me._mode
+        End Get
+        Set(value As String)
+            Me._mode = value
+            Call Me.ConfigurationChanged(Me, New ConfigurationChangedEventArgs)
+        End Set
+    End Property
+
     Private modelActions As New List(Of ModelAdapterAction)
 
     Public Sub New()
@@ -121,7 +138,7 @@ Public Class JsonRESTSynchronizer
 
     Private Sub InitSynchronizer()
         If Me._configuration Is Nothing Then Return
-        Dim httpAPIConfigs = Me._configuration.GetHTTPAPIConfigurations
+        Dim httpAPIConfigs = Me._configuration.GetHTTPAPIConfigurations(Me.Mode)
         For Each apiConfig In httpAPIConfigs
             If apiConfig.Type.Equals("pushFinishedCallback", StringComparison.OrdinalIgnoreCase) Then
                 Me.PushFinishedCallback =
@@ -271,7 +288,7 @@ Public Class JsonRESTSynchronizer
             Next
             '修改完成后整体触发刷新事件
             Dim selectionRanges As New List(Of Range)
-            For Each oriRange In Me.Model.SelectionRange
+            For Each oriRange In Me.Model.AllSelectionRanges
                 '截取选区，如果原选区超过了数据表的范围，则进行截取
                 If oriRange.Row >= dataTable.Rows.Count Then Continue For
                 If oriRange.Column >= dataTable.Columns.Count Then Continue For

@@ -34,7 +34,7 @@ namespace Test
             FrontWork.SearchViewJsonRESTAdapter.ConditionFieldNamesType conditionFieldNamesType1 = new FrontWork.SearchViewJsonRESTAdapter.ConditionFieldNamesType();
             FrontWork.SearchViewJsonRESTAdapter.OrderParamNamesType orderParamNamesType1 = new FrontWork.SearchViewJsonRESTAdapter.OrderParamNamesType();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            FrontWork.ModeMethodListenerNamePair modeMethodListenerNamePair1 = new FrontWork.ModeMethodListenerNamePair();
+            FrontWork.ModeMethodListenerNamesPair modeMethodListenerNamePair1 = new FrontWork.ModeMethodListenerNamesPair();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
@@ -161,11 +161,9 @@ namespace Test
             this.configuration.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.configuration.ConfigurationString = resources.GetString("configuration.ConfigurationString");
             this.configuration.Location = new System.Drawing.Point(1250, 44);
-            modeMethodListenerNamePair1.MethodListenerName = "Form1MethodListener";
             modeMethodListenerNamePair1.Mode = "DEFAULT";
-            this.configuration.MethodListeners = new FrontWork.ModeMethodListenerNamePair[] {
+            this.configuration.MethodListeners = new FrontWork.ModeMethodListenerNamesPair[] {
         modeMethodListenerNamePair1};
-            this.configuration.Mode = "default";
             this.configuration.Name = "configuration";
             this.configuration.Size = new System.Drawing.Size(180, 180);
             this.configuration.TabIndex = 10;
@@ -186,10 +184,10 @@ namespace Test
             this.model1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("model1.BackgroundImage")));
             this.model1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.model1.Configuration = this.configuration;
-            this.model1.FirstSelectionRange = null;
+            this.model1.SelectionRange = null;
             this.model1.Location = new System.Drawing.Point(901, 29);
             this.model1.Name = "model1";
-            this.model1.SelectionRange = new FrontWork.Range[0];
+            this.model1.AllSelectionRanges = new FrontWork.Range[0];
             this.model1.Size = new System.Drawing.Size(180, 180);
             this.model1.TabIndex = 11;
             this.model1.Load += new System.EventHandler(this.model1_Load);

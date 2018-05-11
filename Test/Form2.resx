@@ -117,4 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="configuration1.ConfigurationString" xml:space="preserve">
+    <value>[
+{"mode":"default",
+	"fields":[
+		{"name":"123","visible":true,"editable":true},
+		{"name":"213","visible":true,"editable":true},
+		{"name":"3212","displayName":"213","visible":true,"editable":true},
+		{"name":"3123","displayName":"213","visible":true,"editable":true}
+	]
+	,"httpAPIs":[
+		{"type":"pull","url":"321"},
+		{"type":"pushFinishedCallback","url":"123"}
+	]
+}
+]</value>
+  </data>
 </root>

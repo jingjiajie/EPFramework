@@ -12,10 +12,20 @@ Public Class Model
     Private _selectionRange As Range() = New Range() {}
     Private _configuration As Configuration
     Private _dicRowGuid As New Dictionary(Of DataRow, Guid)
+    Private _mode As String = "default"
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents PictureBox1 As PictureBox
     Friend WithEvents Label1 As Label
     Private _dicRowSyncState As New Dictionary(Of DataRow, SynchronizationState)
+
+    Public Shadows Property Name As String Implements IModel.Name
+        Get
+            Return MyBase.Name
+        End Get
+        Set(value As String)
+            MyBase.Name = value
+        End Set
+    End Property
 
     ''' <summary>
     ''' 配置中心对象
@@ -75,7 +85,7 @@ Public Class Model
     ''' </summary>
     ''' <returns></returns>
     <Browsable(False)>
-    Public Property SelectionRange As Range() Implements IModel.SelectionRange
+    Public Property AllSelectionRanges As Range() Implements IModel.AllSelectionRanges
         Get
             Return Me._selectionRange
         End Get
@@ -95,19 +105,19 @@ Public Class Model
     ''' </summary>
     ''' <returns></returns>
     <Browsable(False)>
-    Public Property FirstSelectionRange As Range Implements IModel.FirstSelectionRange
+    Public Property SelectionRange As Range Implements IModel.SelectionRange
         Get
-            If Me.SelectionRange Is Nothing Then Return Nothing
-            If Me.SelectionRange.Length = 0 Then Return Nothing
+            If Me.AllSelectionRanges Is Nothing Then Return Nothing
+            If Me.AllSelectionRanges.Length = 0 Then Return Nothing
             Return Me.SelectionRange(0)
         End Get
         Set(value As Range)
             If value Is Nothing Then
-                Me.SelectionRange = {}
-            ElseIf Me.SelectionRange Is Nothing Then
-                Me.SelectionRange = {value}
-            ElseIf Me.SelectionRange.Length = 0 Then
-                Me.SelectionRange = {value}
+                Me.AllSelectionRanges = {}
+            ElseIf Me.AllSelectionRanges Is Nothing Then
+                Me.AllSelectionRanges = {value}
+            ElseIf Me.AllSelectionRanges.Length = 0 Then
+                Me.AllSelectionRanges = {value}
             Else
                 Me.SelectionRange(0) = value
             End If
@@ -133,6 +143,39 @@ Public Class Model
         End Set
     End Property
 
+    Default Public Property _Item(row As Long, column As Long) As Object Implements IModel.Item
+        Get
+            Return Me.GetCell(row, column)
+        End Get
+        Set(value As Object)
+            Call Me.UpdateCell(row, column, value)
+        End Set
+    End Property
+
+    Default Public Property _Item(row As Long, columnName As String) As Object Implements IModel.Item
+        Get
+            Return Me.GetCell(row, columnName)
+        End Get
+        Set(value As Object)
+            Call Me.UpdateCell(row, columnName, value)
+        End Set
+    End Property
+
+    ''' <summary>
+    ''' 当前模式
+    ''' </summary>
+    ''' <returns></returns>
+    <Description("当前配置模式"), Category("FrontWork")>
+    Public Property Mode As String Implements IModel.Mode
+        Get
+            Return Me._mode
+        End Get
+        Set(value As String)
+            Me._mode = value
+            Call Me.ConfigurationChanged(Me, New ConfigurationChangedEventArgs)
+        End Set
+    End Property
+
     Private Sub ConfigurationChanged(sender As Object, e As ConfigurationChangedEventArgs)
         Call Me.InitDataTable()
         RaiseEvent Refreshed(Me, New ModelRefreshedEventArgs)
@@ -141,7 +184,7 @@ Public Class Model
     Private Sub InitDataTable()
         If Me.Configuration Is Nothing Then Return
 
-        Dim fieldConfiguration = Me.Configuration.GetFieldConfigurations
+        Dim fieldConfiguration = Me.Configuration.GetFieldConfigurations(Me.Mode)
         For Each curField In fieldConfiguration
             If Not Me.Data.Columns.Contains(curField.Name) Then
                 Dim newColumn As New DataColumn
@@ -155,7 +198,7 @@ Public Class Model
     Private Sub BindRangeChangedEventToSelectionRangeChangedEvent(range As Range)
         AddHandler range.RangeChanged, Sub()
                                            RaiseEvent SelectionRangeChanged(Me, New ModelSelectionRangeChangedEventArgs() With {
-                                                                       .NewSelectionRange = Me.SelectionRange
+                                                                       .NewSelectionRange = Me.AllSelectionRanges
                                                                    })
                                        End Sub
     End Sub
@@ -167,6 +210,36 @@ Public Class Model
     Public Function GetDataTable() As DataTable Implements IModel.GetDataTable
         GetDataTable = Me.Data
         Exit Function
+    End Function
+
+    Public Function GetCell(row As Long, column As Long) As Object Implements IModel.GetCell
+        If row >= Me.Data.Rows.Count Then
+            Throw New Exception($"Row:{row} exceeded the max row of Model({Me.Data.Rows.Count - 1})")
+        End If
+        If column >= Me.Data.Columns.Count Then
+            Throw New Exception($"Column:{column} exceeded the max column of Model({Me.Data.Columns.Count - 1})")
+        End If
+        Dim data As Object = Me.Data.Rows(row)(CType(column, Integer))
+        If IsDBNull(data) Then
+            Return Nothing
+        Else
+            Return data
+        End If
+    End Function
+
+    Public Function GetCell(row As Long, columnName As String) As Object Implements IModel.GetCell
+        If row >= Me.Data.Rows.Count Then
+            Throw New Exception($"Row:{row} exceeded the max row of Model({Me.Data.Rows.Count - 1})")
+        End If
+        If Not Me.Data.Columns.Contains(columnName) Then
+            Throw New Exception($"Model doesn't contain column:{columnName}")
+        End If
+        Dim data As Object = Me.Data.Rows(row)(columnName)
+        If IsDBNull(data) Then
+            Return Nothing
+        Else
+            Return data
+        End If
     End Function
 
     ''' <summary>
@@ -244,21 +317,32 @@ Public Class Model
     ''' <param name="rows">插入行行号</param>
     ''' <param name="dataOfEachRow">数据</param>
     Public Sub InsertRows(rows As Long(), dataOfEachRow As Dictionary(Of String, Object)()) Implements IModel.InsertRows
+        If Me.Configuration Is Nothing Then Throw New Exception($"Configuration not set to Model:{Me.Name}!")
+        Dim fields = Configuration.GetFieldConfigurations(Me.Mode)
         Dim indexRowPairs As New List(Of IndexRowPair)
         '原始行每次插入之后，行号会变，所以做调整
         Dim realRowsASC = (From r In rows Order By r Ascending Select r).ToArray
         For i = 0 To realRowsASC.Length - 1
             realRowsASC(i) = realRowsASC(i) + i
         Next
+        '开始添加数据
         For i = 0 To realRowsASC.Length - 1
             Dim realRow = realRowsASC(i)
-            Dim curData = dataOfEachRow(i)
+            Dim curData = If(dataOfEachRow(i), New Dictionary(Of String, Object))
             Dim newRow = Me.Data.NewRow
-            If curData IsNot Nothing Then
-                For Each item In curData
-                    newRow(item.Key) = item.Value
-                Next
-            End If
+            '置入默认值
+            For Each curField In fields
+                If curField.DefaultValue Is Nothing Then Continue For
+                Dim fieldName = curField.Name
+                If Not curData.ContainsKey(fieldName) Then curData.Add(fieldName, Nothing)
+                If curData(fieldName) Is Nothing Then
+                    curData(fieldName) = curField.DefaultValue.Invoke
+                End If
+            Next
+            '将值写入datatable
+            For Each item In curData
+                newRow(item.Key) = item.Value
+            Next
             Me.Data.Rows.InsertAt(newRow, realRow)
             Dim newIndexRowPair As New IndexRowPair(realRow, Me.GetRowID(Me.Data.Rows(realRow)), If(curData, New Dictionary(Of String, Object)))
             indexRowPairs.Add(newIndexRowPair)
@@ -279,7 +363,7 @@ Public Class Model
                 selectionRanges.Last.Rows += 1
             End If
         Next
-        Me.SelectionRange = selectionRanges.ToArray
+        Me.AllSelectionRanges = selectionRanges.ToArray
 
         Me.UpdateRowSynchronizationStates(realRowsASC, Util.Times(SynchronizationState.UNSYNCHRONIZED, realRowsASC.Length))
     End Sub
@@ -331,8 +415,9 @@ Public Class Model
     ''' </summary>
     ''' <param name="rows">删除行行号</param>
     Public Sub RemoveRows(rows As Long()) Implements IModel.RemoveRows
+        If rows.Length = 0 Then Return
+        Dim indexRowList = New List(Of IndexRowPair)
         Try
-            Dim indexRowList = New List(Of IndexRowPair)
             '每次删除行后行号会变，所以要做调整
             Dim realRows(rows.Length - 1) As Long
             For i = 0 To rows.Length - 1
@@ -343,24 +428,23 @@ Public Class Model
                 indexRowList.Add(newIndexRowPair)
                 Me.Data.Rows.RemoveAt(curRowNum)
             Next
-
-            RaiseEvent RowRemoved(Me, New ModelRowRemovedEventArgs() With {
-                                        .RemovedRows = indexRowList.ToArray
-                                   })
-            If Me.Data.Rows.Count = 0 Then
-                Me.SelectionRange = {}
-            Else
-                Me.SelectionRange = {New Range(Math.Min(rows.Min, Me.Data.Rows.Count - 1), 0, 1, Me.Data.Columns.Count)}
-            End If
         Catch ex As Exception
             Throw New Exception("RemoveRows failed: " & ex.Message)
         End Try
+        RaiseEvent RowRemoved(Me, New ModelRowRemovedEventArgs() With {
+                                        .RemovedRows = indexRowList.ToArray
+                                   })
+        If Me.Data.Rows.Count = 0 Then
+            Me.AllSelectionRanges = {}
+        Else
+            Me.AllSelectionRanges = {New Range(Math.Min(rows.Min, Me.Data.Rows.Count - 1), 0, 1, Me.Data.Columns.Count)}
+        End If
     End Sub
 
     Public Sub RemoveSelectedRows() Implements IModel.RemoveSelectedRows
-        If Me.SelectionRange Is Nothing Then Return
+        If Me.AllSelectionRanges Is Nothing Then Return
         Dim removeRowIDs As New List(Of Guid)
-        For Each range In Me.SelectionRange
+        For Each range In Me.AllSelectionRanges
             For i = 0 To range.Rows - 1
                 removeRowIDs.Add(Me.GetRowID(range.Row + i))
             Next

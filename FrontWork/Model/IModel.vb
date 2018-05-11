@@ -218,6 +218,22 @@ Public Interface IModel
     Function GetDataTable() As DataTable
 
     ''' <summary>
+    ''' 获取单元格数据
+    ''' </summary>
+    ''' <param name="row">行号</param>
+    ''' <param name="column">列号</param>
+    ''' <returns></returns>
+    Function GetCell(row As Long, column As Long) As Object
+
+    ''' <summary>
+    ''' 获取单元格数据
+    ''' </summary>
+    ''' <param name="row">行号</param>
+    ''' <param name="columnName">列名</param>
+    ''' <returns></returns>
+    Function GetCell(row As Long, columnName As String) As Object
+
+    ''' <summary>
     ''' 刷新视图
     ''' </summary>
     ''' <param name="dataTable">数据表</param>
@@ -231,6 +247,12 @@ Public Interface IModel
     ''' </summary>
     ''' <returns></returns>
     Property Configuration As Configuration
+
+    ''' <summary>
+    ''' 当前配置模式
+    ''' </summary>
+    ''' <returns></returns>
+    Property Mode As String
 
     ''' <summary>
     ''' Model所存储数据的行数
@@ -248,13 +270,22 @@ Public Interface IModel
     ''' Model的选区
     ''' </summary>
     ''' <returns></returns>
-    Property SelectionRange As Range()
+    Property AllSelectionRanges As Range()
 
     ''' <summary>
     ''' Model的第一个选区。对于只支持一个选区的表格控件，此参数比较实用
     ''' </summary>
     ''' <returns></returns>
-    Property FirstSelectionRange As Range
+    Property SelectionRange As Range
+
+    ''' <summary>
+    ''' Model的名称，用来区分不同Model
+    ''' </summary>
+    ''' <returns></returns>
+    Property Name As String
+
+    Default Property Item(row As Long, column As Long) As Object
+    Default Property Item(row As Long, columnName As String) As Object
 
     '事件
     ''' <summary>

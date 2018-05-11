@@ -14,6 +14,7 @@ Public Class BasicView
     Private _itemsPerRow As Integer = 3
     Private _configuration As Configuration
     Private _model As IModel
+    Private _mode As String = "default"
 
     Private Property JsEngine As New Jint.Engine
     Private Property FormAssociation As New FormAssociation
@@ -48,6 +49,7 @@ Public Class BasicView
             Return Me._configuration
         End Get
         Set(value As Configuration)
+            If value Is Me.Configuration Then Return
             If Me._configuration IsNot Nothing Then
                 RemoveHandler Me._configuration.ConfigurationChanged, AddressOf Me.ConfigurationChanged
             End If
@@ -88,6 +90,20 @@ Public Class BasicView
     Private dicFieldEdited As New Dictionary(Of String, Boolean)
 
     Private Property Panel As TableLayoutPanel
+
+    <Description("当前配置模式"), Category("FrontWork")>
+    Public Property Mode As String Implements IView.Mode
+        Get
+            Return Me._mode
+        End Get
+        Set(value As String)
+            If Me._mode = value Then Return
+            Me._mode = value
+            Call Me.ConfigurationChanged(Me, New ConfigurationChangedEventArgs)
+            Call Me.ExportData()
+            Call Me.ImportData()
+        End Set
+    End Property
 
     Public Sub New()
         Call InitializeComponent()
@@ -132,13 +148,13 @@ Public Class BasicView
             Logger.PutMessage("Model not set!")
             Return -1
         End If
-        If Me.Model.SelectionRange.Length = 0 Then
+        If Me.Model.AllSelectionRanges.Length = 0 Then
             Return -1
         End If
-        If Me.Model.SelectionRange.Length > 1 Then
+        If Me.Model.AllSelectionRanges.Length > 1 Then
             'Logger.PutMessage("Multiple range selected, TableLayoutPanelView will only show data of the first range", LogLevel.WARNING)
         End If
-        Dim range = Me.Model.SelectionRange(0)
+        Dim range = Me.Model.AllSelectionRanges(0)
         If range.Rows > 1 Then
             'Logger.PutMessage("Multiple rows selected, TableLayoutPanelView will only show data of the first row", LogLevel.WARNING)
         End If
@@ -228,27 +244,20 @@ Public Class BasicView
             Logger.PutMessage("Configuration is not setted")
             Return
         End If
+        Call Me.Panel.SuspendLayout()
         Me.BorderStyle = BorderStyle.None
         Me.Panel.Controls.Clear()
-        Dim fieldConfiguration As FieldConfiguration() = Me.Configuration.GetFieldConfigurations()
-
-        If fieldConfiguration Is Nothing Then
-            Logger.PutMessage("Configuration not found!")
-            Return
-        End If
-
+        Dim fieldConfiguration As FieldConfiguration() = Me.Configuration.GetFieldConfigurations(Me.Mode)
         '初始化行列数量和大小
         Me.Panel.RowStyles.Clear()
         Me.Panel.ColumnStyles.Clear()
-        Dim labelWidth = (Me.Size.Width * 0.4) / Me.ItemsPerRow
-        Dim textBoxWidth = (Me.Size.Width * 0.6) / Me.ItemsPerRow
+        Dim textBoxWidthPercent = 100 / Me.ItemsPerRow
         Dim fieldsPerRow As Integer = Me.ItemsPerRow
-        If fieldsPerRow = 0 Then Return
+        If fieldsPerRow = 0 Then
+            Call Me.Panel.ResumeLayout()
+            Return
+        End If
         Me.Panel.ColumnCount = fieldsPerRow * 2 '计算列数
-        For j = 0 To fieldsPerRow - 1
-            Me.Panel.ColumnStyles.Add(New ColumnStyle(SizeType.Absolute, labelWidth))
-            Me.Panel.ColumnStyles.Add(New ColumnStyle(SizeType.Absolute, textBoxWidth))
-        Next
         Me.Panel.RowCount = System.Math.Floor(fieldConfiguration.Length / fieldsPerRow) + If(fieldConfiguration.Length Mod fieldsPerRow = 0, 0, 1) '计算行数
         For j = 0 To Me.Panel.RowCount
             Me.Panel.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F / Me.Panel.RowCount))
@@ -257,10 +266,10 @@ Public Class BasicView
         '遍历FieldConfiguration()
         Call Me.dicFieldNameColumn.Clear()
         Call Me.dicFieldUpdated.Clear()
-        Dim i As Integer = -1 'i从0开始循环
+        Dim col As Integer = -1 'i从0开始循环
         For Each curField As FieldConfiguration In fieldConfiguration
-            i += 1
-            Me.dicFieldNameColumn.Add(curField.Name, i)
+            col += 1
+            Me.dicFieldNameColumn.Add(curField.Name, col)
             Me.dicFieldUpdated.Add(curField.Name, False)
             '如果字段不可视，直接跳过
             If curField.Visible = False Then Continue For
@@ -268,7 +277,8 @@ Public Class BasicView
             Dim label As New Label With {
                 .Text = curField.DisplayName,
                 .Font = Me.Font,
-                .Dock = DockStyle.Fill
+                .Dock = DockStyle.Fill,
+                .Margin = New Padding(0)
             }
             Me.Panel.Controls.Add(label)
             '如果没有设定Values字段，认为可以用编辑框体现
@@ -280,6 +290,8 @@ Public Class BasicView
                     .Font = Me.Font,
                     .Dock = DockStyle.Fill
                 }
+                '绑定内容改变记录更新事件
+                AddHandler textBox.TextChanged, AddressOf Me.TextBoxTextChangedEvent
                 '如果设置了占位符，则想办法给它模拟出一个占位符来。windows居然不支持，呵呵
                 If (curField.PlaceHolder IsNot Nothing) Then
                     '加一个label覆盖在上面，看着跟真的placeholder似的
@@ -331,7 +343,7 @@ Public Class BasicView
                     AddHandler textBox.Enter, Sub()
                                                   Me.FormAssociation.TextBox = textBox
                                                   FormAssociation.SetAssociationFunc(Function(str As String)
-                                                                                         Dim ret = curField.Association.Invoke({str})
+                                                                                         Dim ret = curField.Association.Invoke(Me, {str})
                                                                                          Return Util.ToArray(Of AssociationItem)(ret)
                                                                                      End Function)
                                               End Sub
@@ -341,7 +353,7 @@ Public Class BasicView
                     AddHandler textBox.TextChanged, Sub()
                                                         If Me.switcherLocalEvents = False Then Return
                                                         Logger.Debug("TableLayoutView TextBox TextChanged User Event: " & Str(Me.GetHashCode))
-                                                        curField.ContentChanged.Invoke()
+                                                        curField.ContentChanged.Invoke(Me, textBox.Text)
                                                     End Sub
                 End If
                 '编辑结束事件
@@ -349,7 +361,7 @@ Public Class BasicView
                     AddHandler textBox.Leave, Sub()
                                                   If Me.switcherLocalEvents = False Then Return
                                                   Logger.Debug("TableLayoutView TextBox Leave User Event: " & Str(Me.GetHashCode))
-                                                  curField.EditEnded.Invoke()
+                                                  curField.EditEnded.Invoke(Me, textBox.Text)
                                               End Sub
                 End If
                 '绑定焦点离开自动保存事件
@@ -358,8 +370,6 @@ Public Class BasicView
                                               Logger.Debug("TableLayoutView TextBox Leave Save Data: " & Str(Me.GetHashCode))
                                               Call Me.CellUpdateEvent(textBox.Name)
                                           End Sub
-                '绑定内容改变记录更新事件
-                AddHandler textBox.TextChanged, AddressOf Me.TextBoxTextChangedEvent
             Else '否则可以用ComboBox体现
                 Dim comboBox As New ComboBox With {
                                                           .Name = curField.Name,
@@ -368,11 +378,13 @@ Public Class BasicView
                                                           .DropDownStyle = ComboBoxStyle.DropDownList,
                                                           .Dock = DockStyle.Fill
                                                       }
+                '绑定内容改变记录更新事件
+                AddHandler comboBox.SelectedIndexChanged, AddressOf Me.ComboBoxSelectedIndexChangedEvent
                 Me.Panel.Controls.Add(comboBox)
                 '如果是设计器调试，就不用触发和绑定事件了
                 If Me.DesignMode Then Continue For
 
-                Dim values As Object() = Util.ToArray(Of Object)(curField.Values.Invoke())
+                Dim values As Object() = Util.ToArray(Of Object)(curField.Values.Invoke(Me))
                 If values IsNot Nothing Then
                     comboBox.Items.AddRange(values)
                 End If
@@ -381,14 +393,14 @@ Public Class BasicView
                     AddHandler comboBox.SelectedIndexChanged, Sub()
                                                                   If Me.switcherLocalEvents = False Then Return
                                                                   Logger.Debug("TableLayoutView ComboBox SelectedIndexChanged User Event: " & Str(Me.GetHashCode))
-                                                                  curField.ContentChanged.Invoke()
+                                                                  curField.ContentChanged.Invoke(Me, comboBox.SelectedItem?.ToString)
                                                               End Sub
                 End If
                 If curField.EditEnded IsNot Nothing Then
                     AddHandler comboBox.Leave, Sub()
                                                    If Me.switcherLocalEvents = False Then Return
                                                    Logger.Debug("TableLayoutView ComboBox Leave User Event: " & Str(Me.GetHashCode))
-                                                   curField.EditEnded.Invoke()
+                                                   curField.EditEnded.Invoke(Me)
                                                End Sub
                 End If
                 '绑定焦点离开自动保存事件
@@ -397,22 +409,53 @@ Public Class BasicView
                                                Logger.Debug("TableLayoutView ComboBox Leave Save Data: " & Str(Me.GetHashCode))
                                                Call Me.CellUpdateEvent(comboBox.Name)
                                            End Sub
-                '绑定内容改变记录更新事件
-                AddHandler comboBox.SelectedIndexChanged, AddressOf Me.ComboBoxSelectedIndexChangedEvent
             End If
         Next
 
-        AddHandler Me.Panel.Leave, Sub()
-                                       Logger.Debug("TableLayoutView Panel Leave: " & Str(Me.GetHashCode))
-                                       Me.switcherLocalEvents = False
-                                   End Sub
+        'For j = 0 To fieldsPerRow - 1
+        '    Me.Panel.ColumnStyles.Add(New ColumnStyle(SizeType.Absolute, 100))
+        '    Me.Panel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, textBoxWidthPercent))
+        'Next
 
-        AddHandler Me.Panel.Enter, Sub()
-                                       Logger.Debug("TableLayoutView Panel Enter: " & Str(Me.GetHashCode))
-                                       Me.switcherLocalEvents = True
-                                   End Sub
+        Dim g = Me.Panel.CreateGraphics
+        '根据实际标题设置列宽
+        For col = 0 To Me.Panel.ColumnCount
+            If col Mod 2 = 1 Then Continue For
+            Dim maxWidth = 0
+            For row = 0 To Me.Panel.RowCount
+                Dim label = Me.Panel.GetControlFromPosition(col, row)
+                If label Is Nothing Then Continue For
+                '宽度加一个字
+                Dim textSize = g.MeasureString(label.Text + "A", Me.Font)
+                Dim textWidth = textSize.Width
+                If textWidth > maxWidth Then
+                    maxWidth = textWidth
+                End If
+            Next
+            Me.Panel.ColumnStyles.Add(New ColumnStyle(SizeType.Absolute, maxWidth))
+            Me.Panel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, textBoxWidthPercent))
+        Next
+        Call g.Dispose()
+
+        Call Me.Panel.ResumeLayout()
+
+        RemoveHandler Me.Panel.Leave, AddressOf Me.TableLayoutPanel_Leave
+        AddHandler Me.Panel.Leave, AddressOf Me.TableLayoutPanel_Leave
+
+        RemoveHandler Me.Panel.Enter, AddressOf Me.TableLayoutPanel_Enter
+        AddHandler Me.Panel.Enter, AddressOf Me.TableLayoutPanel_Enter
 
         Call Me.BindViewToJsEngine()
+    End Sub
+
+    Private Sub TableLayoutPanel_Leave(sender, e)
+        Logger.Debug("TableLayoutView Panel Leave: " & Str(Me.GetHashCode))
+        Me.switcherLocalEvents = False
+    End Sub
+
+    Private Sub TableLayoutPanel_Enter(sender, e)
+        Logger.Debug("TableLayoutView Panel Enter: " & Str(Me.GetHashCode))
+        Me.switcherLocalEvents = True
     End Sub
 
     '这里不包含用户事件，用户事件在创建时用Lambda表达式置入了已经
@@ -462,7 +505,7 @@ Public Class BasicView
         '获取数据
         Dim data = Me.Model.GetRows(New Long() {modelSelectedRow})
         '遍历Configuration的字段
-        Dim fieldConfiguration = Me.Configuration.GetFieldConfigurations()
+        Dim fieldConfiguration = Me.Configuration.GetFieldConfigurations(Me.Mode)
         If fieldConfiguration Is Nothing Then
             Logger.PutMessage("Configuration not found!")
             Return False
@@ -482,7 +525,7 @@ Public Class BasicView
             Dim text As String
 
             If Not curField.ForwardMapper Is Nothing Then
-                text = curField.ForwardMapper.Invoke(value)
+                text = curField.ForwardMapper.Invoke(Me, value)
             Else
                 text = If(value?.ToString, "")
             End If
@@ -540,7 +583,7 @@ Public Class BasicView
             Logger.PutMessage("TargetRow(" & Str(modelSelectedRow) & ") exceeded the max row of model: " & Me.Model.RowCount - 1)
             Return
         End If
-        Dim Configuration = (From m As FieldConfiguration In Me.Configuration.GetFieldConfigurations()
+        Dim Configuration = (From m As FieldConfiguration In Me.Configuration.GetFieldConfigurations(Me.Mode)
                              Where m.Name = fieldName
                              Select m).FirstOrDefault
         Dim value = Me.GetMappedValue(fieldName, Configuration)
@@ -571,7 +614,7 @@ Public Class BasicView
             Return
         End If
         Dim dicData As New Dictionary(Of String, Object)
-        For Each curField As FieldConfiguration In Me.Configuration.GetFieldConfigurations()
+        For Each curField As FieldConfiguration In Me.Configuration.GetFieldConfigurations(Me.Mode)
             '如果字段不可见，则忽略
             If Not curField.Visible Then Continue For
             Dim value = Me.GetMappedValue(curField.Name, curField)
@@ -619,7 +662,7 @@ Public Class BasicView
         '将文字经过ReverseMapper映射成转换后的value
         Dim value As Object
         If Not fieldConfiguration.BackwardMapper Is Nothing Then
-            value = fieldConfiguration.BackwardMapper.Invoke(text)
+            value = fieldConfiguration.BackwardMapper.Invoke(Me, text)
         Else
             value = text
         End If

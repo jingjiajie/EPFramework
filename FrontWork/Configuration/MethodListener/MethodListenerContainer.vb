@@ -21,8 +21,9 @@ Public Class MethodListenerContainer
     End Sub
 
     Shared Sub New()
-        Dim asm = Assembly.GetEntryAssembly()
-        Dim types = asm.GetTypes
+        Dim entryAsm = Assembly.GetEntryAssembly
+        Dim frontWorkAsm = Assembly.GetExecutingAssembly
+        Dim types = entryAsm.GetTypes.Union(frontWorkAsm.GetTypes)
         For Each curType In types
             If curType.BaseType IsNot GetType(MethodListenerBase) Then Continue For
             Dim instance As MethodListenerBase = Activator.CreateInstance(curType)

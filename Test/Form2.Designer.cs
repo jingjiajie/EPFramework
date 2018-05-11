@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
             this.basicView1 = new FrontWork.BasicView();
             this.configuration1 = new FrontWork.Configuration();
             this.pagerView1 = new FrontWork.PagerView();
@@ -40,6 +41,7 @@
             this.basicView1.ItemsPerRow = 3;
             this.basicView1.Location = new System.Drawing.Point(66, 35);
             this.basicView1.Margin = new System.Windows.Forms.Padding(0);
+            this.basicView1.Mode = "default";
             this.basicView1.Model = null;
             this.basicView1.Name = "basicView1";
             this.basicView1.Size = new System.Drawing.Size(883, 219);
@@ -48,18 +50,17 @@
             // configuration1
             // 
             this.configuration1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.configuration1.ConfigurationString = "[\r\n{\"mode\":\"default\",\r\n\t\"fields\":[\r\n\t\t{\"name\":\"123\",\"displayName\":\"ABC\",\"visible\"" +
-    ":true,\"editable\":true}\r\n\t]\r\n}\r\n]";
+            this.configuration1.ConfigurationString = resources.GetString("configuration1.ConfigurationString");
             this.configuration1.Location = new System.Drawing.Point(585, 344);
-            this.configuration1.MethodListeners = new FrontWork.ModeMethodListenerNamePair[0];
-            this.configuration1.Mode = "default";
+            this.configuration1.MethodListeners = new FrontWork.ModeMethodListenerNamesPair[0];
             this.configuration1.Name = "configuration1";
             this.configuration1.Size = new System.Drawing.Size(180, 180);
             this.configuration1.TabIndex = 1;
             // 
             // pagerView1
             // 
-            this.pagerView1.Location = new System.Drawing.Point(30, 170);
+            this.pagerView1.Location = new System.Drawing.Point(22, 221);
+            this.pagerView1.Mode = "default";
             this.pagerView1.Name = "pagerView1";
             this.pagerView1.PageSize = ((long)(50));
             this.pagerView1.Size = new System.Drawing.Size(1280, 84);

@@ -94,6 +94,7 @@
     <Compile Include="Configuration\HTTPAPIConfiguration.vb" />
     <Compile Include="Configuration\MethodListener\MethodListenerBase.vb" />
     <Compile Include="Configuration\MethodListener\MethodListenerContainer.vb" />
+    <Compile Include="Configuration\MethodListener\_StdMethodListener.vb" />
     <Compile Include="IDataView.vb" />
     <Compile Include="Logger\Logger.vb" />
     <Compile Include="Configuration\ModeConfiguration.vb" />
@@ -102,6 +103,12 @@
     <Compile Include="Model\DataStructures\IndexRowSynchronizationStatePair.vb" />
     <Compile Include="Model\DataStructures\SynchronizaionState.vb" />
     <Compile Include="Model\EventArgs\ModelRowSynchronizationStateChangedEventArgs.vb" />
+    <Compile Include="Model\ModelBox.Designer.vb">
+      <DependentUpon>ModelBox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ModelBox.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Synchronizer\JsonRESTSynchronizer.vb">
       <SubType>UserControl</SubType>
     </Compile>
@@ -190,6 +197,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Model\Model.resx">
       <DependentUpon>Model.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Model\ModelBox.resx">
+      <DependentUpon>ModelBox.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

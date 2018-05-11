@@ -50,7 +50,7 @@ namespace Test
 
         private void button4_Click(object sender, EventArgs e)
         {
-            this.model1.RemoveRows(this.model1.FirstSelectionRange.Row, this.model1.FirstSelectionRange.Rows);
+            this.model1.RemoveRows(this.model1.SelectionRange.Row, this.model1.SelectionRange.Rows);
         }
 
         private void button3_Click(object sender, EventArgs e)

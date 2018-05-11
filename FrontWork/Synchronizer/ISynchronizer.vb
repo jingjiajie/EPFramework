@@ -8,6 +8,11 @@ Public Interface ISynchronizer
     ''' <returns></returns>
     Property Configuration As Configuration
 
+    ''' <summary>
+    ''' 当前配置模式
+    ''' </summary>
+    ''' <returns></returns>
+    Property Mode As String
 
     ''' <summary>
     ''' 从服务器拉取数据到Model

@@ -21,9 +21,7 @@ Public Class Configuration
     Friend WithEvents Label1 As Label
 
     Private _configurationString As String
-    Private _methodListeners As ModeMethodListenerNamePair() = {}
-    Private _mode As String = "default"
-    Private modeConfigurations As New List(Of ModeConfiguration)
+    Private _methodListeners As ModeMethodListenerNamesPair() = {}
     Private jsEngine As New Jint.Engine
 
     Public Sub New()
@@ -31,19 +29,11 @@ Public Class Configuration
     End Sub
 
     ''' <summary>
-    ''' 当前的模式，默认为default
+    ''' 配置模式
     ''' </summary>
     ''' <returns></returns>
-    <Description("当前的模式，默认为default"), Category("FrontWork")>
-    Public Property Mode As String
-        Get
-            Return Me._mode
-        End Get
-        Set(value As String)
-            Me._mode = value
-            RaiseEvent ConfigurationChanged(Me, New ConfigurationChangedEventArgs)
-        End Set
-    End Property
+    <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
+    Public Property ModeConfigurations As New List(Of ModeConfiguration) From {New ModeConfiguration() With {.Mode = "default"}}
 
     ''' <summary>
     ''' 配置字符串，Json格式。读取后自动分析转换为Configuration对象
@@ -58,9 +48,9 @@ Public Class Configuration
         Set(value As String)
             Me._configurationString = value
             Me.Configurate(Me._configurationString)
-            If Me.MethodListeners IsNot Nothing Then
-                For Each modeMethodListener In Me.MethodListeners
-                    Call Me.SetMethodListener(modeMethodListener.MethodListenerName, modeMethodListener.Mode)
+            If Me.MethodListeners.Length > 0 Then
+                For Each modeMethodListeners In Me._methodListeners
+                    Call Me.SetMethodListener(modeMethodListeners.MethodListenerNames, modeMethodListeners.Mode)
                 Next
             End If
             RaiseEvent ConfigurationChanged(Me, New ConfigurationChangedEventArgs)
@@ -69,24 +59,19 @@ Public Class Configuration
 
     <Description("方法监听器"), Category("FrontWork")>
     <Editor(GetType(Design.ArrayEditor), GetType(UITypeEditor))>
-    Public Property MethodListeners As ModeMethodListenerNamePair()
+    Public Property MethodListeners As ModeMethodListenerNamesPair()
         Get
             Return Me._methodListeners
         End Get
-        Set(value As ModeMethodListenerNamePair())
+        Set(value As ModeMethodListenerNamesPair())
             Me._methodListeners = value
-            If value Is Nothing Then Return
-            If Not String.IsNullOrWhiteSpace(Me.ConfigurationString) Then
-                For Each modeMethodListener In Me.MethodListeners
-                    Call Me.SetMethodListener(modeMethodListener.MethodListenerName, modeMethodListener.Mode)
+            If Me.modeConfigurations.Count > 0 Then
+                For Each modeMethodListeners In Me._methodListeners
+                    Call Me.SetMethodListener(modeMethodListeners.MethodListenerNames, modeMethodListeners.Mode)
                 Next
             End If
         End Set
     End Property
-
-    '<Description("方法监听器"), Category("FrontWork")>
-    'Public Property MethodListeners As New List(Of KeyValuePair(Of String, IMethodListener))
-
 
     ''' <summary>
     ''' 当前的配置信息是否包含某种模式
@@ -105,10 +90,9 @@ Public Class Configuration
     ''' <summary>
     ''' 设置方法监听器，用来执行配置信息中所指定的字段对应的的本地函数名
     ''' </summary>
-    ''' <param name="methodListenerName">方法监听器类名</param>
+    ''' <param name="methodListenerNames">方法监听器类名</param>
     ''' <param name="mode">设置到的模式</param>
-    Public Sub SetMethodListener(methodListenerName As String, mode As String)
-        Logger.SetMode(LogMode.LOAD_MODE_METHODLISTENER)
+    Public Sub SetMethodListener(methodListenerNames As String(), mode As String)
         If Me.DesignMode Then Return '设计器设计的时候就不用绑方法监听器了
         Dim foundModeConfiguration = (From m In Me.modeConfigurations Where m.Mode.Equals(mode, StringComparison.OrdinalIgnoreCase) Select m).FirstOrDefault
         If foundModeConfiguration Is Nothing Then
@@ -116,42 +100,17 @@ Public Class Configuration
             Return
         End If
 
-        foundModeConfiguration.MethodListenerName = methodListenerName
-        ''根据函数调用栈，找到用户的命名空间，从而在用户的命名空间中根据类名搜索用户的类
-        'Dim trace = New StackTrace
-        'Dim frames = trace.GetFrames()
-        'Dim topFrame = frames.Last
-        'Dim targetNamespace = topFrame.GetMethod.DeclaringType.Namespace
-        'Dim targetNamespaceTypes = Assembly.Load(targetNamespace).GetTypes()
-
-        ''找到方法监听器名称所对应的方法监听器
-        'Dim targetMethodListenerType = (From type In targetNamespaceTypes
-        '                                Where type.Name.Equals(methodListenerName, StringComparison.OrdinalIgnoreCase)
-        '                                Select type).FirstOrDefault
-        ''判断如果目标方法监听器中又包含Configuration类型的对象，则不允许设置。否则会发生无限递归初始化方法监听器
-        'Dim targetMethodListenerTypeProperties = targetMethodListenerType.GetProperties
-        'For Each prop In targetMethodListenerTypeProperties
-        '    If prop.PropertyType = GetType(Configuration) Then
-        '        Throw New Exception($"MethodListener: {methodListenerName} cannot contain Configuration property!")
-        '    End If
-        'Next
-        'Dim targetMethodListenerTypeFields = targetMethodListenerType.GetFields
-        'For Each field In targetMethodListenerTypeFields
-        '    If field.FieldType = GetType(Configuration) Then
-        '        Throw New Exception($"MethodListener: {methodListenerName} cannot contain Configuration field!")
-        '    End If
-        'Next
-        'Dim targetMethodListener = targetMethodListenerType.GetConstructor({}).Invoke({})
+        foundModeConfiguration.MethodListenerNames = methodListenerNames
     End Sub
 
     ''' <summary>
     ''' 获取当前模式的字段配置
     ''' </summary>
     ''' <returns>字段的配置信息</returns>
-    Public Function GetFieldConfigurations() As FieldConfiguration()
-        Dim foundModeConfiguration = (From m In modeConfigurations Where m.Mode = Me.Mode Select m).FirstOrDefault
+    Public Function GetFieldConfigurations(mode As String) As FieldConfiguration()
+        Dim foundModeConfiguration = (From m In modeConfigurations Where m.Mode = mode Select m).FirstOrDefault
         If foundModeConfiguration Is Nothing Then
-            Return {}
+            Throw New Exception($"Mode ""{mode}"" not found!")
         Else
             Return foundModeConfiguration.Fields
         End If
@@ -161,8 +120,8 @@ Public Class Configuration
     ''' 获取当前模式的HTTPAPIs的配置信息
     ''' </summary>
     ''' <returns>HTTPAPIs配置信息</returns>
-    Public Function GetHTTPAPIConfigurations() As HTTPAPIConfiguration()
-        Dim foundModeConfiguration = (From m In modeConfigurations Where m.Mode = Me.Mode Select m).FirstOrDefault
+    Public Function GetHTTPAPIConfigurations(mode As String) As HTTPAPIConfiguration()
+        Dim foundModeConfiguration = (From m In modeConfigurations Where m.Mode = mode Select m).FirstOrDefault
         If foundModeConfiguration Is Nothing Then
             Return {}
         Else
@@ -179,10 +138,9 @@ Public Class Configuration
         Try
             jsValue = jsEngine.Execute("$_FWJsonResult = " + jsonStr).GetValue("$_FWJsonResult")
         Catch ex As Exception
-            If Me.DesignMode Then Return
             Throw New Exception("ConfigurationString error: " + ex.Message)
         End Try
-        Dim newModeConfigurations = ModeConfiguration.FromJsValue(Me, jsValue)
+        Dim newModeConfigurations = ModeConfiguration.FromJsValue(Me.MethodListeners, jsValue)
         If newModeConfigurations Is Nothing Then Return
         Me.modeConfigurations.Clear()
         Me.modeConfigurations.AddRange(newModeConfigurations)
@@ -260,11 +218,11 @@ Public Class Configuration
     End Sub
 End Class
 
-<TypeConverter(GetType(ModeMethodListenerNamePair.ModeMethodListenerPairTypeConverter))>
-Public Class ModeMethodListenerNamePair
+<TypeConverter(GetType(ModeMethodListenerNamesPair.ModeMethodListenerPairTypeConverter))>
+Public Class ModeMethodListenerNamesPair
 
     <Description("方法监听器")>
-    Public Property MethodListenerName As String
+    Public Property MethodListenerNames As String() = {}
 
     <Description("要应用该方法监听器的模式")>
     Public Property Mode As String
@@ -273,9 +231,9 @@ Public Class ModeMethodListenerNamePair
         Inherits TypeConverter
 
         Public Overrides Function ConvertTo(context As ITypeDescriptorContext, culture As CultureInfo, value As Object, destinationType As Type) As Object
-            Dim pair = CType(value, ModeMethodListenerNamePair)
+            Dim pair = CType(value, ModeMethodListenerNamesPair)
             If destinationType = GetType(String) Then
-                Return $"{pair.Mode} => {pair.MethodListenerName}"
+                Return $"{pair.Mode} => {pair.MethodListenerNames.ToString}"
             End If
             Return MyBase.ConvertTo(context, culture, value, destinationType)
         End Function

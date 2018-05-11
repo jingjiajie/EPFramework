@@ -1,5 +1,7 @@
-﻿Imports System.Linq
+﻿Imports System.IO
+Imports System.Linq
 Imports System.Reflection
+Imports System.Runtime.Serialization.Formatters.Binary
 Imports System.Text
 Imports System.Web.Script.Serialization
 
@@ -69,5 +71,24 @@ Friend Class Util
             result(i) = data
         Next
         Return result
+    End Function
+
+    Public Shared Function DeepClone(Of T As New)(src As T) As T
+        Dim newObj As New T
+        Dim srcType = src.GetType
+        Dim fields = srcType.GetFields(BindingFlags.Public Or BindingFlags.NonPublic Or BindingFlags.Instance)
+        For Each field In fields
+            Dim srcValue = field.GetValue(src)
+            If field.FieldType = GetType(String) OrElse field.FieldType.IsValueType Then
+                field.SetValue(newObj, srcValue)
+            ElseIf field.FieldType.GetInterface("ICloneable") = Nothing Then
+                Throw New Exception($"Field {field.Name} must implement ICloneable")
+            ElseIf srcValue Is Nothing Then
+                field.SetValue(newObj, srcValue)
+            Else
+                field.SetValue(newObj, CType(srcValue, ICloneable).Clone)
+            End If
+        Next
+        Return newObj
     End Function
 End Class

@@ -1,9 +1,11 @@
 ﻿Imports System.ComponentModel
+Imports FrontWork
 
 Public Class PagerView
     Implements IView
     Private _currentPage As Long = 1
     Private _totalPage As Long = 1
+    Private _mode As String = "default"
 
     ''' <summary>
     ''' 总页码，从1开始
@@ -51,6 +53,20 @@ Public Class PagerView
     ''' <returns></returns>
     <Description("每页大小"), Category("FrontWork")>
     Public Property PageSize As Long = 50
+
+    ''' <summary>
+    ''' 当前模式
+    ''' </summary>
+    ''' <returns></returns>
+    <Description("当前配置模式"), Category("FrontWork")>
+    Public Property Mode As String Implements IView.Mode
+        Get
+            Return Me._mode
+        End Get
+        Set(value As String)
+            Me._mode = value
+        End Set
+    End Property
 
     ''' <summary>
     ''' 当前页码改变事件（可能由于用户点击下一页，或者程序改变CurrentPage触发）

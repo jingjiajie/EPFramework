@@ -9,11 +9,23 @@ Public Class SearchView
     Inherits UserControl
     Implements IView
     Private _configuration As Configuration
+    Private _mode As String = "default"
 
     ''' <summary>
     ''' 用户按下查询按键触发的事件
     ''' </summary>
     Public Event OnSearch As EventHandler(Of OnSearchEventArgs)
+
+    <Description("当前配置模式"), Category("FrontWork")>
+    Public Property Mode As String Implements IView.Mode
+        Get
+            Return Me._mode
+        End Get
+        Set(value As String)
+            Me._mode = value
+            Call Me.ConfigurationChanged(Me, New ConfigurationChangedEventArgs)
+        End Set
+    End Property
 
     ''' <summary>
     ''' 配置中心对象，用来获取配置
@@ -46,7 +58,7 @@ Public Class SearchView
         Call Me.ComboBoxOrderKey.Items.Add("无")
 
         If Me.Configuration Is Nothing Then Return
-        Dim fieldConfiguration = Me.Configuration.GetFieldConfigurations
+        Dim fieldConfiguration = Me.Configuration.GetFieldConfigurations(Me.Mode)
         If fieldConfiguration Is Nothing Then Return
         Dim fieldNames = (From field In fieldConfiguration
                           Where field.Visible
@@ -89,7 +101,7 @@ Public Class SearchView
             Dim searchDisplayName = Me.ComboBoxSearchKey.SelectedItem?.ToString
             Dim relation As OnSearchEventArgs.Relation
             Dim searchValue = Me.TextBoxSearchCondition.Text
-            Dim searchName = (From m In Me.Configuration.GetFieldConfigurations()
+            Dim searchName = (From m In Me.Configuration.GetFieldConfigurations(Me.Mode)
                               Where m.DisplayName = searchDisplayName
                               Select m.Name).First
             Select Case Me.ComboBoxSearchRelation.SelectedIndex
@@ -105,7 +117,7 @@ Public Class SearchView
 
         If Me.ComboBoxOrderKey.SelectedIndex <> 0 Then
             Dim orderDisplayName = Me.ComboBoxOrderKey.SelectedItem?.ToString
-            Dim orderName = (From m In Me.Configuration.GetFieldConfigurations
+            Dim orderName = (From m In Me.Configuration.GetFieldConfigurations(Mode)
                              Where m.DisplayName = orderDisplayName
                              Select m.Name).First
             Dim order As OnSearchEventArgs.Order

@@ -11,10 +11,13 @@ Imports Jint.Native
 Public Class Configuration
     Inherits UserControl
 
-    ''' <summary>
-    ''' 配置改变事件
-    ''' </summary>
-    Public Event ConfigurationChanged As EventHandler(Of ConfigurationChangedEventArgs)
+    Public Event BeforeFieldAdd As EventHandler(Of BeforeConfigurationFieldAddEventArgs)
+    Public Event BeforeFieldUpdate As EventHandler(Of BeforeConfigurationFieldUpdateEventArgs)
+    Public Event BeforeFieldRemove As EventHandler(Of BeforeConfigurationFieldRemoveEventArgs)
+    Public Event FieldAdded As EventHandler(Of ConfigurationFieldAddedEventArgs)
+    Public Event FieldUpdated As EventHandler(Of ConfigurationFieldUpdatedEventArgs)
+    Public Event FieldRemoved As EventHandler(Of ConfigurationFieldRemovedEventArgs)
+    Public Event Refreshed As EventHandler(Of ConfigurationRefreshedEventArgs)
 
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents PictureBox1 As PictureBox
@@ -53,7 +56,7 @@ Public Class Configuration
                     Call Me.SetMethodListener(modeMethodListeners.MethodListenerNames, modeMethodListeners.Mode)
                 Next
             End If
-            RaiseEvent ConfigurationChanged(Me, New ConfigurationChangedEventArgs)
+            RaiseEvent Refreshed(Me, New ConfigurationRefreshedEventArgs)
         End Set
     End Property
 
@@ -65,13 +68,32 @@ Public Class Configuration
         End Get
         Set(value As ModeMethodListenerNamesPair())
             Me._methodListeners = value
-            If Me.modeConfigurations.Count > 0 Then
+            If Me.DesignMode Then Return '设计器模式不要注册方法监听器
+            If Me.ModeConfigurations.Count > 0 Then
                 For Each modeMethodListeners In Me._methodListeners
                     Call Me.SetMethodListener(modeMethodListeners.MethodListenerNames, modeMethodListeners.Mode)
                 Next
             End If
         End Set
     End Property
+
+    Private Sub BindModeConfiguration(modeConfiguration As ModeConfiguration)
+        AddHandler modeConfiguration.BeforeFieldAdd, AddressOf RaiseBeforeFieldAddEvent
+        AddHandler modeConfiguration.BeforeFieldUpdate, AddressOf RaiseBeforeFieldUpdateEvent
+        AddHandler modeConfiguration.BeforeFieldRemove, AddressOf RaiseBeforeFieldRemoveEvent
+        AddHandler modeConfiguration.FieldAdded, AddressOf RaiseFieldAddedEvent
+        AddHandler modeConfiguration.FieldUpdated, AddressOf RaiseFieldUpdatedEvent
+        AddHandler modeConfiguration.FieldRemoved, AddressOf RaiseFieldRemovedEvent
+    End Sub
+
+    Private Sub UnbindModeConfiguration(modeConfiguration As ModeConfiguration)
+        RemoveHandler modeConfiguration.BeforeFieldAdd, AddressOf RaiseBeforeFieldAddEvent
+        RemoveHandler modeConfiguration.BeforeFieldUpdate, AddressOf RaiseBeforeFieldUpdateEvent
+        RemoveHandler modeConfiguration.BeforeFieldRemove, AddressOf RaiseBeforeFieldRemoveEvent
+        RemoveHandler modeConfiguration.FieldAdded, AddressOf RaiseFieldAddedEvent
+        RemoveHandler modeConfiguration.FieldUpdated, AddressOf RaiseFieldUpdatedEvent
+        RemoveHandler modeConfiguration.FieldRemoved, AddressOf RaiseFieldRemovedEvent
+    End Sub
 
     ''' <summary>
     ''' 当前的配置信息是否包含某种模式
@@ -96,7 +118,7 @@ Public Class Configuration
         If Me.DesignMode Then Return '设计器设计的时候就不用绑方法监听器了
         Dim foundModeConfiguration = (From m In Me.modeConfigurations Where m.Mode.Equals(mode, StringComparison.OrdinalIgnoreCase) Select m).FirstOrDefault
         If foundModeConfiguration Is Nothing Then
-            Throw New Exception($"mode ""{mode}"" not found!")
+            throw new FrontWorkException($"mode ""{mode}"" not found!")
             Return
         End If
 
@@ -107,25 +129,80 @@ Public Class Configuration
     ''' 获取当前模式的字段配置
     ''' </summary>
     ''' <returns>字段的配置信息</returns>
-    Public Function GetFieldConfigurations(mode As String) As FieldConfiguration()
-        Dim foundModeConfiguration = (From m In modeConfigurations Where m.Mode = mode Select m).FirstOrDefault
+    Public Function GetFields(mode As String) As Field()
+        Dim foundModeConfiguration = (From m In ModeConfigurations Where m.Mode = mode Select m).FirstOrDefault
         If foundModeConfiguration Is Nothing Then
-            Throw New Exception($"Mode ""{mode}"" not found!")
+            Throw New FrontWorkException($"Mode ""{mode}"" not found!")
         Else
-            Return foundModeConfiguration.Fields
+            Return foundModeConfiguration.Fields.ToArray
         End If
+    End Function
+
+    Private Function GetModeCofiguration(mode As String) As ModeConfiguration
+        Dim foundConfiguration = (From c In Me.ModeConfigurations Where c.Mode = mode).FirstOrDefault
+        If foundConfiguration Is Nothing Then
+            Throw New ModeNotFoundException($"Mode {mode} not found!")
+        End If
+        Return foundConfiguration
+    End Function
+
+    ''' <summary>
+    ''' 获取当前模式的字段配置
+    ''' </summary>
+    ''' <returns>字段的配置信息</returns>
+    Public Function GetField(mode As String, fieldName As String) As Field
+        Dim fields = Me.GetFields(mode)
+        Dim field = (From f In fields Where f.Name.GetValue?.ToString.Equals(fieldName, StringComparison.OrdinalIgnoreCase) Select f).FirstOrDefault
+        If field Is Nothing Then Throw New FrontWorkException($"Field ""{fieldName}"" not found in mode ""{mode}""!")
+        Return field
+    End Function
+
+    Public Function AddFields(mode As String, fields As Field())
+        Return Me.GetModeCofiguration(mode).AddFields(fields)
+    End Function
+
+    Public Function AddField(mode As String, field As Field)
+        Return Me.GetModeCofiguration(mode).AddFields({field})
+    End Function
+
+    Public Function InsertFields(mode As String, indexes As Integer(), fields As Field())
+        Return Me.GetModeCofiguration(mode).InsertFields(indexes, fields)
+    End Function
+
+    Public Function InsertField(mode As String, index As Integer, field As Field)
+        Return Me.InsertFields(mode, {index}, {field})
+    End Function
+
+    Public Function UpdateFields(mode As String, indexes As Integer(), fields As Field())
+        Return Me.GetModeCofiguration(mode).UpdateFields(indexes, fields)
+    End Function
+
+    Public Function UpdateField(mode As String, index As Integer, field As Field)
+        Return Me.UpdateFields(mode, {index}, {field})
+    End Function
+
+    Public Function RemoveFields(mode As String, indexes As Integer())
+        Return Me.GetModeCofiguration(mode).RemoveFields(indexes)
+    End Function
+
+    Public Function RemoveField(mode As String, index As Integer)
+        Return Me.RemoveFields(mode, {index})
+    End Function
+
+    Public Function ClearFields(mode As String) As Boolean
+        Return Me.GetModeCofiguration(mode).ClearFields
     End Function
 
     ''' <summary>
     ''' 获取当前模式的HTTPAPIs的配置信息
     ''' </summary>
     ''' <returns>HTTPAPIs配置信息</returns>
-    Public Function GetHTTPAPIConfigurations(mode As String) As HTTPAPIConfiguration()
-        Dim foundModeConfiguration = (From m In modeConfigurations Where m.Mode = mode Select m).FirstOrDefault
+    Public Function GetHTTPAPIConfigurations(mode As String) As HTTPAPI()
+        Dim foundModeConfiguration = (From m In ModeConfigurations Where m.Mode = mode Select m).FirstOrDefault
         If foundModeConfiguration Is Nothing Then
             Return {}
         Else
-            Return foundModeConfiguration.HTTPAPIs
+            Return foundModeConfiguration.HTTPAPIs.ToArray
         End If
     End Function
 
@@ -134,16 +211,32 @@ Public Class Configuration
     ''' </summary>
     ''' <param name="jsonStr">json配置字符串</param>
     Public Sub Configurate(jsonStr As String)
+        If String.IsNullOrWhiteSpace(jsonStr) Then Return
         Dim jsValue As JsValue = Nothing
         Try
             jsValue = jsEngine.Execute("$_FWJsonResult = " + jsonStr).GetValue("$_FWJsonResult")
         Catch ex As Exception
-            Throw New Exception("ConfigurationString error: " + ex.Message)
+            If Me.DesignMode Then
+                MessageBox.Show($"配置中心的配置字符串错误，请检查" & vbCrLf & ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Return
+            End If
+            Throw New FrontWorkException("ConfigurationString error: " + ex.Message)
         End Try
+        '为旧的ModeConfigurations解绑事件
+        Dim oldModeCondigurations = Me.ModeConfigurations
+        If oldModeCondigurations?.Count > 0 Then
+            For Each oldModeConfiguration In oldModeCondigurations
+                Call Me.UnbindModeConfiguration(oldModeConfiguration)
+            Next
+        End If
         Dim newModeConfigurations = ModeConfiguration.FromJsValue(Me.MethodListeners, jsValue)
         If newModeConfigurations Is Nothing Then Return
-        Me.modeConfigurations.Clear()
-        Me.modeConfigurations.AddRange(newModeConfigurations)
+        '为新的ModeConfigurations绑定事件
+        For Each newModeConfiguration In newModeConfigurations
+            Call Me.BindModeConfiguration(newModeConfiguration)
+        Next
+        Me.ModeConfigurations.Clear()
+        Me.ModeConfigurations.AddRange(newModeConfigurations)
     End Sub
 
     Private Sub InitializeComponent()
@@ -215,6 +308,34 @@ Public Class Configuration
     Private Sub Configuration_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If Not Me.DesignMode Then Me.Visible = False
         Call InitializeComponent()
+    End Sub
+
+    Public Sub RaiseBeforeFieldAddEvent(sender As Object, eventArgs As BeforeConfigurationFieldAddEventArgs)
+        RaiseEvent BeforeFieldAdd(sender, eventArgs)
+    End Sub
+
+    Public Sub RaiseBeforeFieldUpdateEvent(sender As Object, eventArgs As BeforeConfigurationFieldUpdateEventArgs)
+        RaiseEvent BeforeFieldUpdate(sender, eventArgs)
+    End Sub
+
+    Public Sub RaiseBeforeFieldRemoveEvent(sender As Object, eventArgs As BeforeConfigurationFieldRemoveEventArgs)
+        RaiseEvent BeforeFieldRemove(sender, eventArgs)
+    End Sub
+
+    Public Sub RaiseFieldAddedEvent(sender As Object, eventArgs As ConfigurationFieldAddedEventArgs)
+        RaiseEvent FieldAdded(sender, eventArgs)
+    End Sub
+
+    Public Sub RaiseFieldUpdatedEvent(sender As Object, eventArgs As ConfigurationFieldUpdatedEventArgs)
+        RaiseEvent FieldUpdated(sender, eventArgs)
+    End Sub
+
+    Public Sub RaiseFieldRemovedEvent(sender As Object, eventArgs As ConfigurationFieldRemovedEventArgs)
+        RaiseEvent FieldRemoved(sender, eventArgs)
+    End Sub
+
+    Public Sub RaiseRefreshedEvent(sender As Object, eventArgs As ConfigurationRefreshedEventArgs)
+        RaiseEvent Refreshed(sender, eventArgs)
     End Sub
 End Class
 

@@ -74,12 +74,9 @@ Public Class SearchViewJsonRESTAdapter
         Return False
     End Function
 
-    Protected Overridable Sub SearchViewOnSearch(sender As Object, args As OnSearchEventArgs)
-        If Me.Synchronizer.PullAPI Is Nothing Then
-            Throw New Exception("PullAPI not set!")
-        End If
-        Dim jsEngine As New Jint.Engine
-        Dim jsSerializer = New JavaScriptSerializer
+    Protected Sub SetConditionAndOrdersToAPI(api As JsonRESTAPIInfo, args As OnSearchEventArgs)
+        Static jsEngine As New Jint.Engine
+        Static jsSerializer = New JsonSerializer
         '添加搜索条件
         Dim conditions = args.Conditions
         jsEngine.Execute("var $conditions = [];")
@@ -88,6 +85,9 @@ Public Class SearchViewJsonRESTAdapter
                 Dim key = condition.Key
                 Dim relation = condition.Relation
                 Dim values = condition.Values
+                For i = 0 To values.Length - 1
+                    values(i) = Util.UrlEncode(values(i))
+                Next
                 Dim jsonValues = jsSerializer.Serialize(values)
 
                 Dim fieldKey = Me.APIFieldNames.ConditionParamNames.Key
@@ -106,14 +106,25 @@ Public Class SearchViewJsonRESTAdapter
 
                 Dim fieldKey = Me.APIFieldNames.OrderParamNames.Key
                 Dim fieldOrder = Me.APIFieldNames.OrderParamNames.Order
-                jsEngine.Execute($"$orders.push({{""key"":""{fieldKey}"",""order"":""{fieldOrder}"" }});")
+                jsEngine.Execute($"$orders.push({{""{fieldKey}"":""{key}"",""{fieldOrder}"":""{order}"" }});")
             Next
         End If
 
-        Me.Synchronizer.PullAPI.SetRequestParameter("$conditions", jsEngine.GetValue("$conditions"))
-        Me.Synchronizer.PullAPI.SetRequestParameter("$orders", jsEngine.GetValue("$orders"))
-        Call Me.Synchronizer.PullFromServer()
+        api.SetRequestParameter("$conditions", jsEngine.GetValue("$conditions"))
+        api.SetRequestParameter("$orders", jsEngine.GetValue("$orders"))
     End Sub
+
+    Protected Overridable Sub SearchViewOnSearch(sender As Object, args As OnSearchEventArgs)
+        If Me.Synchronizer.FindAPI Is Nothing Then
+            Throw New FrontWorkException("FindAPI not set!")
+        End If
+        Call Me.Search(args)
+    End Sub
+
+    Protected Overridable Function Search(args As OnSearchEventArgs) As Boolean
+        Me.SetConditionAndOrdersToAPI(Me.Synchronizer.FindAPI, args)
+        Return Me.Synchronizer.Find()
+    End Function
 
     Protected Overridable Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SearchViewJsonRESTAdapter))
